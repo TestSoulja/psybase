@@ -18,6 +18,7 @@
 | Europe PMC search | серии 503 | повторить 2–3 раза с паузой, потом eutils |
 | eprints.leedsbeckett.ac.uk | таймаут 120 с | да |
 | OpenAlex | closed / 451 через r.jina.ai | да |
+| DOI из РИНЦ/eLibrary (`10.24411/…`, `10.33978/…`) | `doi.org` → `responseCode 100` | да; это не подделка, а класс — источник ищется по названию и странице журнала (КиберЛенинка); в утверждение ставится название+год, не DOI |
 
 Обходы, которые работают: NCBI eutils `esummary`/`efetch`, `pmc.ncbi.nlm.nih.gov/articles/PMC…`,
 Cambridge Core (часть PDF без подписки), репозитории вузов (hdl), `doi.org/api/handles`.
