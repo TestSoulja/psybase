@@ -90,8 +90,9 @@ of those who started)
   is no predictor for a particular person.
 - **The exact share who stop because of side effects.** The meta-analysis
   reports discontinuation for any cause (OR) only.
-- **NNT.** It is not in the papers; calculating it ourselves from proportions
-  would pass arithmetic off as measurement, so it is not given here.
+- **NNT.** We do not publish an NNT from these data: it depends on baseline risk
+  and follow-up time, not only on the difference in proportions. It is not in
+  the papers, so it is not here either.
 
 ## Not found
 
