@@ -11,8 +11,10 @@
 активация» → `topics/povedencheskaya-aktivaciya/`, 6.32 «Антидепрессанты» →
 `topics/antidepressanty/` (RU + EN + for-app), `topics/prl/` — «Пограничное
 расстройство личности», RU-only, 22 источника + `for-app/prl/` и 6.33
-«Депрессия и ПРЛ» → `topics/depressiya-i-prl/` (только RU). Всего 64
-карточки источников в `sources/`. Следующая тема не назначена: в очереди
+«Депрессия и ПРЛ» → `topics/depressiya-i-prl/` (только RU) и
+`topics/razlichenie/` — «Различение: ПРЛ, БАР, депрессия», RU-only, 23
+источника. Всего 70
+карточек источников в `sources/`. Следующая тема не назначена: в очереди
 6.20–6.29. Сырьё
 спринта (`research/2026-11-25/`) — волны возобновлены 25.11.2026, идёт цикл
 волн (`research/queue.md`), последняя — 8-я: 1157 утверждений, 129 из них
@@ -139,6 +141,18 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
   распространённости. `parity.mjs` пары не находит и пропускает; `status.mjs`
   сверяет `sources: 10` с числом различных карточек в тексте. 4 новых PMID
   и 4 DOI сверены (`hitCount 1`, `responseCode 1`).
+- `topics/razlichenie/` — «Различение: ПРЛ, БАР, депрессия», только RU (`en.md`
+  нет — долг перевода), 23 источника, `sources: 23`. Собрана из карточек,
+  которые уже были в базе, и шести новых по БАР и гипомании:
+  `grande-2016-bipolar-lancet`, `bayes-2019-bpii-bpd`,
+  `socada-2021-mixed-mde`, `wright-2022-self-concept`,
+  `faurholt-jepsen-2020-dsm5-hypomania`, `luksaite-2026-positive-beliefs`.
+  Шесть карточек с `read: unknown` — `leichsenring`, `bach`, `shen`, `stoffers`,
+  `brodsky`, `paz-otero`; их числа взяты из `taken`, долг виден на странице
+  карточки. `parity.mjs` пары не находит и пропускает; `status.mjs` сверяет
+  `sources: 23` с числом различных карточек в тексте. 6 новых PMID —
+  `hitCount 1`, 6 DOI — `responseCode 1`. «Не нашёл» — семь пунктов, включая
+  403 у NICE и отсутствие отдельного русскоязычного поиска.
 
 ## Дыры и пустые поиски
 
