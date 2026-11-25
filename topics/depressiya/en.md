@@ -58,7 +58,7 @@ type: funnel
 values: 51.6, 21.7
 labels: received any treatment, adequately treated overall
 bases: all, all
-note: treatment was adequate in 41.9% of those who received any — a share of the treated, not of all cases
+note: treatment was adequate in 41.9% of those who received treatment
 unit: %
 source: kessler-2003-ncsr
 ```

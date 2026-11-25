@@ -240,7 +240,7 @@ function chartHtml(raw, ctx) {
       const width = isRange ? pct(n.hi - n.lo) : pct(n.hi);
       const left = isRange ? pct(n.lo) : '0';
       const cls = d.type === 'funnel' ? 'chart-bar chart-bar-funnel' : 'chart-bar';
-      return `<div class="chart-row"><span class="chart-label">${esc(label)}</span><span class="chart-track"><span class="${cls}" style="left:${left};width:${width}"></span></span><span class="chart-value">${esc(showVal(nums[idx]))}</span></div>`;
+      return `<div class="chart-row" aria-hidden="true"><span class="chart-label">${esc(label)}</span><span class="chart-track"><span class="${cls}" style="left:${left};width:${width}"></span></span><span class="chart-value">${esc(showVal(nums[idx]))}</span></div>`;
     })
     .join('');
   const axis = [0, top / 4, top / 2, (top * 3) / 4, top]
@@ -260,15 +260,15 @@ function chartHtml(raw, ctx) {
   // note — подпись под графиком и строка таблицы: условные доли, которые нельзя
   // ставить баром на общую ось, остаются видимыми, а не теряются.
   const noteText = d.note ? esc(d.note) : '';
-  const noteBlock = noteText ? `<p class="chart-note">${noteText}</p>` : '';
+  const noteBlock = noteText ? `<p class="chart-note" aria-hidden="true">${noteText}</p>` : '';
   const noteRow = noteText
     ? `<tfoot><tr><th>${ru ? 'Примечание' : 'Note'}</th><td>${noteText}</td></tr></tfoot>`
     : '';
   return `<figure class="chart" data-chart="${esc(d.type)}">
 <figcaption class="chart-caption">${ru ? 'Источник' : 'Source'}: ${esc(caption)}</figcaption>
-<div class="chart-axis chart-axis-top">${axis}</div>
+<div class="chart-axis chart-axis-top" aria-hidden="true">${axis}</div>
 ${bars}
-<div class="chart-axis">${axis}</div>
+<div class="chart-axis" aria-hidden="true">${axis}</div>
 <table class="chart-table"><caption>${ru ? 'Те же данные таблицей' : 'The same data as a table'}</caption>
 <thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th></tr></thead><tbody>${rows}</tbody>${noteRow}</table>
 ${noteBlock}
