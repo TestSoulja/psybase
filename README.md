@@ -141,8 +141,9 @@ RU/EN, а не график с таблицей.
 
 1. Открыть источники и сверить PMID/DOI — не по памяти: PMID, взятый на память,
    уже дважды оказывался чужой статьёй.
-2. Завести карточки в `sources/`: `id`/`doi`, `lang`, `type`, `year`, `taken`,
-   `accessed` по [`docs/schema.md`](docs/schema.md).
+2. Завести карточки в `sources/`: `id`/`doi`, `lang`, `type`, `read`
+   (`abstract` | `full` | `page` | `unknown`), `year`, `taken`, `accessed` по
+   [`docs/schema.md`](docs/schema.md).
 3. Написать `topics/<slug>/ru.md` (и `en.md`, если перевод есть) — с минимумом
    разделов и числом `sources:` во front-matter.
 4. Заполнить «Не нашёл»: пустым он быть не может, недоступный источник — тоже

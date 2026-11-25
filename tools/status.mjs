@@ -28,6 +28,7 @@
  *     тем числом; в sitemap нет адресов источников или страниц каталога;
  *     «цитируется в темах» ведёт на несуществующую тему.
  *   - у карточки нет `read:` или значение не из abstract|full|page|unknown;
+ *     на странице карточки нет `data-read` или текст строки не равен метке;
  *     таблица типов на странице доказательности расходится с sources/;
  *     список «Источники» темы ссылается не на все карточки.
  *
@@ -361,6 +362,12 @@ for (const c of nowhere) {
 // «В каждой карточке написано, чем читали» было утверждением, которого диск не
 // подтверждал; теперь это поле, и страж считает, у скольких оно названо.
 const READ_VALUES = ['abstract', 'full', 'page', 'unknown'];
+const READ_TEXT = {
+  abstract: 'аннотация',
+  full: 'полный текст',
+  page: 'страница целиком',
+  unknown: 'Основа чтения не записана',
+};
 const cardRead = new Map();
 for (const c of sourceCards) {
   const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
@@ -546,11 +553,36 @@ if (distReady) {
       }
     }
     // «Цитируется в темах» — только существующие адреса: тема или страница каталога.
+    // Заодно строка «Чем читали»: data-read из четырёх значений и текст ровно
+    // метка. Иначе страница может сказать «аннотация · Europe PMC», хотя тело
+    // карточки называет другой путь.
     const deadLinks = [];
     for (const c of sourceCards) {
       const p = join(DIST, 'ru', 'istochniki', c, 'index.html');
       if (!existsSync(p)) continue;
       const text = readFileSync(p, 'utf8');
+      const readMatch = text.match(/<p class="read" data-read="([^"]*)">([^<]*)<\/p>/);
+      if (!readMatch) {
+        problems.push(`dist/ru/istochniki/${c}/ — нет строки «Чем читали» с data-read`);
+      } else {
+        const [, shownRead, shownText] = readMatch;
+        if (!READ_VALUES.includes(shownRead)) {
+          problems.push(
+            `dist/ru/istochniki/${c}/ — data-read «${shownRead}», допустимо только ${READ_VALUES.join(' | ')}`,
+          );
+        } else if (shownText !== READ_TEXT[shownRead]) {
+          problems.push(
+            `dist/ru/istochniki/${c}/ — data-read «${shownRead}», а текст «${shownText}», ожидается ровно «${READ_TEXT[shownRead]}»`,
+          );
+        }
+        const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+        const sourceRead = String(data.read ?? '').trim();
+        if (shownRead !== sourceRead) {
+          problems.push(
+            `dist/ru/istochniki/${c}/ — data-read «${shownRead}», а в sources/${c}.md read: «${sourceRead}»`,
+          );
+        }
+      }
       for (const m of text.matchAll(/href="\/psybase\/ru\/([a-z0-9-]+)\/"/g)) {
         if (m[1] === 'istochniki') continue;
         if (!topics.includes(m[1]) && !pageDirs.includes(m[1])) deadLinks.push(`${c} → ${m[1]}`);

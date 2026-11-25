@@ -360,17 +360,10 @@ const READ_LABEL = {
 };
 function readLine(card) {
   const read = String(card.read ?? 'unknown').trim();
-  if (read === 'unknown' || !READ_LABEL[read]) return READ_LABEL.unknown;
-  if (read !== 'abstract') return READ_LABEL[read];
-  const body = String(card.body ?? '');
-  const via = /Europe PMC/i.test(body)
-    ? 'Europe PMC'
-    : /eutils/i.test(body)
-      ? 'NCBI eutils'
-      : /PubMed/i.test(body)
-        ? 'PubMed'
-        : '';
-  return [READ_LABEL.abstract, via, asRuDate(card.accessed)].filter(Boolean).join(' · ');
+  // Только метка из front-matter. Источник и дату называет тело карточки:
+  // подбирать «Europe PMC» по телу — догадка, и она уже противоречила телам,
+  // где стоит «через NCBI eutils, PMID сверен Europe PMC».
+  return READ_LABEL[read] ?? READ_LABEL.unknown;
 }
 function readStats(cards) {
   let named = 0;
