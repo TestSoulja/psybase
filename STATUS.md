@@ -61,7 +61,7 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
 
 ## Готовые темы: `topics/`
 
-- `topics/depressiya/` — «Депрессия», пара `ru.md` + `en.md`, 6 источников:
+- `topics/depressiya/` — «Депрессия», пара `ru.md` + `en.md`, 7 источников:
   `sources/who-2025-depression.md`, `kessler-2003-ncsr`, `eaton-2008-baltimore`,
   `wiedlocha-2024-bpd-mdd`, `li-2025-criticism`, `nhs-depression-overview` — все
   карточки в `sources/`. Исходник — `legacy/inbox/06-30-depressiya.md`.

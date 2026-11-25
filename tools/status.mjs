@@ -10,6 +10,9 @@
  *   - в STATUS.md нет строки «Обновлено: ГГГГ-ММ-ДД»;
  *   - в таблице «Дыры и пустые поиски» у строки нет даты ГГГГ-ММ-ДД;
  *   - в topics/<тема>/ru.md или en.md раздел «Не нашёл» / «Not found» пуст.
+ *   - таблица тем в README.md расходится с topics/: тема есть на диске, но не
+ *     в таблице; тема в таблице, а папки нет; число источников не равно
+ *     `sources:` во front-matter темы.
  *
  *   node tools/status.mjs
  */
@@ -148,6 +151,91 @@ for (const d of topics) {
   }
 }
 
+// 7. README.md: таблица «Что внутри сейчас» — это то, что видит новый читатель,
+// и она стареет молча. Страж сверяет три вещи: тема на диске есть в таблице;
+// тема из таблицы есть на диске; число источников в столбце равно `sources:`
+// во front-matter темы. Языки сверяются заодно: столбец «RU» без `en.md` и
+// «RU + EN» при наличии перевода — та же устаревшая строка.
+const TOPIC_STUB = (d) => {
+  const p = join(TOPICS, d, 'ru.md');
+  const text = existsSync(p) ? readFileSync(p, 'utf8').replace(/^\uFEFF/, '') : '';
+  const fm = (text.match(/^---\r?\n([\s\S]*?)\r?\n---/) ?? [null, ''])[1];
+  const declared = fm.match(/^sources:\s*(\d+)\s*$/m);
+  const title = fm.match(/^title:\s*(.+)$/m);
+  return {
+    dir: d,
+    title: title ? title[1].trim() : d,
+    sources: declared ? Number(declared[1]) : null,
+    hasEn: existsSync(join(TOPICS, d, 'en.md')),
+    draft: /^draft:\s*true\s*$/m.test(fm),
+  };
+};
+
+const topicsInfo = topics.map(TOPIC_STUB);
+const publicTopics = topicsInfo.filter((t) => !t.draft && t.dir !== '_example');
+
+const README = join(ROOT, 'README.md');
+const readmeText = existsSync(README) ? readFileSync(README, 'utf8').replace(/^\uFEFF/, '') : '';
+const readmeLines = readmeText.split(/\r?\n/);
+const readmeHead = readmeLines.findIndex((l) => l.trim() === '## Что внутри сейчас');
+let readmeRows = 0;
+
+if (readmeHead === -1) {
+  problems.push('в README.md нет раздела «Что внутри сейчас» с таблицей тем');
+} else {
+  const seen = new Set();
+  for (let i = readmeHead + 1; i < readmeLines.length; i++) {
+    const line = readmeLines[i];
+    if (/^##\s/.test(line)) break; // раздел кончился
+    if (!line.startsWith('|')) continue;
+    const cells = line.split('|').slice(1, -1).map((c) => c.trim());
+    if (!cells.length) continue;
+    if (cells[0] === 'Тема') continue; // шапка
+    if (/^:?-{3,}:?$/.test(cells[0])) continue; // разделитель
+    readmeRows++;
+
+    const url = cells[4] ?? '';
+    const slugMatch = url.match(/\/ru\/([a-z0-9_-]+)\//);
+    if (!slugMatch) {
+      problems.push(
+        `README.md:${i + 1} — в строке «${cells[0]}» нет адреса вида /ru/<slug>/, сверять не с чем`,
+      );
+      continue;
+    }
+    const slug = slugMatch[1];
+    if (slug === '_example') {
+      problems.push('README.md — в таблице тем стоит topics/_example: это шаблон, а не тема');
+      continue;
+    }
+    const info = topicsInfo.find((t) => t.dir === slug);
+    if (!info) {
+      problems.push(`README.md — тема «${cells[0]}» есть в таблице, а папки topics/${slug} нет`);
+      continue;
+    }
+    seen.add(slug);
+    const declaredInRow = Number((cells[2] ?? '').replace(/[^\d]/g, ''));
+    if (info.sources === null) {
+      problems.push(`topics/${slug}/ru.md — во front-matter нет «sources: N», сверять с README не с чем`);
+    } else if (declaredInRow !== info.sources) {
+      problems.push(
+        `README.md — «${info.title}»: в таблице источников ${declaredInRow || '—'}, а в topics/${slug}/ru.md sources: ${info.sources}`,
+      );
+    }
+    const rowHasEn = /\bEN\b/.test(cells[1] ?? '');
+    if (info.hasEn && !rowHasEn) {
+      problems.push(`README.md — «${info.title}»: перевод есть (en.md), а в столбце языков только RU`);
+    }
+    if (!info.hasEn && rowHasEn) {
+      problems.push(`README.md — «${info.title}»: в таблице EN, а файла topics/${slug}/en.md нет`);
+    }
+  }
+  for (const t of publicTopics) {
+    if (!seen.has(t.dir)) {
+      problems.push(`тема topics/${t.dir} есть на диске, но её нет в таблице README.md`);
+    }
+  }
+}
+
 if (problems.length) {
   console.log('✖ STATUS.md расходится с диском:');
   for (const p of problems) console.log(`   ${p}`);
@@ -156,7 +244,18 @@ if (problems.length) {
 
 for (const s of staleSources) console.log(`· ${s}`);
 
+const totalSources = publicTopics.reduce((n, t) => n + (t.sources ?? 0), 0);
+for (const t of publicTopics) {
+  console.log(`· topics/${t.dir}: источников ${t.sources ?? '—'}, ${t.hasEn ? 'RU + EN' : 'RU'}`);
+}
+console.log(
+  `· тем: ${publicTopics.length}, источников по темам: ${totalSources}, без перевода: ${untranslated.length}`,
+);
+
 console.log(
   `✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем; ` +
     `тем без перевода: ${untranslated.length}; «Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
+);
+console.log(
+  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники и языки сверены`,
 );
