@@ -72,6 +72,37 @@ function parse(md) {
   return { fm, body };
 }
 
+// Числа блока chart считаются отдельно (их сверяет checkCharts): иначе число,
+// оставшееся в графике, прикрывает пропажу того же числа из прозы.
+const CHART_BLOCK_RE = /```chart\r?\n[\s\S]*?```/g;
+
+// Набор чисел текста: без ссылок и DOI, где цифры — часть адреса.
+// Тире между цифрами — разделитель диапазона, а не минус: «5-10», «5–10»
+// и «5 − 10» дают один и тот же набор, иначе дефис в EN против тире в RU
+// выглядел бы как потеря числа.
+function numbersIn(body) {
+  const plain = body
+    .replace(URL_RE, ' ')
+    .replace(DOI_RE, ' ')
+    .replace(/(\d)\s*[-–—−]\s*(\d)/g, '$1–$2');
+  return multiset([...plain.matchAll(NUMBER_RE)].map((m) => m[0].replace(',', '.')));
+}
+
+// Разделы «##»: числа сравниваются по разделам, а не общей кучей — иначе число,
+// переехавшее из одного утверждения в другое, выглядит как паритет.
+function sectionsOf(body) {
+  const out = [];
+  const parts = body.split(/^##[ \t]+/m);
+  out.push({ title: '', text: parts.shift() ?? '' });
+  for (const part of parts) {
+    const nl = part.indexOf('\n');
+    const title = (nl < 0 ? part : part.slice(0, nl)).trim();
+    const text = nl < 0 ? '' : part.slice(nl + 1);
+    out.push({ title, text });
+  }
+  return out;
+}
+
 function extract(body) {
   const urls = uniqueSorted([...body.matchAll(URL_RE)].map((m) => stripPunct(m[0])));
   const dois = uniqueSorted([...body.matchAll(DOI_RE)].map((m) => cleanDoi(m[0]).toLowerCase()));
@@ -83,15 +114,7 @@ function extract(body) {
 
   const headings = [...body.matchAll(/^(#{1,6})\s+(.+?)\s*#*\s*$/gm)].map((m) => m[1].length);
 
-  // числа считаем по тексту без ссылок и DOI: там цифры — часть адреса.
-  // Тире между цифрами — разделитель диапазона, а не минус: «5-10», «5–10»
-  // и «5 − 10» дают один и тот же набор чисел, иначе дефис в EN против тире
-  // в RU выглядел бы как потеря числа.
-  const plain = body
-    .replace(URL_RE, ' ')
-    .replace(DOI_RE, ' ')
-    .replace(/(\d)\s*[-–—−]\s*(\d)/g, '$1–$2');
-  const numbers = multiset([...plain.matchAll(NUMBER_RE)].map((m) => m[0].replace(',', '.')));
+  const numbers = numbersIn(body.replace(CHART_BLOCK_RE, ' '));
 
   return { urls, dois, pmids, headings, numbers };
 }
@@ -158,6 +181,33 @@ function checkCharts(ruBody, enBody, where, problems) {
   }
 }
 
+function diffNumbers(a, b, label, problems, where) {
+  if (a.join() === b.join()) return;
+  const count = (list) => list.reduce((m, n) => m.set(n, (m.get(n) ?? 0) + 1), new Map());
+  const ca = count(a);
+  const cb = count(b);
+  const parts = [];
+  for (const [n, k] of ca) if (k !== (cb.get(n) ?? 0)) parts.push(`${n} (RU ${k}, EN ${cb.get(n) ?? 0})`);
+  for (const [n, k] of cb) if (!ca.has(n)) parts.push(`${n} (RU 0, EN ${k})`);
+  if (parts.length) problems.push(`${where}: ${label}числа не совпали — ${parts.join(', ')}`);
+}
+
+// Числа прозы — по разделам, числа графиков — отдельно (checkCharts). Так
+// «15» в блоке chart не прикрывает пропажу «15%» из текста утверждения.
+function checkSections(ruBody, enBody, where, problems) {
+  const a = sectionsOf(ruBody.replace(CHART_BLOCK_RE, ' '));
+  const b = sectionsOf(enBody.replace(CHART_BLOCK_RE, ' '));
+  if (a.length !== b.length) {
+    problems.push(`${where}: разделов «##» RU ${a.length}, EN ${b.length}`);
+    diffNumbers(numbersIn(ruBody.replace(CHART_BLOCK_RE, ' ')), numbersIn(enBody.replace(CHART_BLOCK_RE, ' ')), '', problems, where);
+    return;
+  }
+  for (let i = 0; i < a.length; i++) {
+    const label = a[i].title ? `раздел ${i} «${a[i].title}»: ` : 'до первого раздела: ';
+    diffNumbers(numbersIn(a[i].text), numbersIn(b[i].text), label, problems, where);
+  }
+}
+
 function diffSets(a, b, label, problems, where) {
   const onlyA = a.filter((x) => !b.includes(x));
   const onlyB = b.filter((x) => !a.includes(x));
@@ -195,14 +245,7 @@ function checkPair(dir, slug) {
   const lvlB = B.headings.join(',');
   if (lvlA !== lvlB) problems.push(`${where}: разный уровень заголовков — RU [${lvlA}], EN [${lvlB}]`);
 
-  const numA = multiset(A.numbers);
-  const numB = multiset(B.numbers);
-  if (numA.join() !== numB.join()) {
-    const onlyA = numA.filter((x) => !numB.includes(x));
-    const onlyB = numB.filter((x) => !numA.includes(x));
-    if (onlyA.length) problems.push(`${where}: числа есть в RU, нет в EN — ${onlyA.join(', ')}`);
-    if (onlyB.length) problems.push(`${where}: числа есть в EN, нет в RU — ${onlyB.join(', ')}`);
-  }
+  checkSections(ru.body, en.body, where, problems);
 
   diffSets(A.pmids, B.pmids, 'PMID', problems, where);
   diffSets(A.dois, B.dois, 'DOI', problems, where);

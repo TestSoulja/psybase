@@ -2,7 +2,7 @@
 slug: depressiya
 title: Депрессия
 updated: 2026-11-25
-sources: 6
+sources: 7
 ---
 
 ## Что это
