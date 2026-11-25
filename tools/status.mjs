@@ -6,7 +6,10 @@
  * Этот скрипт падает, если:
  *   - в legacy/inbox/ есть файл, которого нет в таблице STATUS.md;
  *   - в STATUS.md есть тема, файла которой нет;
- *   - в topics/ появилась папка, не отмеченная в STATUS.md.
+ *   - в topics/ появилась папка, не отмеченная в STATUS.md;
+ *   - в STATUS.md нет строки «Обновлено: ГГГГ-ММ-ДД»;
+ *   - в таблице «Дыры и пустые поиски» у строки нет даты ГГГГ-ММ-ДД;
+ *   - в topics/<тема>/ru.md или en.md раздел «Не нашёл» / «Not found» пуст.
  *
  *   node tools/status.mjs
  */
@@ -59,10 +62,72 @@ for (const d of topics) {
 const dateMatch = status.match(/^Обновлено:\s*(\d{4}-\d{2}-\d{2})/m);
 if (!dateMatch) problems.push('в STATUS.md нет строки «Обновлено: ГГГГ-ММ-ДД»');
 
+// 4. «Дыры и пустые поиски»: у каждой строки таблицы своя дата замера.
+// Пустой поиск — тоже результат, и строка без даты через месяц читается как
+// «это было давно»: непонятно, повторять запрос или он уже был. Даты в первом
+// столбце нет — это дефект журнала. Если раздела нет совсем, страж тоже
+// падает: иначе его отключают, удалив заголовок.
+const lines = status.split(/\r?\n/);
+const holesHeading = lines.findIndex((l) => l.trim() === '## Дыры и пустые поиски');
+if (holesHeading === -1) {
+  problems.push('в STATUS.md нет раздела «Дыры и пустые поиски»');
+} else {
+  for (let i = holesHeading + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^##\s/.test(line)) break; // раздел кончился
+    if (!line.startsWith('|')) continue;
+    const cells = line.split('|').slice(1, -1).map((c) => c.trim());
+    if (!cells.length) continue;
+    if (cells[0] === 'Дата') continue; // шапка таблицы
+    if (/^:?-{3,}:?$/.test(cells[0])) continue; // строка-разделитель
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(cells[0])) {
+      problems.push(
+        `STATUS.md:${i + 1} — строка «Дыры и пустые поиски» без даты ГГГГ-ММ-ДД (первая ячейка «${cells[0]}»)`,
+      );
+    }
+  }
+}
+
+// 5. Раздел «Не нашёл» / «Not found» не пустой: правило §4 правил приёма.
+// Пустой раздел означает «искали недостаточно», а не «всё нашлось».
+// Отсутствие заголовка здесь не проверяем — его ловит parity.mjs; этот страж
+// отвечает только за пустое тело. topics/_example проверяется наравне с
+// остальными: это настоящая пара ru/en, и исключение по draft: true позволило
+// бы проводить черновик без раздела — ровно то, что страж запрещает.
+const NOT_FOUND = [
+  { file: 'ru.md', heading: /^#{1,6}\s*Не нашёл\s*#*\s*$/, label: 'Не нашёл' },
+  { file: 'en.md', heading: /^#{1,6}\s*Not found\s*#*\s*$/i, label: 'Not found' },
+];
+
+function sectionBodyIsEmpty(text, headingRe) {
+  const content = text.replace(/^\uFEFF/, '').split(/\r?\n/);
+  const start = content.findIndex((l) => headingRe.test(l.trim()));
+  if (start === -1) return null; // заголовка нет — не наша забота, см. parity.mjs
+  const body = [];
+  for (let i = start + 1; i < content.length; i++) {
+    if (/^#{1,2}\s/.test(content[i])) break; // следующий ## — раздел кончился
+    body.push(content[i]);
+  }
+  return body.join('\n').trim() === '';
+}
+
+for (const d of topics) {
+  for (const { file, heading, label } of NOT_FOUND) {
+    const p = join(TOPICS, d, file);
+    if (!existsSync(p)) continue; // отсутствие пары — ошибка parity.mjs
+    if (sectionBodyIsEmpty(readFileSync(p, 'utf8'), heading)) {
+      problems.push(`topics/${d}/${file} — раздел «${label}» пуст (правило §4: пустым он быть не может)`);
+    }
+  }
+}
+
 if (problems.length) {
   console.log('✖ STATUS.md расходится с диском:');
   for (const p of problems) console.log(`   ${p}`);
   process.exit(1);
 }
 
-console.log(`✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем`);
+console.log(
+  `✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем; ` +
+    `«Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
+);
