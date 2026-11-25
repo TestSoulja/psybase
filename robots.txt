@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://testsoulja.github.io/psybase/sitemap.xml
