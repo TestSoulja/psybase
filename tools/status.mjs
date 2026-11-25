@@ -15,8 +15,10 @@
  *     `sources:` во front-matter темы.
  *   - сноска под таблицей тем («N карточек в sources/: N в темах, N из них —
  *     в двух темах, N — только в for-app») расходится с диском.
- *   - в README.en.md есть число, которого нет в README.md: шпаргалка не вводит
- *     своих чисел.
+ *   - в README.en.md пары «N topics/cards/claims/sources» расходятся с числами
+ *     главной, которые считает build.mjs (home: topics, cards, claims, notFound).
+ *   - в README.en.md есть число, которого нет в README.md: второй слой,
+ *     ловит опечатку, а не смысл.
  *
  *   node tools/status.mjs
  */
@@ -24,6 +26,7 @@
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { frontMatter, topicStats } from './stats.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const STATUS = join(ROOT, 'STATUS.md');
@@ -48,10 +51,10 @@ const mentioned = new Set(
 );
 
 for (const f of inboxFiles) {
-  if (!mentioned.has(f)) problems.push(`в STATUS.md нет строки для ${f}`);
+  if (!mentioned.has(f)) problems.push(`STATUS.md — нет строки для legacy/inbox/${f}`);
 }
 for (const f of mentioned) {
-  if (!inboxFiles.includes(f)) problems.push(`STATUS.md ссылается на ${f}, файла нет`);
+  if (!inboxFiles.includes(f)) problems.push(`STATUS.md — ссылка на legacy/inbox/${f}, файла нет`);
 }
 
 // 2. Готовые темы
@@ -61,13 +64,13 @@ const topics = existsSync(TOPICS)
 for (const d of topics) {
   if (d === '_example') continue;
   if (!status.includes(`topics/${d}`) && !status.includes(`${d}/`)) {
-    problems.push(`тема topics/${d} не отмечена в STATUS.md`);
+    problems.push(`topics/${d}/ru.md — тема не отмечена в STATUS.md`);
   }
 }
 
 // 3. Дата обновления
 const dateMatch = status.match(/^Обновлено:\s*(\d{4}-\d{2}-\d{2})/m);
-if (!dateMatch) problems.push('в STATUS.md нет строки «Обновлено: ГГГГ-ММ-ДД»');
+if (!dateMatch) problems.push('STATUS.md — нет строки «Обновлено: ГГГГ-ММ-ДД»');
 
 // 4. «Дыры и пустые поиски»: у каждой строки таблицы своя дата замера.
 // Пустой поиск — тоже результат, и строка без даты через месяц читается как
@@ -77,7 +80,7 @@ if (!dateMatch) problems.push('в STATUS.md нет строки «Обновле
 const lines = status.split(/\r?\n/);
 const holesHeading = lines.findIndex((l) => l.trim() === '## Дыры и пустые поиски');
 if (holesHeading === -1) {
-  problems.push('в STATUS.md нет раздела «Дыры и пустые поиски»');
+  problems.push('STATUS.md — нет раздела «Дыры и пустые поиски»');
 } else {
   for (let i = holesHeading + 1; i < lines.length; i++) {
     const line = lines[i];
@@ -187,7 +190,7 @@ const readmeHead = readmeLines.findIndex((l) => l.trim() === '## Что внут
 let readmeRows = 0;
 
 if (readmeHead === -1) {
-  problems.push('в README.md нет раздела «Что внутри сейчас» с таблицей тем');
+  problems.push('README.md — нет раздела «Что внутри сейчас» с таблицей тем');
 } else {
   const seen = new Set();
   for (let i = readmeHead + 1; i < readmeLines.length; i++) {
@@ -245,7 +248,7 @@ if (readmeHead === -1) {
   }
   for (const t of publicTopics) {
     if (!seen.has(t.dir)) {
-      problems.push(`тема topics/${t.dir} есть на диске, но её нет в таблице README.md`);
+      problems.push(`topics/${t.dir}/ru.md — темы нет в таблице README.md`);
     }
   }
 }
@@ -321,10 +324,8 @@ for (const c of multiTopic) {
     problems.push(`sources/${c}.md — цитируется в ${n} темах, а сноска README говорит «в двух»`);
   }
 }
-if (nowhere.length) {
-  problems.push(
-    `sources/: карточки не цитируются ни в topics/, ни в for-app/: ${nowhere.join(', ')}`,
-  );
+for (const c of nowhere) {
+  problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/`);
 }
 
 const footnote = readmeText
@@ -350,10 +351,16 @@ if (!footnote) {
   }
 }
 
-// 10. README.en.md — шпаргалка, а не второй канон. Любое число в ней обязано
-// встречаться в README.md: иначе английская версия вводит факт, которого в
-// русском тексте нет. Номера пунктов списков числом не считаются — «5.» в
-// перечне шагов не даёт права написать «5 тем».
+// 10. README.en.md — шпаргалка, а не второй канон.
+//
+// Первый слой — смысл. Пары «<N> topics|cards|claims|sources|questions|
+// unanswered» сверяются с числами, которые считает build.mjs для главной
+// (home: topics, cards, claims, notFound). Это ловит «50 topics», где число
+// есть в русском тексте, но означает не то.
+//
+// Второй слой — подмножество цифр: любое число из README.en.md должно
+// встречаться в README.md. Это ловит опечатку и выдуманное число, но не
+// смысл: «50 topics» проходит второй слой, потому что 50 в каноне есть.
 const EN_README = join(ROOT, 'README.en.md');
 const numbersIn = (text, { skipListMarkers = false } = {}) => {
   const found = new Set();
@@ -363,8 +370,60 @@ const numbersIn = (text, { skipListMarkers = false } = {}) => {
   }
   return found;
 };
+
+// Те же docs и тот же topicStats, что в build.mjs: иначе страж сверялся бы
+// с копией формул, а не со сборкой.
+const buildDocs = [];
+for (const d of topics) {
+  const p = join(TOPICS, d, 'ru.md');
+  if (!existsSync(p)) continue;
+  const doc = frontMatter(readFileSync(p, 'utf8'));
+  if (String(doc.data.draft).trim() === 'true') continue;
+  buildDocs.push(doc);
+}
+const buildStats = buildDocs.map(topicStats);
+const buildHome = {
+  topics: buildDocs.length,
+  cards: sourceCards.length,
+  claims: buildStats.reduce((n, s) => n + s.claims, 0),
+  notFound: buildStats.reduce((n, s) => n + s.notFound, 0),
+};
+
+const HOME_KEYS = {
+  topics: 'topics',
+  cards: 'cards',
+  'source cards': 'cards',
+  sources: 'cards',
+  claims: 'claims',
+  questions: 'notFound',
+  unanswered: 'notFound',
+  notfound: 'notFound',
+};
+
 if (existsSync(EN_README)) {
   const enText = readFileSync(EN_README, 'utf8').replace(/^\uFEFF/, '');
+
+  const pairs = [
+    ...enText.matchAll(
+      /\b(\d+)\s+(topics|(?:source\s+)?cards|claims|sources|questions|unanswered|notFound)\b/gi,
+    ),
+  ];
+  const checked = new Set();
+  for (const m of pairs) {
+    const word = m[2].toLowerCase().replace(/\s+/g, ' ');
+    const key = HOME_KEYS[word];
+    if (!key) continue;
+    const written = Number(m[1]);
+    const actual = buildHome[key];
+    if (written !== actual && !checked.has(`${key}:${written}`)) {
+      checked.add(`${key}:${written}`);
+      problems.push(
+        `README.en.md — «${m[0].trim()}», а build.mjs для главной считает ${key}: ${actual}`,
+      );
+    }
+  }
+
+  // Второй слой: опечатка, а не смысл (см. комментарий выше).
   const canonNumbers = numbersIn(readmeText, { skipListMarkers: true });
   const extra = [...numbersIn(enText)].filter((n) => !canonNumbers.has(n));
   if (extra.length) {
@@ -373,11 +432,11 @@ if (existsSync(EN_README)) {
     );
   }
 } else if (/README\.en\.md/.test(readmeText)) {
-  problems.push('README.md ссылается на English summary, а README.en.md нет');
+  problems.push('README.en.md — файла нет, а README.md ссылается на English summary');
 }
 
 if (problems.length) {
-  console.log('✖ STATUS.md расходится с диском:');
+  console.log('✖ найдены расхождения:');
   for (const p of problems) console.log(`   ${p}`);
   process.exit(1);
 }
@@ -400,5 +459,5 @@ console.log(
     `тем без перевода: ${untranslated.length}; «Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
 );
 console.log(
-  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники, языки, сноска карточек и дата цитаты сверены; README.en.md — подмножество чисел`,
+  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники, языки, сноска карточек и дата цитаты сверены; README.en.md — числа и смысл сверены со сборкой`,
 );

@@ -7,6 +7,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
+import { frontMatter, splitSections, topicStats, homeStats, LEVELS } from './stats.mjs';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const BASE = '/psybase/'; // единственная константа адреса
 const SITE = 'https://testsoulja.github.io' + BASE;
@@ -16,18 +17,6 @@ const TOPICS = join(ROOT, 'topics');
 const SOURCES = join(ROOT, 'sources');
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-function frontMatter(text) {
-  const m = text.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-  const data = {};
-  for (const line of m ? m[1].split(/\r?\n/) : []) {
-    const i = line.indexOf(':');
-    if (i < 0) continue;
-    let v = line.slice(i + 1).trim();
-    if (/^".*"$/.test(v)) v = v.slice(1, -1);
-    data[line.slice(0, i).trim()] = v;
-  }
-  return { data, body: m ? text.replace(/^\uFEFF/, '').slice(m[0].length) : text };
-}
 function closingParen(s, open) {
   let depth = 0;
   for (let i = open; i < s.length; i++) {
@@ -144,7 +133,7 @@ function renderBody(lines, ctx) {
 }
 // --- графики: ```chart в markdown -> CSS-бары, таблица-эквивалент, подпись ------
 // Без библиотек и без hover: всё видно на печати и в чёрно-белом виде.
-const CHART_LEVELS = ['meta', 'rct', 'cohort', 'case', 'review', 'opinion', 'unsure'];
+const CHART_LEVELS = LEVELS;
 
 function parseChart(raw) {
   const data = { type: 'bar', values: [], labels: [], source: '', bases: [], unit: '', note: '' };
@@ -276,40 +265,6 @@ ${noteBlock}
 }
 
 // --- счёт для главной и для блоков «состав доказательств» / «чего нет» ---------
-function blockItems(sec) {
-  if (!sec) return [];
-  const text = sec.lines.join('\n').trim();
-  if (!text) return [];
-  const bullets = text.split('\n').filter((l) => /^\s*(?:[-*]|\d+\.)\s+/.test(l));
-  if (bullets.length) return bullets.map((l) => l.replace(/^\s*(?:[-*]|\d+\.)\s+/, ''));
-  return text.split(/\n\s*\n/).filter((p) => p.trim());
-}
-
-function topicStats(doc) {
-  const body = doc.body;
-  const sections = splitSections(body);
-  const find = (re) => sections.find((s) => re.test(s.title ?? ''));
-  const levels = Object.fromEntries(CHART_LEVELS.map((l) => [l, 0]));
-  for (const m of body.matchAll(/`(meta|rct|cohort|case|review|opinion|unsure)`\)/g)) levels[m[1]]++;
-  const claims = sections
-    .filter((s) => !/^(Источники|Sources|Не нашёл|Not found|Не открылось|Not opened)$/i.test(s.title ?? ''))
-    .flatMap((s) => s.lines.join('\n').split(/\n\s*\n/))
-    .filter((p) => /\]\(\.\.\/sources\/[a-z0-9-]+\.md/.test(p)).length;
-  const cards = new Set([...body.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)].map((m) => m[1]));
-  const notFoundItems = blockItems(find(/^(Не нашёл|Not found)$/i));
-  // «не открылось» отдельным разделом в темах не ведётся — считаем упоминания
-  // недоступного источника внутри «Не нашёл»: это и есть закрытые двери базы.
-  const closedDoors = notFoundItems.filter((t) =>
-    /не открыт|не открылось|not opened|нет доступа|no access|подписк|paywall/i.test(t),
-  ).length;
-  return {
-    levels,
-    claims,
-    cards: cards.size,
-    notFound: notFoundItems.length,
-    closedDoors,
-  };
-}
 
 function evidenceHtml(st, lang) {
   const ru = lang === 'ru';
@@ -328,21 +283,6 @@ function evidenceHtml(st, lang) {
 </section>`;
 }
 
-function splitSections(body) {
-  const secs = [];
-  let cur = { title: null, lines: [] };
-  for (const line of body.split(/\r?\n/)) {
-    const m = line.match(/^##\s+(.*)$/);
-    if (m) {
-      secs.push(cur);
-      cur = { title: m[1].trim(), lines: [] };
-    } else {
-      cur.lines.push(line);
-    }
-  }
-  secs.push(cur);
-  return secs.filter((s) => s.title || s.lines.join('').trim());
-}
 function loadCards() {
   const cards = new Map();
   if (!existsSync(SOURCES)) return cards;
@@ -481,12 +421,7 @@ function build() {
     });
   }
 
-  const home = { topics: topics.length, cards: cards.size, claims: 0, closedDoors: 0, notFound: 0 };
-  for (const t of topics) {
-    home.claims += t.ruStats.claims;
-    home.closedDoors += t.ruStats.closedDoors;
-    home.notFound += t.ruStats.notFound;
-  }
+  const home = homeStats(topics, cards.size);
 
   let ruPages = 0;
   let enPages = 0;

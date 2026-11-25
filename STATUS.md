@@ -32,6 +32,17 @@
 | `/ru/depressiya/` на живом | 17 717 байт, `aria-hidden` — 0, `chart-note` — 0, баров воронки — 3 |
 | `dist/ru/depressiya/index.html` | 17 918 байт, `aria-hidden` — 10, `chart-note` — 1, баров воронки — 2 |
 
+Те же четыре числа с живого — тремя строками PowerShell:
+
+```powershell
+$u = 'https://testsoulja.github.io/psybase/ru/depressiya/?cb=' + [DateTime]::UtcNow.Ticks
+$h = (Invoke-WebRequest $u -UseBasicParsing).Content
+"bytes: {0}; aria-hidden: {1}; chart-note: {2}; funnel-bars: {3}" -f ([Text.Encoding]::UTF8.GetByteCount($h)), ([regex]::Matches($h,'aria-hidden="true"')).Count, ([regex]::Matches($h,'class="chart-note"')).Count, ([regex]::Matches((($h -split '<figure[^>]*data-chart="funnel"[^>]*>')[1] -split '</figure>')[0],'class="chart-row"')).Count
+```
+
+Запуск 25.11.2026: `bytes: 17717; aria-hidden: 0; chart-note: 0; funnel-bars: 3` —
+совпало с таблицей.
+
 То есть живое противоречит README: в сборке уже два бара, примечание и скрытие
 визуальной части от скринридера, а на сайте — три бара и ни того, ни другого.
 
