@@ -1,0 +1,14 @@
+{
+  "name": "psybase",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Пси-база — общедоступная база знаний о психических расстройствах: источники, числа, уровень доказательности, пробелы.",
+  "license": "CC-BY-SA-4.0",
+  "scripts": {
+    "check": "node tools/parity.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
