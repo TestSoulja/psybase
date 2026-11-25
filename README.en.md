@@ -1,4 +1,4 @@
-# Psy-base
+﻿# Psy-base
 
 A public knowledge base on mental disorders: what is known, how strong the
 evidence is, and what nobody knows yet. Built from research, not opinions.
@@ -15,6 +15,6 @@ Rules in short: no claim without a source; every number carries its level of
 evidence; disagreements are shown, not smoothed; a "not found" section is
 mandatory.
 
-Licences: text **CC BY-SA 4.0**, source cards **CC0**, code **MIT**.
+Licences: text **CC BY 4.0**, source cards **CC0**, code **MIT** — see [LICENSES/README.md](LICENSES/README.md).
 
 Details: [`docs/rules.md`](docs/rules.md) (Russian, canonical).
