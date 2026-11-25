@@ -31,6 +31,8 @@
  *     на странице карточки нет `data-read` или текст строки не равен метке;
  *     таблица типов на странице доказательности расходится с sources/;
  *     список «Источники» темы ссылается не на все карточки.
+ *   - в теме нет обязательного минимума разделов: «Что это», «Что не доказано»,
+ *     «Не нашёл», «Источники» (README обещает именно этот список).
  *
  *   node tools/status.mjs
  */
@@ -156,6 +158,26 @@ for (const d of topics) {
     if (sectionBodyIsEmpty(readFileSync(p, 'utf8'), heading)) {
       problems.push(`topics/${d}/${file} — раздел «${label}» пуст (правило §4: пустым он быть не может)`);
     }
+  }
+}
+
+// 5b. Обязательный минимум разделов темы. README обещает список, а не «примерно
+// так»: без стража следующая тема разойдётся с обещанием молча. «Что известно»
+// в минимум не входит — там, где текст идёт по вопросам, эту роль играют
+// собственные разделы, и пустой контейнер хуже отсутствующего.
+const REQUIRED_SECTIONS = ['Что это', 'Что не доказано', 'Не нашёл', 'Источники'];
+for (const d of topics) {
+  const p = join(TOPICS, d, 'ru.md');
+  if (!existsSync(p)) continue;
+  const text = readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
+  const { data } = frontMatter(text);
+  if (/^true$/i.test(String(data.draft ?? '').trim())) continue; // черновик не публикуется
+  const h2 = new Set([...text.matchAll(/^##\s+(.+?)\s*#*\s*$/gm)].map((m) => m[1].trim()));
+  const missing = REQUIRED_SECTIONS.filter((t) => !h2.has(t));
+  if (missing.length) {
+    problems.push(
+      `topics/${d}/ru.md — нет обязательных разделов: «${missing.join('», «')}» (README: минимум «Что это», «Что не доказано», «Не нашёл», «Источники»)`,
+    );
   }
 }
 
@@ -369,8 +391,10 @@ const READ_TEXT = {
   unknown: 'Основа чтения не записана',
 };
 const cardRead = new Map();
+const cardType = new Map();
 for (const c of sourceCards) {
   const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+  cardType.set(c, String(data.type ?? '').trim() || 'none');
   const read = String(data.read ?? '').trim();
   if (!read) {
     problems.push(`sources/${c}.md — нет «read:»: основа чтения обязательна (abstract | full | page | unknown)`);
@@ -738,6 +762,24 @@ for (const s of staleSources) console.log(`· ${s}`);
 const totalSources = publicTopics.reduce((n, t) => n + (t.sources ?? 0), 0);
 for (const t of publicTopics) {
   console.log(`· topics/${t.dir}: источников ${t.sources ?? '—'}, ${t.hasEn ? 'RU + EN' : 'RU'}`);
+}
+// Разбивка по типам печатается, а не считается руками: сумма обязана сходиться
+// с `sources:` темы и с числом различных карточек, иначе цифра в STATUS
+// устаревает молча (так уже вышло с «168 новых» и «177 цитируемых»).
+const TYPE_ORDER = ['meta', 'rct', 'cohort', 'review', 'case', 'opinion', 'unsure'];
+for (const t of publicTopics) {
+  const refs = topicCites.get(t.dir);
+  if (!refs || !refs.size) continue;
+  const counts = Object.fromEntries(TYPE_ORDER.map((k) => [k, 0]));
+  let other = 0;
+  for (const c of refs) {
+    const ty = cardType.get(c) ?? 'none';
+    if (ty in counts) counts[ty]++;
+    else other++;
+  }
+  const parts = TYPE_ORDER.filter((k) => counts[k]).map((k) => `${k} ${counts[k]}`);
+  if (other) parts.push(`без типа ${other}`);
+  console.log(`· типы в topics/${t.dir}: ${parts.join(', ')} — ${refs.size} различных`);
 }
 console.log(
   `· тем: ${publicTopics.length}, источников по темам: ${totalSources}, без перевода: ${untranslated.length}`,
