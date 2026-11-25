@@ -55,9 +55,10 @@ countries about one third of people with depression receive treatment
 
 ```chart
 type: funnel
-values: 51.6, 41.9, 21.7
-labels: received any treatment, adequate among them, adequately treated overall
-bases: all, treated, all
+values: 51.6, 21.7
+labels: received any treatment, adequately treated overall
+bases: all, all
+note: treatment was adequate in 41.9% of those who received any — a share of the treated, not of all cases
 unit: %
 source: kessler-2003-ncsr
 ```

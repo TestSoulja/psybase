@@ -126,7 +126,7 @@ function chartBlocks(body) {
   const re = /```chart\r?\n([\s\S]*?)```/g;
   let m;
   while ((m = re.exec(body))) {
-    const data = { type: '', values: [], labels: 0, source: '', bases: [], unit: '' };
+    const data = { type: '', values: [], labels: 0, source: '', bases: [], unit: '', note: '' };
     for (const line of m[1].split(/\r?\n/)) {
       const kv = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
       if (!kv) continue;
@@ -138,6 +138,7 @@ function chartBlocks(body) {
       else if (key === 'source') data.source = val;
       else if (key === 'bases') data.bases = val.split(',').map((s) => s.trim()).filter(Boolean);
       else if (key === 'unit') data.unit = val;
+      else if (key === 'note') data.note = val;
     }
     out.push(data);
   }
@@ -179,6 +180,16 @@ function checkCharts(ruBody, enBody, where, problems) {
     }
     if (y.type === 'funnel' && !y.bases.length) {
       problems.push(`${where}: график ${n} — у воронки EN нет bases`);
+    }
+    // note переводится, поэтому дословно текст не сверяется: сверяются его
+    // наличие и набор чисел внутри — «41,9 %» в RU и «41.9%» в EN обязаны
+    // совпасть, а пропавшая оговорка видна как пустой note в одной версии.
+    if (Boolean(x.note) !== Boolean(y.note)) {
+      problems.push(
+        `${where}: график ${n} — note RU ${x.note ? 'есть' : 'нет'}, EN ${y.note ? 'есть' : 'нет'}`,
+      );
+    } else {
+      diffNumbers(numbersIn(x.note), numbersIn(y.note), 'note: ', problems, where);
     }
     if (x.values.length !== y.values.length) {
       problems.push(

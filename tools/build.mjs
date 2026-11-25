@@ -147,7 +147,7 @@ function renderBody(lines, ctx) {
 const CHART_LEVELS = ['meta', 'rct', 'cohort', 'case', 'review', 'opinion', 'unsure'];
 
 function parseChart(raw) {
-  const data = { type: 'bar', values: [], labels: [], source: '', bases: [], unit: '' };
+  const data = { type: 'bar', values: [], labels: [], source: '', bases: [], unit: '', note: '' };
   for (const line of raw.split(/\r?\n/)) {
     const m = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
     if (!m) continue;
@@ -159,6 +159,7 @@ function parseChart(raw) {
     else if (key === 'source') data.source = val;
     else if (key === 'bases') data.bases = val.split(',').map((s) => s.trim()).filter(Boolean);
     else if (key === 'unit') data.unit = val;
+    else if (key === 'note') data.note = val;
   }
   return data;
 }
@@ -194,7 +195,7 @@ function chartHtml(raw, ctx) {
   if (d.type === 'funnel') {
     if (!d.bases.length) {
       throw new Error(
-        `график-воронка без bases: у каждого бара нужна база all или treated (${raw.trim().split(/\r?\n/).join(' | ')})`,
+        `график-воронка без bases: у каждого бара нужна база — all, у всех баров один и тот же знаменатель (${raw.trim().split(/\r?\n/).join(' | ')})`,
       );
     }
     if (d.bases.length !== d.values.length) {
@@ -204,7 +205,13 @@ function chartHtml(raw, ctx) {
     }
     const badBase = d.bases.find((b) => b !== 'all' && b !== 'treated');
     if (badBase) {
-      throw new Error(`график-воронка: база «${badBase}» — допустимы только all и treated`);
+      throw new Error(`график-воронка: база «${badBase}» — допустимо только all`);
+    }
+    const treatedIdx = d.bases.indexOf('treated');
+    if (treatedIdx >= 0) {
+      throw new Error(
+        `график-воронка: условная доля (из лечившихся) в бар не ставится: она дублирует следующий шаг воронки — вынеси в note (бар ${treatedIdx + 1} «${d.labels[treatedIdx] ?? d.values[treatedIdx]}»)`,
+      );
     }
   } else if (d.bases.length) {
     throw new Error('bases допустим только для type: funnel');
@@ -214,20 +221,9 @@ function chartHtml(raw, ctx) {
   if (bad) {
     throw new Error(`график: значение «${bad.raw}» не число (ось считается от нуля)`);
   }
-  const widths = [];
-  let lastAll = null;
-  for (let idx = 0; idx < nums.length; idx++) {
-    const n = nums[idx];
-    if (d.type !== 'funnel' || d.bases[idx] === 'all') {
-      widths.push(n);
-      if (d.type === 'funnel') lastAll = n.hi;
-    } else {
-      if (lastAll == null) {
-        throw new Error(`график-воронка: база treated у бара ${idx + 1} без предшествующего all`);
-      }
-      widths.push({ lo: (n.lo * lastAll) / 100, hi: (n.hi * lastAll) / 100, raw: n.raw });
-    }
-  }
+  // У воронки все бары — доли от всех случаев: одна ось, один знаменатель.
+  // Условные доли (из лечившихся) сюда не попадают — для них есть note.
+  const widths = nums;
   const peak = Math.max(...nums.map((n) => n.hi));
   // Ось всегда от нуля. Верх шкалы — круглое число, а не «максимум данных»:
   // 100 для процентов, иначе ближайшее кратное, чтобы деления были целыми.
@@ -255,26 +251,27 @@ function chartHtml(raw, ctx) {
   const caption = [d.source, card && card.year ? String(card.year) : '', population]
     .filter(Boolean)
     .join(' · ');
-  const baseLabel = (b) => (b === 'all' ? (ru ? 'все случаи' : 'all cases') : ru ? 'получавшие лечение' : 'those treated');
   const rows = nums
-    .map((n, idx) => {
-      const baseCell = d.type === 'funnel' ? `<td>${esc(baseLabel(d.bases[idx]))}</td>` : '';
-      return `<tr><td>${esc(d.labels[idx] ?? '')}</td><td>${esc(showVal(n))}</td>${baseCell}</tr>`;
-    })
+    .map(
+      (n, idx) =>
+        `<tr><td>${esc(d.labels[idx] ?? '')}</td><td>${esc(showVal(n))}</td></tr>`,
+    )
     .join('');
-  const baseHeader = d.type === 'funnel' ? `<th>${ru ? 'База' : 'Base'}</th>` : '';
-  const baseNote =
-    d.type === 'funnel'
-      ? `<p class="chart-note">${ru ? 'Длина бара — доля от всех случаев; значение — доля от базы в таблице.' : 'Bar length is the share of all cases; the value is the share of its base in the table.'}</p>`
-      : '';
+  // note — подпись под графиком и строка таблицы: условные доли, которые нельзя
+  // ставить баром на общую ось, остаются видимыми, а не теряются.
+  const noteText = d.note ? esc(d.note) : '';
+  const noteBlock = noteText ? `<p class="chart-note">${noteText}</p>` : '';
+  const noteRow = noteText
+    ? `<tfoot><tr><th>${ru ? 'Примечание' : 'Note'}</th><td>${noteText}</td></tr></tfoot>`
+    : '';
   return `<figure class="chart" data-chart="${esc(d.type)}">
 <figcaption class="chart-caption">${ru ? 'Источник' : 'Source'}: ${esc(caption)}</figcaption>
 <div class="chart-axis chart-axis-top">${axis}</div>
 ${bars}
 <div class="chart-axis">${axis}</div>
 <table class="chart-table"><caption>${ru ? 'Те же данные таблицей' : 'The same data as a table'}</caption>
-<thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th>${baseHeader}</tr></thead><tbody>${rows}</tbody></table>
-${baseNote}
+<thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th></tr></thead><tbody>${rows}</tbody>${noteRow}</table>
+${noteBlock}
 </figure>`;
 }
 
