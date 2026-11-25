@@ -27,9 +27,12 @@ if (-not (Test-Path (Join-Path $repo 'dist\index.html'))) { Fail "dist/index.htm
 # 4. Ветка gh-pages: только дописываем, force-push запрещён
 $tmp = Join-Path $env:TEMP ("psybase-gh-pages-" + $PID)
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
-git fetch origin gh-pages 2>$null
-$hasRemote = ($LASTEXITCODE -eq 0)
+# ls-remote молчит, если ветки нет; fetch в этом случае пишет в stderr и валит Stop
+$remoteRef = git ls-remote --heads origin gh-pages
+$hasRemote = ($LASTEXITCODE -eq 0 -and "$remoteRef".Trim())
 if ($hasRemote) {
+  git fetch origin gh-pages
+  if ($LASTEXITCODE -ne 0) { Fail "не удалось получить origin/gh-pages" }
   git worktree add --detach $tmp origin/gh-pages
   if ($LASTEXITCODE -ne 0) { Fail "не удалось получить origin/gh-pages в worktree" }
 } else {
