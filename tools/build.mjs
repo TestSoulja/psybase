@@ -288,6 +288,15 @@ function chartHtml(raw, ctx) {
       `${chartName} (${d.source}): отрицательное значение «${negative.raw}» — ось от нуля, бар соврал бы; ось от середины — отдельная задача`,
     );
   }
+  // Смесь точки и диапазона: isRange один на весь график, поэтому точка при
+  // наличии диапазона получила бы width = hi − lo = 0 — бар нулевой ширины.
+  const rangeCount = nums.filter((n) => n.hi !== n.lo).length;
+  if (rangeCount > 0 && rangeCount < nums.length) {
+    const point = nums.find((n) => n.hi === n.lo);
+    throw new Error(
+      `${chartName} (${d.source}): смешаны диапазон и точка — «${point.raw}» получил бы нулевую ширину. Раздели на два графика или приведи все значения к диапазону`,
+    );
+  }
   // График не вводит чисел, которых в тексте нет: каждое значение (и каждый
   // конец диапазона) ищется в своей теме дословно. Это печать, а не падение:
   // расхождение видит редактор, а сборка не блокируется.
@@ -919,7 +928,8 @@ ${pages
         );
       }
     }
-    console.log(`· графики: ${chartChecks.length}, значений не найдено: ${missTotal}`);
+    const chartPages = new Set(chartChecks.map((c) => c.page)).size;
+    console.log(`· графики: ${chartChecks.length} на ${chartPages} страницах, значений не найдено: ${missTotal}`);
   }
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${ruPages + enPages} (RU ${ruPages}, EN ${enPages}, тем без перевода: ${ruPages - enPages}), пропущено draft: ${skipped}, размер: ${bytes} байт`);
