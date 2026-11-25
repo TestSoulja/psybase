@@ -21,6 +21,12 @@
  *     ловит опечатку, а не смысл.
  *   - pages/<slug>/ без ru.md; слаг страницы совпал с темой; страница попала
  *     в таблицу тем; «Тем: N» на собранной главной не равна числу папок тем.
+ *   - dist/ нет или он старше последней правки входов — это ошибка, а не
+ *     «сверка пропущена»: собери `node tools/build.mjs`.
+ *   - страница источника: нет индекса, страницы карточки или строки; число
+ *     в индексе не равно числу файлов или числу на главной; тип показан не
+ *     тем числом; в sitemap нет адресов источников; «цитируется в темах»
+ *     ведёт на несуществующую тему.
  *
  *   node tools/status.mjs
  */
@@ -412,8 +418,40 @@ const buildHome = {
 // 9a. Главная: «Тем: N» — только topics/. pages/ — каталог, он в счётчик не
 // входит. Сверяем собранную страницу, а не формулу: если счётчик сложит темы
 // и страницы, число разойдётся.
-const DIST_HOME = join(ROOT, 'dist', 'ru', 'index.html');
-if (existsSync(DIST_HOME)) {
+//
+// dist/ — не «необязательный артефакт»: все проверки ниже читают собранные
+// страницы. Нет сборки — страж падает, а не пишет «сверка пропущена»:
+// пропущенная сверка выглядит как успешная.
+const DIST = join(ROOT, 'dist');
+const DIST_HOME = join(DIST, 'ru', 'index.html');
+const distReady = existsSync(DIST_HOME);
+if (!distReady) {
+  problems.push('dist/ — сборки нет: собери: node tools/build.mjs');
+} else {
+  const builtAt = statSync(DIST_HOME).mtimeMs;
+  let newest = 0;
+  let newestWhere = '';
+  const touch = (p) => {
+    const m = statSync(p).mtimeMs;
+    if (m > newest) {
+      newest = m;
+      newestWhere = p;
+    }
+  };
+  for (const d of topics) {
+    for (const f of ['ru.md', 'en.md']) if (existsSync(join(TOPICS, d, f))) touch(join(TOPICS, d, f));
+  }
+  for (const d of pageDirs) {
+    if (existsSync(join(PAGES, d, 'ru.md'))) touch(join(PAGES, d, 'ru.md'));
+  }
+  for (const f of sourceCards) touch(join(SOURCES, `${f}.md`));
+  touch(join(ROOT, 'tools', 'build.mjs'));
+  if (newest > builtAt + 2000) {
+    problems.push(
+      `dist/ — старше последней правки (${newestWhere.replace(ROOT + '\\', '')}): пересобери: node tools/build.mjs`,
+    );
+  }
+
   const html = readFileSync(DIST_HOME, 'utf8').replace(/^\uFEFF/, '');
   const shown = html.match(/Тем:\s*([\d\s\u00a0]+)/);
   if (!shown) {
@@ -426,8 +464,93 @@ if (existsSync(DIST_HOME)) {
       );
     }
   }
-} else {
-  console.log('· dist/ru/index.html нет — сверка «Тем: N» на главной пропущена (нужна сборка)');
+
+  const cardsShown = html.match(/карточек источников:\s*([\d\s\u00a0]+)/);
+  if (!cardsShown) {
+    problems.push('dist/ru/index.html — нет строки «карточек источников: N»');
+  } else {
+    const writtenCards = Number(cardsShown[1].replace(/\D/g, ''));
+    if (writtenCards !== sourceCards.length) {
+      problems.push(
+        `dist/ru/index.html — «карточек источников: ${writtenCards}», а файлов в sources/ ${sourceCards.length}`,
+      );
+    }
+  }
+}
+
+// 9b. Страницы источников: индекс и карточка на каждый файл. Проверяем то,
+// что читатель получит: число в индексе, набор строк, наличие страницы,
+// адреса в sitemap и живые ссылки «цитируется в темах».
+const SITE = 'https://testsoulja.github.io/psybase/';
+if (distReady) {
+  const SRC_INDEX = join(DIST, 'ru', 'istochniki', 'index.html');
+  if (!existsSync(SRC_INDEX)) {
+    problems.push('dist/ru/istochniki/index.html — нет индекса источников: пересобери: node tools/build.mjs');
+  } else {
+    const idx = readFileSync(SRC_INDEX, 'utf8').replace(/^\uFEFF/, '');
+    const declared = idx.match(/data-source-count="(\d+)"/);
+    if (!declared) {
+      problems.push('dist/ru/istochniki/index.html — нет data-source-count, сверять число не с чем');
+    } else if (Number(declared[1]) !== sourceCards.length) {
+      problems.push(
+        `dist/ru/istochniki/index.html — в индексе ${declared[1]} карточек, а файлов в sources/ ${sourceCards.length}`,
+      );
+    }
+    const rows = [...idx.matchAll(/data-type="([a-z]+)" data-source="([a-z0-9-]+)"/g)];
+    const rowIds = new Set(rows.map((m) => m[2]));
+    for (const c of sourceCards) {
+      if (!rowIds.has(c)) problems.push(`dist/ru/istochniki/index.html — нет строки для sources/${c}.md`);
+      if (!existsSync(join(DIST, 'ru', 'istochniki', c, 'index.html'))) {
+        problems.push(`dist/ru/istochniki/${c}/ — нет страницы карточки`);
+      }
+    }
+    for (const id of rowIds) {
+      if (!sourceCards.includes(id)) problems.push(`dist/ru/istochniki/index.html — строка для несуществующей карточки «${id}»`);
+    }
+    const typeOnDisk = {};
+    for (const c of sourceCards) {
+      const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+      typeOnDisk[data.type] = (typeOnDisk[data.type] ?? 0) + 1;
+    }
+    const typeShown = {};
+    for (const [, type] of rows) typeShown[type] = (typeShown[type] ?? 0) + 1;
+    for (const type of new Set([...Object.keys(typeOnDisk), ...Object.keys(typeShown)])) {
+      if ((typeOnDisk[type] ?? 0) !== (typeShown[type] ?? 0)) {
+        problems.push(
+          `dist/ru/istochniki/index.html — типа «${type}» показано ${typeShown[type] ?? 0}, а в sources/ ${typeOnDisk[type] ?? 0}`,
+        );
+      }
+    }
+    // «Цитируется в темах» — только существующие адреса: тема или страница каталога.
+    const deadLinks = [];
+    for (const c of sourceCards) {
+      const p = join(DIST, 'ru', 'istochniki', c, 'index.html');
+      if (!existsSync(p)) continue;
+      const text = readFileSync(p, 'utf8');
+      for (const m of text.matchAll(/href="\/psybase\/ru\/([a-z0-9-]+)\/"/g)) {
+        if (m[1] === 'istochniki') continue;
+        if (!topics.includes(m[1]) && !pageDirs.includes(m[1])) deadLinks.push(`${c} → ${m[1]}`);
+      }
+    }
+    if (deadLinks.length) {
+      problems.push(
+        `dist/ru/istochniki/<id>/ — ссылка на несуществующую тему: ${deadLinks.slice(0, 3).join(', ')}${deadLinks.length > 3 ? ` и ещё ${deadLinks.length - 3}` : ''}`,
+      );
+    }
+  }
+  const SITEMAP = join(DIST, 'sitemap.xml');
+  if (!existsSync(SITEMAP)) {
+    problems.push('dist/sitemap.xml — файла нет: пересобери: node tools/build.mjs');
+  } else {
+    const sm = readFileSync(SITEMAP, 'utf8');
+    const need = [`${SITE}ru/istochniki/`, ...sourceCards.map((c) => `${SITE}ru/istochniki/${c}/`)];
+    const missing = need.filter((u) => !sm.includes(`<loc>${u}</loc>`));
+    if (missing.length) {
+      problems.push(
+        `dist/sitemap.xml — нет ${missing.length} адресов источников, например ${missing[0]}`,
+      );
+    }
+  }
 }
 
 const HOME_KEYS = {

@@ -6,7 +6,7 @@
   "description": "Пси-база — общедоступная база знаний о психических расстройствах: источники, числа, уровень доказательности, пробелы.",
   "license": "CC-BY-4.0",
   "scripts": {
-    "check": "node tools/parity.mjs && node tools/status.mjs",
+    "check": "node tools/build.mjs && node tools/parity.mjs && node tools/status.mjs",
     "build": "node tools/build.mjs"
   },
   "engines": {

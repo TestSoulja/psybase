@@ -36,8 +36,20 @@ function anchor(label, raw) {
   }
   const badge = level ? ` <span class="badge badge-${esc(level)}">${esc(level)}</span>` : '';
   const src = href.match(/^\.\.\/sources\/([a-z0-9-]+)\.md$/);
-  if (src) return `<span class="src" data-src="${src[1]}">${label}</span>${badge}`;
+  if (src) {
+    // Пометка типа — ссылка на страницу карточки: из темы видно не только
+    // «какой это дизайн», но и откуда взято. Без карточки пометка остаётся
+    // текстом, чтобы не вести в 404.
+    const badgeLink =
+      level && existsSync(join(SOURCES, `${src[1]}.md`))
+        ? ` <a class="badge badge-${esc(level)}" href="${sourceHref(src[1])}">${esc(level)}</a>`
+        : level
+          ? ` <span class="badge badge-${esc(level)}">${esc(level)}</span>`
+          : '';
+    return `<span class="src" data-src="${src[1]}">${label}</span>${badgeLink}`;
+  }
   if (/^https?:\/\//.test(href)) return `<a href="${esc(href)}" rel="noopener">${label}</a>${badge}`;
+  if (href.startsWith(BASE) || href.startsWith('/')) return `<a href="${esc(href)}">${label}</a>${badge}`;
   return `<span class="linkish">${label}</span>${badge}`;
 }
 function inline(text) {
@@ -80,6 +92,11 @@ function renderBody(lines, ctx) {
   while (i < lines.length) {
     const line = lines[i];
     if (!line.trim()) {
+      i++;
+      continue;
+    }
+    if (line.trim() === '{{types}}') {
+      out.push(ctx.typesTable ?? '');
       i++;
       continue;
     }
@@ -288,12 +305,134 @@ function loadCards() {
   const cards = new Map();
   if (!existsSync(SOURCES)) return cards;
   for (const f of readdirSync(SOURCES).filter((x) => x.endsWith('.md'))) {
-    const { data } = frontMatter(readFileSync(join(SOURCES, f), 'utf8'));
-    cards.set(f.replace(/\.md$/, ''), data);
+    const slug = f.replace(/\.md$/, '');
+    const { data, body } = frontMatter(readFileSync(join(SOURCES, f), 'utf8'));
+    // «Что мы взяли» — единственное поле, без которого карточка не публикуется:
+    // пустая страница источника выглядит как факт без источника.
+    if (!String(data.taken ?? '').trim()) {
+      throw new Error(`sources/${f} — нет «taken»: карточка без «что мы взяли» не публикуется`);
+    }
+    cards.set(slug, { ...data, body });
   }
   return cards;
 }
-function citation(card) {
+
+// Порядок типов для индекса источников задан отдельно от LEVELS: у LEVELS
+// case стоит перед review, а читателю нужен порядок от сильного дизайна к
+// слабому. Это порядок показа, не оценка качества (см. страницу dokazatelnost).
+const TYPE_ORDER = ['meta', 'rct', 'cohort', 'review', 'case', 'opinion', 'unsure'];
+const TYPE_LABEL = {
+  meta: 'систематический обзор, мета-анализ',
+  rct: 'рандомизированное контролируемое исследование',
+  cohort: 'когорта, наблюдение, случай-контроль',
+  review: 'обзор без метаанализа, гайд, консенсус',
+  case: 'описание случая или серии случаев',
+  opinion: 'экспертное мнение, редакционная статья',
+  unsure: 'тип определить не удалось',
+};
+const sourceHref = (id) => `${BASE}ru/istochniki/${id}/`;
+function pluralCards(n) {
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return 'карточка';
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'карточки';
+  return 'карточек';
+}
+function typeCounts(cards) {
+  const counts = Object.fromEntries(TYPE_ORDER.map((t) => [t, 0]));
+  for (const card of cards.values()) counts[card.type] = (counts[card.type] ?? 0) + 1;
+  return counts;
+}
+function typesTable(cards) {
+  const counts = typeCounts(cards);
+  const rows = TYPE_ORDER.map(
+    (t) =>
+      `<tr><td><span class="badge badge-${t}">${t}</span></td><td>${esc(TYPE_LABEL[t])}</td><td>${counts[t]}</td></tr>`,
+  ).join('');
+  return `<table class="types"><thead><tr><th>Тип</th><th>Что за ним стоит</th><th>Карточек</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+// Темы, в которых цитируется каждая карточка: считается по topics/, не руками.
+function cardTopicMap(topics) {
+  const byCard = new Map();
+  for (const t of topics) {
+    const text = `${t.ru.body}\n${t.en?.body ?? ''}`;
+    for (const m of text.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)) {
+      if (!byCard.has(m[1])) byCard.set(m[1], new Set());
+      byCard.get(m[1]).add(t.slug);
+    }
+  }
+  return byCard;
+}
+function sourceIndexPage({ cards, topics, topicTitles }) {
+  const counts = typeCounts(cards);
+  const total = cards.size;
+  const parts = TYPE_ORDER.filter((t) => counts[t] > 0).map((t) => `${t} ${counts[t]}`);
+  const byCard = cardTopicMap(topics);
+  const groups = TYPE_ORDER.map((type) => {
+    const list = [...cards.entries()]
+      .filter(([, c]) => c.type === type)
+      .sort((a, b) => Number(b[1].year ?? 0) - Number(a[1].year ?? 0) || String(a[1].title ?? '').localeCompare(String(b[1].title ?? ''), 'en'));
+    return { type, list };
+  }).filter((g) => g.list.length);
+  const rows = groups
+    .map((g) => {
+      const head = `<tr class="type-head"><th colspan="5"><span class="badge badge-${g.type}">${g.type}</span> ${esc(TYPE_LABEL[g.type])} — ${g.list.length}</th></tr>`;
+      return (
+        head +
+        g.list
+          .map(([id, c]) => {
+            const cited = [...(byCard.get(id) ?? [])].sort().map((slug) => `<a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a>`).join(', ') || '<span class="meta">только в for-app</span>';
+            return `<tr data-type="${esc(c.type)}" data-source="${esc(id)}"><td><a href="${sourceHref(id)}">${esc(c.title ?? id)}</a> <span class="src">${esc(id)}</span></td><td>${esc(c.year ?? '')}</td><td>${esc(c.type ?? '')}</td><td>${cited}</td><td>${citationInner(c) || '—'}</td></tr>`;
+          })
+          .join('')
+      );
+    })
+    .join('');
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Все источники — Пси-база</title><link rel="canonical" href="${SITE}ru/istochniki/">
+<link rel="stylesheet" href="${BASE}style.css"></head><body>
+<nav class="langs"><a href="${BASE}ru/">Все темы</a> · <span class="no-translation" lang="ru">EN — перевода нет</span></nav>
+<header><h1>Все источники</h1>
+<p class="meta">обновлено: строит сборка при каждом прогоне</p>
+<p class="disclaimer">Не заменяет врача. При угрозе жизни — 112.</p></header>
+<main>
+<p class="meta" id="source-count" data-source-count="${total}">${total} ${pluralCards(total)}: ${parts.join(', ')}</p>
+<p>Порядок — от сильного дизайна к слабому, внутри типа — по году, затем по названию. Это порядок показа, а не рейтинг: тип говорит, какие выводы исследование в принципе позволяет, и не заменяет оценку качества (почему мы не считаем GRADE — <a href="${BASE}ru/dokazatelnost/">на странице о доказательствах</a>).</p>
+<table class="sources"><thead><tr><th>Источник</th><th>Год</th><th>Тип</th><th>Цитируется в темах</th><th>PMID / DOI</th></tr></thead><tbody>${rows}</tbody></table>
+</main>
+<footer><p><a href="${BASE}ru/">Все темы</a> · <a href="${BASE}">psybase</a></p></footer>
+</body></html>`;
+}
+function sourceCardPage({ id, card, topicTitles, topicsCited, cards }) {
+  const url = sourceHref(id);
+  const cited = topicsCited.length
+    ? `<ul>${topicsCited
+        .map((slug) => `<li><a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a></li>`)
+        .join('')}</ul>`
+    : `<p class="meta">Ни в одной теме: карточка цитируется только в приложении «Опора» или пока не цитируется.</p>`;
+  const body = renderBody(card.body.split(/\r?\n/), { lang: 'ru', cards, typesTable: '' });
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(card.title ?? id)} — источник — Пси-база</title><link rel="canonical" href="${url}">
+<link rel="stylesheet" href="${BASE}style.css"></head><body>
+<nav class="langs"><a href="${BASE}ru/istochniki/">Все источники</a> · <span class="no-translation" lang="ru">EN — перевода нет</span></nav>
+<header><h1>${esc(card.title ?? id)}</h1>
+<p class="meta">${esc(card.year ?? '')} · <span class="badge badge-${esc(card.type ?? '')}">${esc(card.type ?? '')}</span> · язык оригинала: ${esc(card.lang ?? '—')}</p>
+<p class="disclaimer">Не заменяет врача. При угрозе жизни — 112.</p></header>
+<main>
+<p class="cite">${citationInner(card) || 'идентификатор не указан'}</p>
+<section><h2>Что мы взяли</h2>
+<p>${esc(String(card.taken ?? '').trim())}</p>
+<p class="meta">«Что мы взяли» — наша формулировка из источника, а не его аннотация; дословных кусков текста здесь нет.</p></section>
+<section><h2>Чем читали</h2>${body.trim() || '<p class="meta">—</p>'}</section>
+<section><h2>Цитируется в темах</h2>${cited}</section>
+<p><a href="${BASE}ru/istochniki/">← все источники</a> · <a href="${BASE}ru/">все темы</a></p>
+</main>
+<footer><p><a href="${BASE}ru/istochniki/">Все источники</a> · <a href="${BASE}ru/">Все темы</a></p></footer>
+</body></html>`;
+}
+function citationInner(card) {
   const id = card.id ?? '';
   const doi = card.doi ?? '';
   const pmid = id.match(/^PMID\s+(\d+)$/i);
@@ -301,7 +440,11 @@ function citation(card) {
   if (pmid) parts.push(`PMID <a href="https://pubmed.ncbi.nlm.nih.gov/${pmid[1]}/" rel="noopener">${pmid[1]}</a>`);
   else if (/^https?:\/\//.test(id)) parts.push(`<a href="${esc(id)}" rel="noopener">источник</a>`);
   if (doi) parts.push(`DOI <a href="https://doi.org/${esc(doi)}" rel="noopener">${esc(doi)}</a>`);
-  return parts.length ? ` <span class="cite">${parts.join(' · ')}</span>` : '';
+  return parts.join(' · ');
+}
+function citation(card) {
+  const inner = citationInner(card);
+  return inner ? ` <span class="cite">${inner}</span>` : '';
 }
 function cite(html, cards) {
   return html.replace(/<li>(?:(?!<\/li>)[\s\S])*?<\/li>/g, (li) =>
@@ -329,10 +472,10 @@ const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 sys
 @media print{.chart,.evidence,.gaps,.home-stats{break-inside:avoid}.chart-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#ccc!important;border-right:1px solid #000}.chart-track{border:1px solid #000}}
 @media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
 @media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
-function page({ lang, slug, title, updated, sections, cards, hasPair, stats }) {
+function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '' }) {
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
-  const ctx = { lang, cards };
+  const ctx = { lang, cards, typesTable };
   const body = sections
     .map((s) => {
       if (!s.title) return `<section>${renderBody(s.lines, ctx)}</section>`;
@@ -489,6 +632,28 @@ function build() {
     enPages++;
   }
   const topicSlugs = new Set(topics.map((t) => t.slug));
+  const topicTitles = new Map(topics.map((t) => [t.slug, t.ru.data.title ?? t.slug]));
+  const cardTopics = cardTopicMap(topics);
+  for (const id of cardTopics.keys()) {
+    if (!cards.has(id)) throw new Error(`тема цитирует sources/${id}.md, а такой карточки нет — ссылка в никуда`);
+  }
+  // Страницы источников: индекс + страница на каждую карточку. Адрес — по
+  // слагу карточки, поэтому «цитируется в темах» ведёт только на существующие
+  // темы (проверено выше), а индекс собирается из того же списка файлов.
+  mkdirSync(join(DIST, 'ru', 'istochniki'), { recursive: true });
+  writeFileSync(
+    join(DIST, 'ru', 'istochniki', 'index.html'),
+    sourceIndexPage({ cards, topics, topicTitles }),
+    'utf8',
+  );
+  for (const [id, card] of cards) {
+    mkdirSync(join(DIST, 'ru', 'istochniki', id), { recursive: true });
+    writeFileSync(
+      join(DIST, 'ru', 'istochniki', id, 'index.html'),
+      sourceCardPage({ id, card, topicTitles, topicsCited: [...(cardTopics.get(id) ?? [])], cards }),
+      'utf8',
+    );
+  }
   for (const p of pages) {
     if (topicSlugs.has(p.slug)) throw new Error(`pages/${p.slug} и topics/${p.slug}: один адрес /ru/${p.slug}/ на двоих`);
     mkdirSync(join(DIST, 'ru', p.slug), { recursive: true });
@@ -503,6 +668,7 @@ function build() {
         cards,
         hasPair: false,
         stats: null,
+        typesTable: typesTable(cards),
       }),
       'utf8',
     );
@@ -512,7 +678,7 @@ function build() {
     const num = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     return `<section class="home-stats"><h2>${ru ? 'Что есть в базе' : 'What the base contains'}</h2>
 <p class="meta">${ru
-      ? `Тем: ${num(home.topics)} · карточек источников: ${num(home.cards)} · утверждений со ссылкой на источник: ${num(home.claims)} · вопросов без ответа: ${num(home.notFound)}, из них ${num(home.closedDoors)} — источник не открылся`
+      ? `Тем: ${num(home.topics)} · <a href="${BASE}ru/istochniki/">карточек источников: ${num(home.cards)}</a> · утверждений со ссылкой на источник: ${num(home.claims)} · вопросов без ответа: ${num(home.notFound)}, из них ${num(home.closedDoors)} — источник не открылся`
       : `Topics: ${num(home.topics)} · source cards: ${num(home.cards)} · claims with a source link: ${num(home.claims)} · unanswered: ${num(home.notFound)}, ${num(home.closedDoors)} of them a source would not open`}</p>
 <p class="meta">${ru ? 'Числа считает сборка из файлов, руками не правятся.' : 'Numbers are computed by the build from the files, never typed by hand.'}</p>
 </section>`;
@@ -534,11 +700,12 @@ function build() {
 <nav class="langs"><a href="${BASE}ru/">Русский</a><a href="${BASE}en/">English</a></nav>
 ${homeHtml(lang)}
 <ul>${items}</ul>
-${pages.length
-  ? `<nav class="pages-nav"><h2>${lang === 'ru' ? 'Ещё о базе' : 'More about the base'}</h2><ul>${pages
-      .map((p) => `<li><a href="${BASE}ru/${p.slug}/">${esc(p.ru.data.title)}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>`)
-      .join('')}</ul></nav>`
-  : ''}
+<nav class="pages-nav"><h2>${lang === 'ru' ? 'Ещё о базе' : 'More about the base'}</h2><ul>
+<li><a href="${BASE}ru/istochniki/">${lang === 'ru' ? 'Все источники' : 'All sources'}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>
+${pages
+  .map((p) => `<li><a href="${BASE}ru/${p.slug}/">${esc(p.ru.data.title)}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>`)
+  .join('\n')}
+</ul></nav>
 </body></html>`;
   };
   for (const lang of ['ru', 'en']) mkdirSync(join(DIST, lang), { recursive: true });
@@ -559,12 +726,15 @@ ${pages.length
     ...topics.map((t) => `${SITE}ru/${t.slug}/`),
     ...topics.filter((t) => t.en).map((t) => `${SITE}en/${t.slug}/`),
     ...pages.map((p) => `${SITE}ru/${p.slug}/`),
+    `${SITE}ru/istochniki/`,
+    ...cards.keys().map((id) => `${SITE}ru/istochniki/${id}/`),
   ];
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
   const bytes = dirBytes(DIST);
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${ruPages + enPages} (RU ${ruPages}, EN ${enPages}, тем без перевода: ${ruPages - enPages}), пропущено draft: ${skipped}, размер: ${bytes} байт`);
   console.log(`страниц каталога: ${pages.length} (в «Тем: N» не входят, адрес ${BASE}ru/<slug>/)`);
+  console.log(`страниц источников: ${cards.size + 1} (индекс + ${cards.size} карточек, адрес ${BASE}ru/istochniki/<id>/)`);
   console.log(`адреса: ${BASE}ru/<slug>/ для всех тем, ${BASE}en/<slug>/ — перевод или маршрут на RU`);
   if (FIXTURE) console.log('режим --fixture: topics/_example, во временную папку');
 }

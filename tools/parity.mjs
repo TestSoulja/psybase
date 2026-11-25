@@ -320,8 +320,12 @@ const untranslatedByRoot = { topics: 0, 'for-app': 0, pages: 0 };
 for (const { dir, root } of pairs) {
   const { where, problems, stats, untranslated: noEn } = checkPair(dir);
   if (noEn) {
-    untranslated++;
-    untranslatedByRoot[root]++;
+    if (root === 'pages') {
+      untranslatedByRoot.pages++;
+    } else {
+      untranslated++;
+      untranslatedByRoot[root]++;
+    }
     const label = root === 'pages' ? ' (страница каталога, пары нет)' : ' (пары нет, проверять нечего)';
     console.log(`· ${where} — без перевода${label}`);
     continue;
@@ -335,12 +339,15 @@ for (const { dir, root } of pairs) {
   }
 }
 
-const pairsChecked = pairs.length - untranslated;
+const pairsChecked = pairs.length - untranslated - untranslatedByRoot.pages;
 const un = untranslated
-  ? `файлов без перевода: ${untranslated} (в темах ${untranslatedByRoot.topics}, в for-app ${untranslatedByRoot['for-app']}${
-      untranslatedByRoot.pages ? `, в pages ${untranslatedByRoot.pages}` : ''
-    })`
+  ? `файлов без перевода: ${untranslated} (в темах ${untranslatedByRoot.topics}, в for-app ${untranslatedByRoot['for-app']})`
   : '';
+if (untranslatedByRoot.pages) {
+  console.log(
+    `· страниц каталога: ${untranslatedByRoot.pages}, только RU (решение 26.11.2026)`,
+  );
+}
 console.log(
   failed
     ? `\nпровалено пар: ${failed} из ${pairsChecked}` + (un ? `; ${un}` : '')
