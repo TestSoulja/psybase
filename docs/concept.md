@@ -107,4 +107,6 @@ legacy/         ← корпус как был: opora/ (§1–§6.19), inbox/ (�
 
 1. Тексты тем — в бэклоге. Репозиторий опубликован 25.11.2026:
    `https://github.com/TestSoulja/psybase`, ветка `main`, 62 файла, публичный.
-2. Страница (GitHub Pages) не включена — сначала наполнение.
+2. Страница (GitHub Pages) включена 25.11.2026: ветка `gh-pages`, корень,
+   адрес `https://testsoulja.github.io/psybase/`. Публикуется только `dist/`:
+   `for-app/`, `legacy/` и темы с `draft: true` на сайте не появляются.
