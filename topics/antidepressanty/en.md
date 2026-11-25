@@ -73,7 +73,8 @@ the only consistent signal. Heterogeneity was low, confidence was low
 
 **In BPD there is no indication, yet most patients are prescribed one.** "No
 approved pharmacological treatment for BPD exists"; antidepressants are the most
-frequent class at baseline, 80.4%; polypharmacy (≥ 1 psychotropic) in 83.1%. This
+frequent class at baseline, 80.4%; polypharmacy (by the authors' methods, more
+than one medication at the same time; the abstract says "≥ 1") in 83.1%. This
 is a retrospective cohort: 12-month data were available for 1461 people (16.1%
 of those who started)
 [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md, `cohort`).

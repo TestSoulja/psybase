@@ -147,7 +147,7 @@ function renderBody(lines, ctx) {
 const CHART_LEVELS = ['meta', 'rct', 'cohort', 'case', 'review', 'opinion', 'unsure'];
 
 function parseChart(raw) {
-  const data = { type: 'bar', values: [], labels: [], source: '' };
+  const data = { type: 'bar', values: [], labels: [], source: '', bases: [], unit: '' };
   for (const line of raw.split(/\r?\n/)) {
     const m = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
     if (!m) continue;
@@ -157,6 +157,8 @@ function parseChart(raw) {
     else if (key === 'values') data.values = val.split(',').map((s) => s.trim()).filter(Boolean);
     else if (key === 'labels') data.labels = val.split(',').map((s) => s.trim());
     else if (key === 'source') data.source = val;
+    else if (key === 'bases') data.bases = val.split(',').map((s) => s.trim()).filter(Boolean);
+    else if (key === 'unit') data.unit = val;
   }
   return data;
 }
@@ -189,10 +191,42 @@ function chartHtml(raw, ctx) {
       `график: значений ${d.values.length}, подписей ${d.labels.length} — подписи не совпадают с барами (в блоке chart дробная часть пишется точкой: запятая разделяет значения)`,
     );
   }
+  if (d.type === 'funnel') {
+    if (!d.bases.length) {
+      throw new Error(
+        `график-воронка без bases: у каждого бара нужна база all или treated (${raw.trim().split(/\r?\n/).join(' | ')})`,
+      );
+    }
+    if (d.bases.length !== d.values.length) {
+      throw new Error(
+        `график-воронка: значений ${d.values.length}, баз ${d.bases.length} — bases нужен для каждого бара`,
+      );
+    }
+    const badBase = d.bases.find((b) => b !== 'all' && b !== 'treated');
+    if (badBase) {
+      throw new Error(`график-воронка: база «${badBase}» — допустимы только all и treated`);
+    }
+  } else if (d.bases.length) {
+    throw new Error('bases допустим только для type: funnel');
+  }
   const nums = d.values.map(chartRange);
   const bad = nums.find((n) => !Number.isFinite(n.lo) || !Number.isFinite(n.hi));
   if (bad) {
     throw new Error(`график: значение «${bad.raw}» не число (ось считается от нуля)`);
+  }
+  const widths = [];
+  let lastAll = null;
+  for (let idx = 0; idx < nums.length; idx++) {
+    const n = nums[idx];
+    if (d.type !== 'funnel' || d.bases[idx] === 'all') {
+      widths.push(n);
+      if (d.type === 'funnel') lastAll = n.hi;
+    } else {
+      if (lastAll == null) {
+        throw new Error(`график-воронка: база treated у бара ${idx + 1} без предшествующего all`);
+      }
+      widths.push({ lo: (n.lo * lastAll) / 100, hi: (n.hi * lastAll) / 100, raw: n.raw });
+    }
   }
   const peak = Math.max(...nums.map((n) => n.hi));
   // Ось всегда от нуля. Верх шкалы — круглое число, а не «максимум данных»:
@@ -200,38 +234,47 @@ function chartHtml(raw, ctx) {
   const top = peak > 100 ? Math.ceil(peak / 40) * 40 : peak > 10 ? 100 : Math.max(4, Math.ceil(peak / 4) * 4);
   const pct = (v) => `${Math.max(0, Math.min(100, (v / top) * 100)).toFixed(2)}%`;
   const tick = (v) => String(Math.round(v * 100) / 100).replace('.', ru ? ',' : '.');
-  const showVal = (n) => (n.hi !== n.lo ? `${tick(n.lo)}–${tick(n.hi)}` : tick(n.lo));
-  const isRange = nums.some((n) => n.hi !== n.lo);
-  const bars = nums
+  const unitSuffix = d.unit ? (d.unit === '%' ? ' %' : ` ${d.unit}`) : '';
+  const showVal = (n) => `${n.hi !== n.lo ? `${tick(n.lo)}–${tick(n.hi)}` : tick(n.lo)}${unitSuffix}`;
+  const axisValue = (v) => `${tick(v)}${unitSuffix}`;
+  const isRange = widths.some((n) => n.hi !== n.lo);
+  const bars = widths
     .map((n, idx) => {
       const label = d.labels[idx] ?? d.values[idx];
       const width = isRange ? pct(n.hi - n.lo) : pct(n.hi);
       const left = isRange ? pct(n.lo) : '0';
       const cls = d.type === 'funnel' ? 'chart-bar chart-bar-funnel' : 'chart-bar';
-      return `<div class="chart-row"><span class="chart-label">${esc(label)}</span><span class="chart-track"><span class="${cls}" style="left:${left};width:${width}"></span></span><span class="chart-value">${esc(showVal(n))}</span></div>`;
+      return `<div class="chart-row"><span class="chart-label">${esc(label)}</span><span class="chart-track"><span class="${cls}" style="left:${left};width:${width}"></span></span><span class="chart-value">${esc(showVal(nums[idx]))}</span></div>`;
     })
     .join('');
   const axis = [0, top / 4, top / 2, (top * 3) / 4, top]
-    .map((v) => `<span>${tick(v)}</span>`)
+    .map((v) => `<span>${axisValue(v)}</span>`)
     .join('');
   const card = cards.get(d.source);
   const population = card && card.taken ? String(card.taken).split(' — ')[0].split(',').slice(0, 2).join(',').trim() : '';
   const caption = [d.source, card && card.year ? String(card.year) : '', population]
     .filter(Boolean)
     .join(' · ');
+  const baseLabel = (b) => (b === 'all' ? (ru ? 'все случаи' : 'all cases') : ru ? 'получавшие лечение' : 'those treated');
   const rows = nums
-    .map(
-      (n, idx) =>
-        `<tr><td>${esc(d.labels[idx] ?? '')}</td><td>${esc(showVal(n))}</td></tr>`,
-    )
+    .map((n, idx) => {
+      const baseCell = d.type === 'funnel' ? `<td>${esc(baseLabel(d.bases[idx]))}</td>` : '';
+      return `<tr><td>${esc(d.labels[idx] ?? '')}</td><td>${esc(showVal(n))}</td>${baseCell}</tr>`;
+    })
     .join('');
+  const baseHeader = d.type === 'funnel' ? `<th>${ru ? 'База' : 'Base'}</th>` : '';
+  const baseNote =
+    d.type === 'funnel'
+      ? `<p class="chart-note">${ru ? 'Длина бара — доля от всех случаев; значение — доля от базы в таблице.' : 'Bar length is the share of all cases; the value is the share of its base in the table.'}</p>`
+      : '';
   return `<figure class="chart" data-chart="${esc(d.type)}">
 <figcaption class="chart-caption">${ru ? 'Источник' : 'Source'}: ${esc(caption)}</figcaption>
 <div class="chart-axis chart-axis-top">${axis}</div>
 ${bars}
 <div class="chart-axis">${axis}</div>
 <table class="chart-table"><caption>${ru ? 'Те же данные таблицей' : 'The same data as a table'}</caption>
-<thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th></tr></thead><tbody>${rows}</tbody></table>
+<thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th>${baseHeader}</tr></thead><tbody>${rows}</tbody></table>
+${baseNote}
 </figure>`;
 }
 

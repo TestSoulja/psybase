@@ -42,6 +42,7 @@ type: bar
 values: 50, 35, 15
 labels: без рецидива, с рецидивом, без свободного от эпизода года
 source: eaton-2008-baltimore
+unit: %
 ```
 
 **Лечение.** Из 12-месячных случаев 51,6% получили какое-либо лечение, адекватным
@@ -54,6 +55,8 @@ source: eaton-2008-baltimore
 type: funnel
 values: 51.6, 41.9, 21.7
 labels: получили лечение, адекватное из них, адекватно пролечено
+bases: all, treated, all
+unit: %
 source: kessler-2003-ncsr
 ```
 

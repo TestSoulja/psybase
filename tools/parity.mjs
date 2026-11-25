@@ -126,7 +126,7 @@ function chartBlocks(body) {
   const re = /```chart\r?\n([\s\S]*?)```/g;
   let m;
   while ((m = re.exec(body))) {
-    const data = { type: '', values: [], labels: 0, source: '' };
+    const data = { type: '', values: [], labels: 0, source: '', bases: [], unit: '' };
     for (const line of m[1].split(/\r?\n/)) {
       const kv = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
       if (!kv) continue;
@@ -136,6 +136,8 @@ function chartBlocks(body) {
       else if (key === 'values') data.values = val.split(',').map((s) => s.trim()).filter(Boolean);
       else if (key === 'labels') data.labels = val.split(',').filter((s) => s.trim()).length;
       else if (key === 'source') data.source = val;
+      else if (key === 'bases') data.bases = val.split(',').map((s) => s.trim()).filter(Boolean);
+      else if (key === 'unit') data.unit = val;
     }
     out.push(data);
   }
@@ -166,6 +168,18 @@ function checkCharts(ruBody, enBody, where, problems) {
     if (x.type !== y.type) problems.push(`${where}: график ${n} — тип RU «${x.type}», EN «${y.type}»`);
     if (x.source !== y.source) problems.push(`${where}: график ${n} — источник RU «${x.source}», EN «${y.source}»`);
     if (x.labels !== y.labels) problems.push(`${where}: график ${n} — подписей RU ${x.labels}, EN ${y.labels}`);
+    if (x.unit !== y.unit) problems.push(`${where}: график ${n} — единица RU «${x.unit}», EN «${y.unit}»`);
+    if (x.bases.join(',') !== y.bases.join(',')) {
+      problems.push(
+        `${where}: график ${n} — bases RU [${x.bases.join(', ')}], EN [${y.bases.join(', ')}]`,
+      );
+    }
+    if (x.type === 'funnel' && !x.bases.length) {
+      problems.push(`${where}: график ${n} — у воронки RU нет bases`);
+    }
+    if (y.type === 'funnel' && !y.bases.length) {
+      problems.push(`${where}: график ${n} — у воронки EN нет bases`);
+    }
     if (x.values.length !== y.values.length) {
       problems.push(
         `${where}: график ${n} — значений RU ${x.values.length}, EN ${y.values.length} (дробная часть в блоке chart — точкой, запятая разделяет значения)`,

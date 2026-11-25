@@ -44,6 +44,7 @@ type: bar
 values: 50, 35, 15
 labels: no relapse, relapse, no episode-free year
 source: eaton-2008-baltimore
+unit: %
 ```
 
 **Treatment.** Among 12-month cases 51.6% received some treatment, treatment was
@@ -56,6 +57,8 @@ countries about one third of people with depression receive treatment
 type: funnel
 values: 51.6, 41.9, 21.7
 labels: received any treatment, adequate among them, adequately treated overall
+bases: all, treated, all
+unit: %
 source: kessler-2003-ncsr
 ```
 
