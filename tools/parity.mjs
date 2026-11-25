@@ -104,8 +104,8 @@ function checkPair(dir, slug) {
   const enPath = join(dir, 'en.md');
 
   if (!existsSync(enPath)) {
-    problems.push(`${where}: нет en.md (правило «правка RU вместе с EN» не выполнено)`);
-    return { where, problems, stats: null };
+    // RU — канон; тема без перевода не ошибка, а долг: пару проверять нечего.
+    return { where, problems, stats: null, untranslated: true };
   }
 
   const ru = parse(readFileSync(ruPath, 'utf8'));
@@ -174,8 +174,14 @@ if (!pairs.length) {
 }
 
 let failed = 0;
+let untranslated = 0;
 for (const { dir } of pairs) {
-  const { where, problems, stats } = checkPair(dir);
+  const { where, problems, stats, untranslated: noEn } = checkPair(dir);
+  if (noEn) {
+    untranslated++;
+    console.log(`· ${where} — без перевода (пары нет, проверять нечего)`);
+    continue;
+  }
   if (problems.length) {
     failed++;
     console.log(`✖ ${where}`);
@@ -185,5 +191,10 @@ for (const { dir } of pairs) {
   }
 }
 
-console.log(failed ? `\nпровалено пар: ${failed} из ${pairs.length}` : `\nвсе пары в порядке: ${pairs.length}`);
+const pairsChecked = pairs.length - untranslated;
+console.log(
+  failed
+    ? `\nпровалено пар: ${failed} из ${pairsChecked}` + (untranslated ? `; тем без перевода: ${untranslated}` : '')
+    : `\nвсе пары в порядке: ${pairsChecked}` + (untranslated ? `; тем без перевода: ${untranslated}` : ''),
+);
 process.exit(failed ? 1 : 0);

@@ -114,10 +114,37 @@ function sectionBodyIsEmpty(text, headingRe) {
 for (const d of topics) {
   for (const { file, heading, label } of NOT_FOUND) {
     const p = join(TOPICS, d, file);
-    if (!existsSync(p)) continue; // отсутствие пары — ошибка parity.mjs
+    if (!existsSync(p)) continue; // отсутствие пары — долг перевода, не ошибка
     if (sectionBodyIsEmpty(readFileSync(p, 'utf8'), heading)) {
       problems.push(`topics/${d}/${file} — раздел «${label}» пуст (правило §4: пустым он быть не может)`);
     }
+  }
+}
+
+// 6. `sources: N` во front-matter = числу различных карточек, на которые ссылается
+// тема. Для RU-only темы это замена паритету: потерю ссылки при правке больше
+// ничто не заметит — EN-копии нет, сверять не с чем. Падает только потеря
+// (ссылок стало меньше, чем заявлено); обратное — устаревший счётчик, он
+// печатается строкой, но цикл не останавливает.
+const untranslated = topics.filter((d) => !existsSync(join(TOPICS, d, 'en.md')));
+const staleSources = [];
+for (const d of topics) {
+  const p = join(TOPICS, d, 'ru.md');
+  if (!existsSync(p)) continue;
+  const text = readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
+  const fmMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const fmText = fmMatch ? fmMatch[1] : '';
+  if (/^draft:\s*true\s*$/m.test(fmText)) continue; // шаблон _example не публикуется
+  const declared = fmText.match(/^sources:\s*(\d+)\s*$/m);
+  if (!declared) {
+    problems.push(`topics/${d}/ru.md — во front-matter нет «sources: N»`);
+    continue;
+  }
+  const refs = new Set([...text.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)].map((m) => m[1]));
+  if (refs.size < Number(declared[1])) {
+    problems.push(`topics/${d}: sources: ${declared[1]}, а карточек в тексте ${refs.size} — ссылка потеряна`);
+  } else if (refs.size > Number(declared[1])) {
+    staleSources.push(`topics/${d}: sources: ${declared[1]}, карточек в тексте ${refs.size} — счётчик устарел`);
   }
 }
 
@@ -127,7 +154,9 @@ if (problems.length) {
   process.exit(1);
 }
 
+for (const s of staleSources) console.log(`· ${s}`);
+
 console.log(
   `✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем; ` +
-    `«Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
+    `тем без перевода: ${untranslated.length}; «Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
 );
