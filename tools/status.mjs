@@ -268,6 +268,37 @@ for (const p of instructionFiles) {
   });
 }
 
+// 5d. Декларация на странице «Как мы работаем». Это не стиль, а рамка: по
+// определению пропаганды (436-ФЗ и ФЗ-3 «О наркотических средствах и
+// психотропных веществах») пропагандой считается распространение сведений,
+// направленных на формирование интереса и побуждение к употреблению, а не
+// разговор о вреде. Поэтому страница обязана назвать все категории, которых мы
+// не описываем (изготовление, дозы для эффекта, пути введения, места
+// приобретения), и отдельно сказать, что материалы не являются пропагандой.
+// Формулировки можно править, но потерять категорию молча нельзя: страж
+// падает с названием отсутствующей фразы.
+const DECLARATION_PAGE = join(PAGES, 'kak-my-rabotaem', 'ru.md');
+const DECLARATION_PHRASES = [
+  'изготовления',
+  'дозы для достижения эффекта',
+  'пути введения',
+  'места приобретения',
+  'не являются пропагандой',
+];
+let declarationOk = true;
+if (!existsSync(DECLARATION_PAGE)) {
+  problems.push('pages/kak-my-rabotaem/ru.md — страницы «Как мы работаем» нет: декларация не проверяется');
+  declarationOk = false;
+} else {
+  const declaration = readFileSync(DECLARATION_PAGE, 'utf8').replace(/^\uFEFF/, '').replace(/\s+/g, ' ');
+  for (const phrase of DECLARATION_PHRASES) {
+    if (!declaration.includes(phrase)) {
+      problems.push(`pages/kak-my-rabotaem/ru.md — нет обязательной фразы «${phrase}» (страж 5d)`);
+      declarationOk = false;
+    }
+  }
+}
+
 // 6. `sources: N` во front-matter = числу различных карточек, на которые ссылается
 // тема. Для RU-only темы это замена паритету: потерю ссылки при правке больше
 // ничто не заметит — EN-копии нет, сверять не с чем. Падает только потеря
@@ -845,6 +876,11 @@ if (problems.length) {
 }
 
 for (const s of staleSources) console.log(`· ${s}`);
+if (declarationOk) {
+  console.log(
+    `· страж 5d: декларация на /ru/kak-my-rabotaem/ — ${DECLARATION_PHRASES.length} ключевых фраз на месте`,
+  );
+}
 
 const totalSources = publicTopics.reduce((n, t) => n + (t.sources ?? 0), 0);
 for (const t of publicTopics) {
