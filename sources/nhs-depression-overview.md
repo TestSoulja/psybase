@@ -2,6 +2,7 @@
 id: https://www.nhs.uk/mental-health/conditions/depression-in-adults/overview/
 lang: en
 type: review
+read: page
 year: 2026
 title: Depression in adults — overview (NHS)
 taken: формулировка для пациентов — депрессия не признак слабости и не то, из чего «вытряхиваются, взяв себя в руки»; это реальная болезнь с реальными симптомами

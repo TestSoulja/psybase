@@ -2,6 +2,7 @@
 id: https://www.who.int/news-room/fact-sheets/detail/depression
 lang: en
 type: review
+read: page
 year: 2025
 title: Depressive disorder (depression) — fact sheet
 taken: определение эпизода (2 недели, бо́льшую часть дня); 2023 — 4% населения, 5,2% взрослых (4,1% мужчин, 6,2% женщин), 5,4% в 70+; в 1,5 раза чаще у женщин; в странах с высоким доходом лечение получает около трети; психологические методы — первые, лекарства не нужны при лёгкой депрессии

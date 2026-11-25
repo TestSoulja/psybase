@@ -3,6 +3,7 @@ id: PMID 38742125
 doi: 10.3389/fpsyt.2024.1398859
 lang: en
 type: review
+read: full
 year: 2024
 title: Depression with comorbid borderline personality disorder — could ketamine be a treatment catalyst?
 taken: ПРЛ диагностируется у 10–30% пациентов с большим депрессивным расстройством; частота БДР среди людей с ПРЛ превышает 80%; коморбидность связана с более тяжёлыми симптомами, худшим функционированием, большей резистентностью к лечению и повышенной суицидальностью

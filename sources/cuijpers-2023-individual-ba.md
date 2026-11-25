@@ -3,6 +3,7 @@ id: PMID 37068380
 doi: 10.1080/10503307.2023.2197630
 lang: en
 type: meta
+read: abstract
 year: 2023
 title: Individual behavioral activation in the treatment of depression — a meta-analysis
 taken: 22 РКИ, 819 пациентов, индивидуальная BA против контроля; Hedges' g 0,85 (0,57–1,1), гетерогенность 75%; только исследования с низким риском смещения — g 0,56 (0,09–1,03), гетерогенность 80%, интервал предсказания −0,85…1,98

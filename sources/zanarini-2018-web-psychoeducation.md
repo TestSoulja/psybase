@@ -3,6 +3,7 @@ id: PMID 28703950
 doi: 10.4088/JCP.16m11153
 lang: en
 type: rct
+read: unknown
 year: 2018
 title: Randomized Controlled Trial of Web-Based Psychoeducation for Women With Borderline Personality Disorder
 taken: 80 женщин, 40 против 40; интернет-психообразование против интернет-контроля без психообразования: в острой фазе большее снижение импульсивности (p = 0,048) и больший рост психосоциального функционирования (p = 0,049), в поддерживающей фазе — по всем 5 доменам шкалы Zanarini

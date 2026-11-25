@@ -3,6 +3,7 @@ id: PMID 34295287
 doi: 10.3389/fpsyg.2021.680805
 lang: en
 type: cohort
+read: abstract
 year: 2021
 title: A network perspective on the comorbidity of personality disorders and mental disorders — an illustration of depression and borderline personality disorder
 taken: 376 пациентов клинической выборки, SCID-II + BDI-II; в сети симптомов найдены прямые связи между симптомами депрессии и ПРЛ; авторы предлагают модель, где симптомы взаимодействуют напрямую (например, диффузия идентичности → нестабильные отношения → подавленное настроение), а не выводятся из общей латентной переменной

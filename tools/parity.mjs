@@ -345,7 +345,7 @@ const un = untranslated
   : '';
 if (untranslatedByRoot.pages) {
   console.log(
-    `· страниц каталога: ${untranslatedByRoot.pages}, только RU (решение 26.11.2026)`,
+    `· страниц каталога: ${untranslatedByRoot.pages}, только RU (решение 25.11.2026)`,
   );
 }
 console.log(

@@ -3,6 +3,7 @@ id: PMID 38851198
 doi: 10.1016/s2215-0366(24)00133-0
 lang: en
 type: meta
+read: abstract
 year: 2024
 title: Incidence of antidepressant discontinuation symptoms — a systematic review and meta-analysis
 taken: 79 исследований (44 РКИ и 35 наблюдательных), 21 002 пациента; хотя бы один симптом отмены у 31 % против 17 % на плацебо, разница 8 %; тяжёлые симптомы у 2,8 % против 0,6 %; с поправкой на неспецифический эффект около 15 %, то есть у одного из шести-семи

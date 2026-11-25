@@ -3,6 +3,7 @@ id: PMID 24936656
 doi: 10.1371/journal.pone.0100100
 lang: en
 type: meta
+read: abstract
 year: 2014
 title: Behavioural activation for depression — update of meta-analysis of effectiveness
 taken: 26 РКИ, 1524 участника; BA против контроля — SMD −0,74 (−0,91…−0,56), 25 РКИ, 1088 человек; против антидепрессантов — SMD −0,42 (−0,83…0,00), 4 РКИ, 283; качество большинства исследований низкое, наблюдение короткое

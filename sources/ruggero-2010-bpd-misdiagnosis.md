@@ -3,6 +3,7 @@ id: PMID 19889426
 doi: 10.1016/j.jpsychires.2009.09.011
 lang: en
 type: cohort
+read: abstract
 year: 2010
 title: Borderline personality disorder and the misdiagnosis of bipolar disorder
 taken: 610 амбулаторных пациентов, SCID + SIDP-IV; 82 (≈ 13 %) сообщили о ранее поставленном биполярном диагнозе, который SCID не подтвердил; наличие ПРЛ значимо повышало шансы такого ошибочного диагноза, ни один отдельный критерий ПРЛ не был уникальным предиктором

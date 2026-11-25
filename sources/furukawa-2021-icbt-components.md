@@ -3,6 +3,7 @@ id: PMID 33957075
 doi: 10.1016/S2215-0366(21)00077-8
 lang: en
 type: meta
+read: abstract
 year: 2021
 title: Dismantling, optimising, and personalising internet CBT for depression — component network meta-analysis
 taken: 76 РКИ, 17 521 участник (48 испытаний с индивидуальными данными, 11 704 человека); добавление поведенческой активации дало −1,83 балла по шкале депрессии (CrI −2,90…−0,80); релаксация — возможно, вредна (1,20; CrI 0,17–2,27); сочетание человеческого и автоматического подбадривания снижало отсев (OR 0,32; CrI 0,13–0,93)

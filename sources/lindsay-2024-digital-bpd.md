@@ -3,6 +3,7 @@ id: PMID 39612494
 doi: 10.2196/54941
 lang: en
 type: meta
+read: abstract
 year: 2024
 title: Digital Interventions for Symptoms of Borderline Personality Disorder: Systematic Review and Meta-Analysis
 taken: 40 публикаций из 8520, 6611 участников, 38 программ, из них 32 (84%) — РКИ; эффект на суицидальные мысли Hedges g = −0,13 (95% ДИ −0,25…−0,01), на паранойю g = −0,52 (−0,86…−0,18), на общую тяжесть ПРЛ g = −0,17 (−0,42…0,10) — не значим; степень человеческого сопровождения с эффектом не связана, дизайн (напоминания, самонаблюдение, репетиция навыков) — связан

@@ -3,6 +3,7 @@ id: PMID 29061415
 doi: 10.1016/j.ajp.2017.06.003
 lang: en
 type: cohort
+read: abstract
 year: 2017
 title: Antidepressant-related jitteriness syndrome in anxiety and depressive disorders — incidence and risk factors
 taken: 209 пациентов с тревожным или депрессивным расстройством, 6 недель; джиттернесс за весь срок у 27,7 %, в первые 2 недели — 6,7 %; при митразапине 14,3 %, при остальных препаратах 23–34 %; высокая доза связана с риском (OR 2,68; 1,37–5,25), других предикторов нет; у людей с джиттернессом выше баллы психопатологии

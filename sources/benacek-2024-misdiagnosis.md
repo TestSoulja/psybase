@@ -3,6 +3,7 @@ id: PMID 38206660
 doi: 10.2196/50738
 lang: en
 type: cohort
+read: abstract
 year: 2024
 title: Identification of predictors of mood disorder misdiagnosis and subsequent help-seeking behavior in individuals with depressive symptoms
 taken: 924 человека с текущими депрессивными симптомами, диагноз по телефонному интервью CIDI; 379 из них с ошибочным диагнозом; модель предсказания ошибочного диагноза — AUC 0,75; среди сильнейших предикторов тяжесть подавленного настроения, нестабильность образа себя, участие психиатра в постановке диагноза депрессии, более поздний возраст диагноза, импульсивные траты

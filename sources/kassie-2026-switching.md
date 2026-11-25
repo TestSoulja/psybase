@@ -3,6 +3,7 @@ id: PMID 41452123
 doi: 10.1111/ppe.70109
 lang: en
 type: cohort
+read: abstract
 year: 2026
 title: Switching Patterns of Antidepressant Treatment in Children and Adolescents in Australia, 2014–2022 — A Retrospective Population-Based Cohort Study
 taken: 44 381 ребёнок и подросток 5–18 лет, начавшие антидепрессант в Австралии в 2014–2022; 15,0 % переключились на другой антидепрессант в течение 12 месяцев, чаще на СИОЗС; причины переключения в данных не записаны

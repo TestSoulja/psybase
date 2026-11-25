@@ -3,6 +3,7 @@ id: PMID 18458203
 doi: 10.1001/archpsyc.65.5.513
 lang: en
 type: cohort
+read: unknown
 year: 2008
 title: Population-based study of first onset and chronicity in major depressive disorder
 taken: Ист-Балтимор, 23 года наблюдения, 3481 человек в 1981 г., 92 первых эпизода — медиана эпизода 12 недель; около 15% не имели ни одного свободного от эпизода года; около 50% после первого эпизода больше не болели; рецидив у 35%

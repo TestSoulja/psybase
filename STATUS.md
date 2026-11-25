@@ -1,6 +1,6 @@
 # Где остановились
 
-Обновлено: 2026-11-26. Этот файл — первое, что читается в новой сессии.
+Обновлено: 2026-11-25. Этот файл — первое, что читается в новой сессии.
 Правило: **в конце каждой работы по исследованиям он обновляется**, иначе
 `node tools/status.mjs` падает.
 
@@ -155,6 +155,17 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
 | 2026-11-25 | Europe PMC (сырьё: `research/2026-11-25/kognitivnye-iskazheniya.md`) | `ABSTRACT:"cross-lagged" AND (ABSTRACT:"interpretation bias" OR ABSTRACT:"negative bias") AND ABSTRACT:depress*` | hitCount 5; панельных RI-CLPM-работ по этому конструкту в рецензируемой литературе **0**, единственная прямая работа — препринт PsyArXiv 10.31234/osf.io/pefnw_v6 (n=581, 14-дневный дневник) | связь «предвзятость → симптомы» на уровне устойчивых различий есть, предиктивных связей «день ко дню» нет; пока это препринт, в тему не идёт без журнальной версии |
 | 2026-11-25 | Europe PMC (Q4 «Смена препарата»; сырьё: `research/2026-11-25/prl-preparaty-pobochnye-i-otmena.md`) | `TITLE:antidepressant AND (TITLE:switching OR TITLE:switch)`; `ABSTRACT:"switch" AND ABSTRACT:"adverse events" AND ABSTRACT:antidepressant`; `TITLE:"discontinuation emergent"` | 100 / 42 / 4 записи, из них отобрано 1 / 2 / 1 и добавлены два уже собранных обзора отмены; доли «стало хуже именно после переключения» **нет** ни в одной; попутно — частота переключений 15,0 % (PMID 41452123), проверка шкалы DESS (PMID 42814111), 3 случая быстрого переключения МАОИ (PMID 40679804); обзоры отмены 2024/2025 (PMID 38851198, 40632531) дали 31 % против 17 % и головокружение OR 5,52 | **Q4 сделан**: раздел «Смена препарата» в `topics/antidepressanty/`, 6 карточек; доля ухудшения после смены не найдена, РКИ стратегий по нежелательным явлениям нет, данных при ПРЛ отдельно нет; 6.33 сконвертирована следом |
 | 2026-11-25 | Europe PMC (Q5 «Доза») | `(TITLE:"dose increase" OR TITLE:"dose escalation") AND (TITLE:antidepressant OR TITLE:SSRI OR TITLE:serotonin)`; `TITLE:"activation syndrome" AND (TITLE:SSRI OR TITLE:antidepressant OR TITLE:serotonergic)`; `(ABSTRACT:jitteriness OR ABSTRACT:"activation syndrome") AND ABSTRACT:antidepressant` | 7 / 2 / 32 записи, отобрано 1 / 0 / 3 (PMID 29873954; 29061415, 19478285, 25419134); доли «стало хуже именно после повышения дозы» **нет**; измерены частота активации 27,7 % за 6 недель и 7,0 % за месяц, разброс обзора 4–65 %, связь с высокой дозой OR 2,68, повышение дозы по эффективности SMD 0,053 | **Q5 сделан**: абзац «Доза — не то же, что препарат» в `topics/antidepressanty/`, 4 карточки; доля ухудшения после повышения дозы не найдена |
+| 2026-11-25 | `sources/` — основа чтения | не поиск, а учёт: у карточки появилось поле `read` | **22 карточки с `read: unknown`** — в теле не сказано, аннотацию читали или полный текст; страница карточки так и пишет: «Основа чтения не записана» | долг: дописать основу в тело и заменить `unknown`; до этого число «названа у 42 из 64» на странице доказательности честнее прежнего «в каждой карточке написано» |
+
+Список 22 карточек с `read: unknown` (по одной строке, чтобы долг не растворился):
+`bach-2022-icd11-pd`, `brodsky-2025-dbt-vs-ssri`, `eaton-2008-baltimore`,
+`gonzalez-2021-stepps`, `grant-2008-nesarc`, `guillen-2024-family-connections`,
+`huo-2026-prevalence-men`, `jorgensen-2024-5-year`, `klein-2021-internet-self-management`,
+`lak-2025-suicidality`, `leichsenring-2024-bpd-review`, `li-2025-criticism`,
+`paz-otero-2026-adhd`, `pesic-2026-borderline-name`, `potter-2006-manipulative`,
+`ramos-suarez-2026-prevalence`, `shen-2018-misdiagnosis`, `stoffers-2022-pharmacotherapy`,
+`storebo-2020-psychotherapy`, `vikstrom-2026-relatives`, `zanarini-2018-web-psychoeducation`,
+`zanarini-2024-24-year`.
 
 ## Дальше (не в этом шаге)
 

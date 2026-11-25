@@ -3,6 +3,7 @@ id: PMID 40679804
 doi: 10.1097/pra.0000000000000869
 lang: en
 type: case
+read: abstract
 year: 2025
 title: Rapid Monoamine Oxidase Inhibitor Switches in Treatment-Resistant Depression — Safety Evaluation in 3 Cases
 taken: 3 случая быстрого прямого переключения между МАОИ с паузой 1–2 дня; ни в одном не было серотониновой токсичности или гипертонического криза, все переключения перенесены без явлений; авторы предлагают паузу 2 дня и меньше для отдельных ситуаций

@@ -87,6 +87,9 @@ function table(lines) {
   }</tbody></table>`;
 }
 function renderBody(lines, ctx) {
+  // {{read}} — строка-число внутри абзаца, не блок: подставляем до разбора,
+  // иначе токен уехал бы в текст страницы.
+  lines = lines.map((l) => l.replace(/\{\{read\}\}/g, ctx.readStats ?? ''));
   const out = [];
   let i = 0;
   while (i < lines.length) {
@@ -96,7 +99,17 @@ function renderBody(lines, ctx) {
       continue;
     }
     if (line.trim() === '{{types}}') {
-      out.push(ctx.typesTable ?? '');
+      if (!ctx.typesTable) {
+        throw new Error(
+          `${ctx.pageLabel ?? 'страница'}: есть {{types}}, а таблица типов пуста — сборка не подставит числа`,
+        );
+      }
+      out.push(ctx.typesTable);
+      i++;
+      continue;
+    }
+    if (line.trim() === '{{read}}') {
+      out.push(ctx.readStats ?? '');
       i++;
       continue;
     }
@@ -318,8 +331,9 @@ function loadCards() {
 }
 
 // Порядок типов для индекса источников задан отдельно от LEVELS: у LEVELS
-// case стоит перед review, а читателю нужен порядок от сильного дизайна к
-// слабому. Это порядок показа, не оценка качества (см. страницу dokazatelnost).
+// case стоит перед review, а здесь обзоры идут раньше отдельных наблюдений.
+// Это порядок показа, а не силы: страница доказательности говорит «тип — это
+// не качество», и называть тот же порядок силой нельзя.
 const TYPE_ORDER = ['meta', 'rct', 'cohort', 'review', 'case', 'opinion', 'unsure'];
 const TYPE_LABEL = {
   meta: 'систематический обзор, мета-анализ',
@@ -331,6 +345,41 @@ const TYPE_LABEL = {
   unsure: 'тип определить не удалось',
 };
 const sourceHref = (id) => `${BASE}ru/istochniki/${id}/`;
+// Основа чтения — из front-matter, не из догадки по телу. unknown печатается
+// прямо: «в каждой карточке написано» было неправдой, пока поле не заполняли.
+const READ_VALUES = ['abstract', 'full', 'page', 'unknown'];
+const asRuDate = (iso) => {
+  const m = String(iso ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : String(iso ?? '');
+};
+const READ_LABEL = {
+  abstract: 'аннотация',
+  full: 'полный текст',
+  page: 'страница целиком',
+  unknown: 'Основа чтения не записана',
+};
+function readLine(card) {
+  const read = String(card.read ?? 'unknown').trim();
+  if (read === 'unknown' || !READ_LABEL[read]) return READ_LABEL.unknown;
+  if (read !== 'abstract') return READ_LABEL[read];
+  const body = String(card.body ?? '');
+  const via = /Europe PMC/i.test(body)
+    ? 'Europe PMC'
+    : /eutils/i.test(body)
+      ? 'NCBI eutils'
+      : /PubMed/i.test(body)
+        ? 'PubMed'
+        : '';
+  return [READ_LABEL.abstract, via, asRuDate(card.accessed)].filter(Boolean).join(' · ');
+}
+function readStats(cards) {
+  let named = 0;
+  for (const card of cards.values()) {
+    const read = String(card.read ?? '').trim();
+    if (read && read !== 'unknown') named++;
+  }
+  return { named, unknown: cards.size - named };
+}
 function pluralCards(n) {
   const m10 = n % 10;
   const m100 = n % 100;
@@ -349,7 +398,8 @@ function typesTable(cards) {
     (t) =>
       `<tr><td><span class="badge badge-${t}">${t}</span></td><td>${esc(TYPE_LABEL[t])}</td><td>${counts[t]}</td></tr>`,
   ).join('');
-  return `<table class="types"><thead><tr><th>Тип</th><th>Что за ним стоит</th><th>Карточек</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const data = TYPE_ORDER.map((t) => `${t}:${counts[t]}`).join(',');
+  return `<table class="types" data-types="${data}"><thead><tr><th>Тип</th><th>Что за ним стоит</th><th>Карточек</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 // Темы, в которых цитируется каждая карточка: считается по topics/, не руками.
 function cardTopicMap(topics) {
@@ -398,7 +448,7 @@ function sourceIndexPage({ cards, topics, topicTitles }) {
 <p class="disclaimer">Не заменяет врача. При угрозе жизни — 112.</p></header>
 <main>
 <p class="meta" id="source-count" data-source-count="${total}">${total} ${pluralCards(total)}: ${parts.join(', ')}</p>
-<p>Порядок — от сильного дизайна к слабому, внутри типа — по году, затем по названию. Это порядок показа, а не рейтинг: тип говорит, какие выводы исследование в принципе позволяет, и не заменяет оценку качества (почему мы не считаем GRADE — <a href="${BASE}ru/dokazatelnost/">на странице о доказательствах</a>).</p>
+<p>Порядок — от обзоров и мета-анализов к отдельным наблюдениям, внутри типа — по году, затем по названию. Это порядок показа, а не рейтинг: тип говорит, какие выводы исследование в принципе позволяет, и не заменяет оценку качества (почему мы не считаем GRADE — <a href="${BASE}ru/dokazatelnost/">на странице о доказательствах</a>).</p>
 <table class="sources"><thead><tr><th>Источник</th><th>Год</th><th>Тип</th><th>Цитируется в темах</th><th>PMID / DOI</th></tr></thead><tbody>${rows}</tbody></table>
 </main>
 <footer><p><a href="${BASE}ru/">Все темы</a> · <a href="${BASE}">psybase</a></p></footer>
@@ -418,14 +468,14 @@ function sourceCardPage({ id, card, topicTitles, topicsCited, cards }) {
 <link rel="stylesheet" href="${BASE}style.css"></head><body>
 <nav class="langs"><a href="${BASE}ru/istochniki/">Все источники</a> · <span class="no-translation" lang="ru">EN — перевода нет</span></nav>
 <header><h1>${esc(card.title ?? id)}</h1>
-<p class="meta">${esc(card.year ?? '')} · <span class="badge badge-${esc(card.type ?? '')}">${esc(card.type ?? '')}</span> · язык оригинала: ${esc(card.lang ?? '—')}</p>
+<p class="meta">${esc(card.year ?? '')} · <span class="badge badge-${esc(card.type ?? '')}">${esc(card.type ?? '')}</span> · язык оригинала: ${esc(card.lang ?? '—')} · сверено ${esc(asRuDate(card.accessed) || '—')}</p>
 <p class="disclaimer">Не заменяет врача. При угрозе жизни — 112.</p></header>
 <main>
 <p class="cite">${citationInner(card) || 'идентификатор не указан'}</p>
 <section><h2>Что мы взяли</h2>
 <p>${esc(String(card.taken ?? '').trim())}</p>
 <p class="meta">«Что мы взяли» — наша формулировка из источника, а не его аннотация; дословных кусков текста здесь нет.</p></section>
-<section><h2>Чем читали</h2>${body.trim() || '<p class="meta">—</p>'}</section>
+<section><h2>Чем читали</h2><p class="read" data-read="${esc(String(card.read ?? 'unknown').trim())}">${esc(readLine(card))}</p>${body.trim() || '<p class="meta">—</p>'}</section>
 <section><h2>Цитируется в темах</h2>${cited}</section>
 <p><a href="${BASE}ru/istochniki/">← все источники</a> · <a href="${BASE}ru/">все темы</a></p>
 </main>
@@ -472,17 +522,32 @@ const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 sys
 @media print{.chart,.evidence,.gaps,.home-stats{break-inside:avoid}.chart-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#ccc!important;border-right:1px solid #000}.chart-track{border:1px solid #000}}
 @media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
 @media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
-function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '' }) {
+function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '', readStats: readStatsText = '' }) {
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
-  const ctx = { lang, cards, typesTable };
+  const ctx = { lang, cards, typesTable, readStats: readStatsText, pageLabel: `${lang}/${slug}` };
   const body = sections
     .map((s) => {
       if (!s.title) return `<section>${renderBody(s.lines, ctx)}</section>`;
       const nf = /^(Не нашёл|Not found)$/i.test(s.title);
       const isSources = /^(Источники|Sources)$/i.test(s.title);
       const html = renderBody(s.lines, ctx);
-      const inner = isSources ? cite(html, cards) : html;
+      // В списке «Источники» каждый пункт — ссылка на страницу карточки, а не
+      // только пометка типа. В тексте ссылку не ставим: там число важнее
+      // навигации, и карточка открывается с пометки типа.
+      const inner = isSources
+        ? cite(html, cards).replace(
+            /<span class="src" data-src="([a-z0-9-]+)">([\s\S]*?)<\/span>(?: <span class="badge[^"]*">[a-z]+<\/span>)?/g,
+            (m, id, label) => {
+              const card = cards.get(id);
+              const type = card?.type ? String(card.type) : '';
+              const badge = type
+                ? ` <span class="badge badge-${esc(type)}">${esc(type)}</span>`
+                : '';
+              return `<a class="src" href="${sourceHref(id)}">${label}</a>${badge}`;
+            },
+          )
+        : html;
       return `<section${nf ? ' class="not-found"' : ''}><h2${nf ? ' id="not-found"' : ''}>${inline(s.title)}</h2>${inner}</section>`;
     })
     .join('\n');
@@ -532,6 +597,8 @@ function build() {
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
   const cards = loadCards();
+  const readCounts = readStats(cards);
+  const readSummary = `Основа чтения названа у ${readCounts.named} из ${cards.size}; у ${readCounts.unknown} не записана`;
   const dirs = readdirSync(TOPICS).filter((d) => statSync(join(TOPICS, d)).isDirectory());
   const targets = FIXTURE ? dirs.filter((d) => d === '_example') : dirs;
   if (FIXTURE && !targets.length) throw new Error('фикстура topics/_example не найдена');
@@ -582,6 +649,14 @@ function build() {
       const fmSlug = String(ru.data.slug ?? '').trim();
       if (fmSlug !== slug) throw new Error(`pages/${slug}/ru.md: во front-matter slug «${fmSlug}», а папка «${slug}»`);
       if (!String(ru.data.title ?? '').trim()) throw new Error(`pages/${slug}/ru.md: во front-matter нет title`);
+      // Страница доказательности обещает таблицу типов с числами из sources/.
+      // Без {{types}} она молча останется без чисел, поэтому это ошибка сборки,
+      // а не «страница без таблицы».
+      if (slug === 'dokazatelnost' && !ru.body.includes('{{types}}')) {
+        throw new Error(
+          `pages/${slug}/ru.md: нет {{types}} — таблица типов не соберётся из sources/, а страница о доказательствах без чисел не публикуется`,
+        );
+      }
       pages.push({ slug, ru, sections: splitSections(ru.body) });
     }
   }
@@ -669,6 +744,7 @@ function build() {
         hasPair: false,
         stats: null,
         typesTable: typesTable(cards),
+        readStats: readSummary,
       }),
       'utf8',
     );
@@ -703,7 +779,10 @@ ${homeHtml(lang)}
 <nav class="pages-nav"><h2>${lang === 'ru' ? 'Ещё о базе' : 'More about the base'}</h2><ul>
 <li><a href="${BASE}ru/istochniki/">${lang === 'ru' ? 'Все источники' : 'All sources'}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>
 ${pages
-  .map((p) => `<li><a href="${BASE}ru/${p.slug}/">${esc(p.ru.data.title)}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>`)
+  .map((p) => {
+    const navTitle = lang === 'en' ? (p.ru.data.title_en ?? p.ru.data.title) : p.ru.data.title;
+    return `<li><a href="${BASE}ru/${p.slug}/">${esc(navTitle)}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>`;
+  })
   .join('\n')}
 </ul></nav>
 </body></html>`;
@@ -731,12 +810,27 @@ ${pages
   ];
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
   const bytes = dirBytes(DIST);
+  for (const f of filesUnder(DIST)) {
+    const text = readFileSync(f, 'utf8');
+    if (text.includes('{{')) {
+      throw new Error(`${f.replace(DIST + '\\', '').replace(DIST + '/', '')} — остался незаменённый «{{…}}»: шаблон страницы не собран`);
+    }
+  }
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${ruPages + enPages} (RU ${ruPages}, EN ${enPages}, тем без перевода: ${ruPages - enPages}), пропущено draft: ${skipped}, размер: ${bytes} байт`);
   console.log(`страниц каталога: ${pages.length} (в «Тем: N» не входят, адрес ${BASE}ru/<slug>/)`);
   console.log(`страниц источников: ${cards.size + 1} (индекс + ${cards.size} карточек, адрес ${BASE}ru/istochniki/<id>/)`);
   console.log(`адреса: ${BASE}ru/<slug>/ для всех тем, ${BASE}en/<slug>/ — перевод или маршрут на RU`);
   if (FIXTURE) console.log('режим --fixture: topics/_example, во временную папку');
+}
+function filesUnder(dir) {
+  const out = [];
+  for (const f of readdirSync(dir)) {
+    const p = join(dir, f);
+    if (statSync(p).isDirectory()) out.push(...filesUnder(p));
+    else out.push(p);
+  }
+  return out;
 }
 function dirBytes(dir) {
   let n = 0;

@@ -3,6 +3,7 @@ id: PMID 41862841
 doi: 10.1186/s12888-026-07974-6
 lang: en
 type: cohort
+read: abstract
 year: 2026
 title: Treatment trajectories of patients with borderline personality disorder prescribed pharmacotherapy — real-world insights from a retrospective observational study
 taken: ретроспективная когорта; одобренного лекарственного лечения ПРЛ нет; антидепрессанты на старте 80,4 %; полипрагмазия (по методам: больше одного препарата одновременно ≥ 14 дней; в аннотации — «≥ 1») у 83,1 %; данные за 12 месяцев были у 1461 человека (16,1 % начавших)

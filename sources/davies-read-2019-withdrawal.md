@@ -3,6 +3,7 @@ id: PMID 30292574
 doi: 10.1016/j.addbeh.2018.08.027
 lang: en
 type: review
+read: abstract
 year: 2019
 title: A systematic review into the incidence, severity and duration of antidepressant withdrawal effects — are guidelines evidence-based?
 taken: 24 исследования; частота отмены 27–86 %, взвешенное среднее 56 %; 46 % испытавших назвали тяжесть крайней; средняя длительность в четырёх работах — 5 дней, 10 дней, 43 дня, 79 недель; 7 из 10 исследований длительности противоречат тезису руководств о самоограничении за 1–2 недели

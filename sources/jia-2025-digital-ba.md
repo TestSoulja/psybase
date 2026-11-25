@@ -3,6 +3,7 @@ id: PMID 40526910
 doi: 10.2196/68054
 lang: en
 type: meta
+read: abstract
 year: 2025
 title: Effectiveness of digital behavioral activation interventions for depression and anxiety
 taken: 17 РКИ (18 статей), 12 вошли в мета-анализ; симптомы депрессии снижались через 2, 3 и 6 месяцев (p<0,001, p=0,001, p=0,009), через 12 месяцев — нет (p=0,82); тревога и функционирование не изменились (p=0,08 и p=0,24; p=0,88)

@@ -3,6 +3,7 @@ id: PMID 38522259
 doi: 10.1016/j.comppsych.2024.152478
 lang: en
 type: cohort
+read: unknown
 year: 2024
 title: The course of borderline personality disorder from adolescence to early adulthood: A 5-year follow-up study
 taken: Через 5 лет после диагноза в подростковом возрасте критериям соответствовали 24% (97 из 111)

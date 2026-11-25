@@ -3,6 +3,7 @@ id: PMID 18303940
 doi: 10.1371/journal.pmed.0050045
 lang: en
 type: meta
+read: abstract
 year: 2008
 title: Initial severity and antidepressant benefits — a meta-analysis of data submitted to the Food and Drug Administration
 taken: четыре препарата нового поколения, все поданные в FDA испытания; разница с плацебо растёт с исходной тяжестью, но остаётся небольшой даже при очень тяжёлой депрессии; причина — падение ответа на плацебо, а не рост ответа на препарат

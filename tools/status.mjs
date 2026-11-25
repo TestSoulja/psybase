@@ -25,8 +25,11 @@
  *     «сверка пропущена»: собери `node tools/build.mjs`.
  *   - страница источника: нет индекса, страницы карточки или строки; число
  *     в индексе не равно числу файлов или числу на главной; тип показан не
- *     тем числом; в sitemap нет адресов источников; «цитируется в темах»
- *     ведёт на несуществующую тему.
+ *     тем числом; в sitemap нет адресов источников или страниц каталога;
+ *     «цитируется в темах» ведёт на несуществующую тему.
+ *   - у карточки нет `read:` или значение не из abstract|full|page|unknown;
+ *     таблица типов на странице доказательности расходится с sources/;
+ *     список «Источники» темы ссылается не на все карточки.
  *
  *   node tools/status.mjs
  */
@@ -354,6 +357,27 @@ for (const c of nowhere) {
   problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/`);
 }
 
+// 9c. Основа чтения: поле `read` обязательно и только из четырёх значений.
+// «В каждой карточке написано, чем читали» было утверждением, которого диск не
+// подтверждал; теперь это поле, и страж считает, у скольких оно названо.
+const READ_VALUES = ['abstract', 'full', 'page', 'unknown'];
+const cardRead = new Map();
+for (const c of sourceCards) {
+  const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+  const read = String(data.read ?? '').trim();
+  if (!read) {
+    problems.push(`sources/${c}.md — нет «read:»: основа чтения обязательна (abstract | full | page | unknown)`);
+  } else if (!READ_VALUES.includes(read)) {
+    problems.push(`sources/${c}.md — read: «${read}», допустимо только ${READ_VALUES.join(' | ')}`);
+  }
+  cardRead.set(c, READ_VALUES.includes(read) ? read : 'unknown');
+}
+const readNamed = [...cardRead.values()].filter((r) => r !== 'unknown').length;
+const readUnknown = sourceCards.length - readNamed;
+if (readNamed + readUnknown !== sourceCards.length) {
+  problems.push(`sources/ — основа чтения: названа у ${readNamed} + не записана у ${readUnknown} ≠ ${sourceCards.length} карточек`);
+}
+
 const footnote = readmeText
   .replace(/\s+/g, ' ')
   .match(
@@ -543,11 +567,83 @@ if (distReady) {
     problems.push('dist/sitemap.xml — файла нет: пересобери: node tools/build.mjs');
   } else {
     const sm = readFileSync(SITEMAP, 'utf8');
-    const need = [`${SITE}ru/istochniki/`, ...sourceCards.map((c) => `${SITE}ru/istochniki/${c}/`)];
+    const need = [
+      ...pageDirs.map((d) => `${SITE}ru/${d}/`),
+      `${SITE}ru/istochniki/`,
+      ...sourceCards.map((c) => `${SITE}ru/istochniki/${c}/`),
+    ];
     const missing = need.filter((u) => !sm.includes(`<loc>${u}</loc>`));
     if (missing.length) {
       problems.push(
-        `dist/sitemap.xml — нет ${missing.length} адресов источников, например ${missing[0]}`,
+        `dist/sitemap.xml — нет ${missing.length} адресов (страницы каталога и источники), например ${missing[0]}`,
+      );
+    }
+  }
+
+  // Таблица типов на странице доказательности: число в data-types должно
+  // сходиться с front-matter, иначе страница печатает свою копию правды.
+  const DOK = join(DIST, 'ru', 'dokazatelnost', 'index.html');
+  if (pageDirs.includes('dokazatelnost')) {
+    if (!existsSync(DOK)) {
+      problems.push('dist/ru/dokazatelnost/index.html — страницы доказательности нет: пересобери: node tools/build.mjs');
+    } else {
+      const dok = readFileSync(DOK, 'utf8');
+      const typesAttr = dok.match(/<table class="types" data-types="([^"]+)"/);
+      if (!typesAttr) {
+        problems.push('dist/ru/dokazatelnost/index.html — таблица типов без data-types, сверять не с чем');
+      } else {
+        const shownTypes = Object.fromEntries(
+          typesAttr[1].split(',').map((pair) => {
+            const [k, v] = pair.split(':');
+            return [k, Number(v)];
+          }),
+        );
+        const diskTypes = {};
+        for (const c of sourceCards) {
+          const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+          diskTypes[data.type] = (diskTypes[data.type] ?? 0) + 1;
+        }
+        for (const type of new Set([...Object.keys(shownTypes), ...Object.keys(diskTypes)])) {
+          if ((shownTypes[type] ?? 0) !== (diskTypes[type] ?? 0)) {
+            problems.push(
+              `dist/ru/dokazatelnost/index.html — в data-types «${type}:${shownTypes[type] ?? 0}», а в sources/ ${diskTypes[type] ?? 0}`,
+            );
+          }
+        }
+      }
+      const readShown = dok.match(/Основа чтения названа у (\d+) из (\d+); у (\d+) не записана/);
+      if (!readShown) {
+        problems.push('dist/ru/dokazatelnost/index.html — нет строки об основе чтения, сверять нечего');
+      } else if (
+        Number(readShown[1]) !== readNamed ||
+        Number(readShown[2]) !== sourceCards.length ||
+        Number(readShown[3]) !== readUnknown
+      ) {
+        problems.push(
+          `dist/ru/dokazatelnost/index.html — «названа у ${readShown[1]} из ${readShown[2]}; у ${readShown[3]} не записана», а на диске ${readNamed} из ${sourceCards.length}; ${readUnknown}`,
+        );
+      }
+    }
+  }
+
+  // Список «Источники» в конце темы: каждая карточка — ссылкой на свою
+  // страницу, и число различных ссылок равно `sources:` темы.
+  for (const t of topicsInfo) {
+    if (t.draft || t.dir === '_example') continue;
+    const p = join(DIST, 'ru', t.dir, 'index.html');
+    if (!existsSync(p)) continue;
+    const html = readFileSync(p, 'utf8');
+    const section = html.match(/<h2>Источники<\/h2>([\s\S]*?)<\/section>/);
+    if (!section) {
+      problems.push(`dist/ru/${t.dir}/ — нет раздела «Источники», сверять список не с чем`);
+      continue;
+    }
+    const ids = new Set(
+      [...section[1].matchAll(/href="\/psybase\/ru\/istochniki\/([a-z0-9-]+)\/"/g)].map((m) => m[1]),
+    );
+    if (t.sources !== null && ids.size !== t.sources) {
+      problems.push(
+        `dist/ru/${t.dir}/ — в «Источники» ${ids.size} различных ссылок на карточки, а sources: ${t.sources}`,
       );
     }
   }
@@ -617,6 +713,7 @@ console.log(
 console.log(
   `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} больше чем в одной теме, ${appOnly.length} только в for-app`,
 );
+console.log(`· основа чтения: названа у ${readNamed}, не записана у ${readUnknown}`);
 console.log(`· страниц каталога: ${pageDirs.length} (в таблицу тем и сноску карточек не входят)`);
 
 console.log(

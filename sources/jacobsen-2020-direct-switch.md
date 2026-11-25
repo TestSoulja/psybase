@@ -3,6 +3,7 @@ id: PMID 31010445
 doi: 10.1017/s1092852919000750
 lang: en
 type: rct
+read: abstract
 year: 2020
 title: Clinical implications of directly switching antidepressants in well-treated depressed patients with treatment-emergent sexual dysfunction — a comparison between vortioxetine and escitalopram
 taken: 8-недельное двойное слепое РКИ; взрослые с хорошо леченным большим депрессивным расстройством и сексуальной дисфункцией на СИОЗС напрямую переключены на вортиоксетин или эсциталопрам; эффективность сохранялась, частота и тяжесть нежелательных явлений различались только по тошноте; общая доля ухудшения не сообщается, N в абстракте не назван

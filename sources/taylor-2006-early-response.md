@@ -3,6 +3,7 @@ id: PMID 17088502
 doi: 10.1001/archpsyc.63.11.1217
 lang: en
 type: meta
+read: abstract
 year: 2006
 title: Early onset of selective serotonin reuptake inhibitor antidepressant action — systematic review and meta-analysis
 taken: 28 РКИ, n = 5872, СИОЗС против плацебо; улучшение к концу 1-й недели; снижение HAMD на 50 % за неделю — RR 1,64 (1,2–2,25); дальше улучшение идёт с убывающей скоростью минимум 6 недель

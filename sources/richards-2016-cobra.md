@@ -3,6 +3,7 @@ id: PMID 27461440
 doi: 10.1016/S0140-6736(16)31140-0
 lang: en
 type: rct
+read: abstract
 year: 2016
 title: COBRA — behavioural activation versus cognitive behavioural therapy for depression, non-inferiority trial
 taken: 440 взрослых (221 BA, 219 КПТ), 12 месяцев; PHQ-9 8,4 против 8,4, разница 0,1 (−1,3…1,5) при пороге неполноценности 1,9; per-protocol 7,8 против 7,9; исключали острых и совершивших попытку за последние 2 месяца

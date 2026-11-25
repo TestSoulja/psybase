@@ -3,6 +3,7 @@ id: PMID 33661018
 doi: 10.1521/pedi_2021_35_512
 lang: en
 type: rct
+read: unknown
 year: 2021
 title: STEPPS for Borderline Personality Disorder: A Pragmatic Trial and Naturalistic Comparison With Noncompleters
 taken: 118 амбулаторных пациентов, Испания; улучшение по шкале BEST сохранялось к 42-му месяцу

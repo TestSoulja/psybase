@@ -3,6 +3,7 @@ id: PMID 35084346
 doi: 10.2196/29621
 lang: en
 type: meta
+read: abstract
 year: 2022
 title: Impact of smartphone app-based psychological interventions for reducing depressive symptoms
 taken: 12 испытаний, 2859 участников; SMD −0,51 (−0,69…−0,33), I²=70%; у участников с умеренной и тяжёлой депрессией эффект больше (−0,67), чем при лёгкой и умеренной (−0,15)

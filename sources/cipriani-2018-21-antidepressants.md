@@ -3,6 +3,7 @@ id: PMID 29477251
 doi: 10.1016/S0140-6736(17)32802-7
 lang: en
 type: meta
+read: abstract
 year: 2018
 title: Comparative efficacy and acceptability of 21 antidepressant drugs for the acute treatment of adults with major depressive disorder — a systematic review and network meta-analysis
 taken: 522 РКИ, 116 477 человек, 21 препарат; ответ лучше плацебо у всех, OR от 2,13 (амитриптилин, 1,89–2,41) до 1,37 (ребоксетин, 1,16–1,63), между препаратами 1,15–1,55; отсев ниже плацебо только у агомелатина (0,84; 0,72–0,97) и флуоксетина (0,88; 0,80–0,96), у кломипрамина выше (1,30; 1,01–1,68), наибольший отсев у семи препаратов — 1,30–2,32; высокий риск смещения у 46 (9 %) испытаний, умеренный у 380 (73 %), низкий у 96 (18 %); уверенность от умеренной до очень низкой

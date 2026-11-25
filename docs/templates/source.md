@@ -3,6 +3,7 @@ id: PMID 00000000
 doi: 10.0000/example
 lang: en
 type: meta
+read: abstract
 year: 2021
 title: Название как в источнике
 taken: что именно взято — числа, эффект, размер выборки

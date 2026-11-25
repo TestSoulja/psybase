@@ -3,6 +3,7 @@ id: PMID 40410166
 doi: 10.1038/s41398-025-03322-6
 lang: en
 type: cohort
+read: unknown
 year: 2025
 title: Perceived criticism and depressive symptoms among adults aged 50 years and older — a 17-year population-based cohort study
 taken: ELSA, волны 1–9 (2002–2019), 50+, без депрессивных симптомов на старте; воспринимаемая критика супруга — HR 1,36 (1,18–1,55) при «немного», 2,24 (1,85–2,72) при «много», 1,05 (0,92–1,20) при «чуть»; критика детей — 1,24 (1,12–1,36), 1,50 (1,33–1,68), 2,02 (1,62–2,52); женщины чувствительнее ко всем четырём источникам

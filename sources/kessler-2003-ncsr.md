@@ -3,6 +3,7 @@ id: PMID 12813115
 doi: 10.1001/jama.289.23.3095
 lang: en
 type: cohort
+read: abstract
 year: 2003
 title: The epidemiology of major depressive disorder — results from the National Comorbidity Survey Replication (NCS-R)
 taken: США, 2001–2002, N=9090, CIDI/DSM-IV — 12 мес 6,6% (5,9–7,3), за жизнь 16,2% (15,1–17,3); средняя длительность эпизода 16 недель (15,1–17,3); 72,1% случаев за жизнь с коморбидным диагнозом; лечение получили 51,6%, адекватным оно было у 41,9% → адекватно пролечено 21,7%

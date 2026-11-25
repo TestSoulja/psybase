@@ -3,6 +3,7 @@ id: PMID 34762057
 doi: 10.2196/28874
 lang: en
 type: rct
+read: abstract
 year: 2021
 title: Mobile Diary App Versus Paper-Based Diary Cards for Patients With Borderline Personality Disorder: Economic Evaluation
 taken: 78 человек, 12 месяцев, ДБТ в 5 амбулаторных центрах Дании: в группе приложения на 37,1 дня больше лечения и на 3,16 больше записанных навыков в неделю; по QALY (разница −0,054) и снижению депрессии (−1,11) значимо лучше бумажная группа

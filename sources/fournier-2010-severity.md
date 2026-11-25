@@ -3,6 +3,7 @@ id: PMID 20051569
 doi: 10.1001/jama.2009.1943
 lang: en
 type: meta
+read: abstract
 year: 2010
 title: Antidepressant drug effects and depression severity — a patient-level meta-analysis
 taken: 6 исследований, 718 человек; при HDRS ниже 23 Cohen d меньше 0,20; превосходство над плацебо растёт с тяжестью и пересекает порог клинической значимости NICE при HDRS 25
