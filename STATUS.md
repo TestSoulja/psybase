@@ -18,6 +18,9 @@
 
 Сайт выложен: <https://testsoulja.github.io/psybase/> — ветка `gh-pages`,
 источник Pages = `gh-pages` / root, выкладка через `scripts/deploy-pages.ps1`.
+Живое состояние на 25.11.2026: `gh-pages` = `70b73bc`, 4 темы, 50 карточек
+источников, 9 URL в `sitemap.xml`. Проверять только
+`git ls-remote --heads origin gh-pages`: локальная ветка `gh-pages` отстаёт.
 
 ## Очередь приёмки: `legacy/inbox/`
 
