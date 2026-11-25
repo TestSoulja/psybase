@@ -1,6 +1,7 @@
 ﻿node_modules/
 .DS_Store
 Thumbs.db
+dist/
 
 # агентский файл — только для локальной работы, публике не нужен
 AGENTS.md
