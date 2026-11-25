@@ -162,9 +162,11 @@ const TOPIC_STUB = (d) => {
   const fm = (text.match(/^---\r?\n([\s\S]*?)\r?\n---/) ?? [null, ''])[1];
   const declared = fm.match(/^sources:\s*(\d+)\s*$/m);
   const title = fm.match(/^title:\s*(.+)$/m);
+  const updated = fm.match(/^updated:\s*(\d{4}-\d{2}-\d{2})\s*$/m);
   return {
     dir: d,
     title: title ? title[1].trim() : d,
+    updated: updated ? updated[1] : null,
     sources: declared ? Number(declared[1]) : null,
     hasEn: existsSync(join(TOPICS, d, 'en.md')),
     draft: /^draft:\s*true\s*$/m.test(fm),
@@ -193,6 +195,14 @@ if (readmeHead === -1) {
     if (cells[0] === 'Тема') continue; // шапка
     if (/^:?-{3,}:?$/.test(cells[0])) continue; // разделитель
     readmeRows++;
+
+    // Описание темы — одна строка без чисел: числа живут в соседних столбцах,
+    // а цифра в прозе устаревает молча.
+    if (/\d/.test(cells[3] ?? '')) {
+      problems.push(
+        `README.md:${i + 1} — в столбце «О чём» темы «${cells[0]}» есть цифра: описание должно быть без чисел`,
+      );
+    }
 
     const url = cells[4] ?? '';
     const slugMatch = url.match(/\/ru\/([a-z0-9_-]+)\//);
@@ -236,6 +246,30 @@ if (readmeHead === -1) {
   }
 }
 
+// 8. Дата в примере цитаты — дата `updated:` той темы, которую пример называет.
+// Пример без сверки стареет молча: страница печатает одно, README — другое.
+const citation = readmeText.match(
+  /Пси-база\.\s*«(.+?)»\.\s*Обновлено\s+(\d{2})\.(\d{2})\.(\d{4})/,
+);
+if (!citation) {
+  problems.push('README.md — нет примера цитаты с «Обновлено ДД.ММ.ГГГГ», сверять дату не с чем');
+} else {
+  const [, citeTitle, dd, mm, yyyy] = citation;
+  const cited = topicsInfo.find((t) => t.title === citeTitle);
+  if (!cited) {
+    problems.push(`README.md — в примере цитаты тема «${citeTitle}», а такой темы в topics/ нет`);
+  } else if (!cited.updated) {
+    problems.push(`topics/${cited.dir}/ru.md — во front-matter нет «updated: ГГГГ-ММ-ДД»`);
+  } else {
+    const asText = `${cited.updated.slice(8, 10)}.${cited.updated.slice(5, 7)}.${cited.updated.slice(0, 4)}`;
+    if (asText !== `${dd}.${mm}.${yyyy}`) {
+      problems.push(
+        `README.md — в примере цитаты дата ${dd}.${mm}.${yyyy}, а topics/${cited.dir}/ru.md updated: ${cited.updated} (на странице будет ${asText})`,
+      );
+    }
+  }
+}
+
 if (problems.length) {
   console.log('✖ STATUS.md расходится с диском:');
   for (const p of problems) console.log(`   ${p}`);
@@ -257,5 +291,5 @@ console.log(
     `тем без перевода: ${untranslated.length}; «Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
 );
 console.log(
-  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники и языки сверены`,
+  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники, языки и дата цитаты сверены`,
 );
