@@ -265,7 +265,7 @@ function build() {
   writeFileSync(join(DIST, 'en', 'index.html'), index('en'), 'utf8');
   writeFileSync(
     join(DIST, 'index.html'),
-    `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><link rel="canonical" href="${SITE}ru/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
+    `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><title>Пси-база</title><link rel="canonical" href="${SITE}ru/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
     'utf8',
   );
   writeFileSync(join(DIST, '404.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>404</title><link rel="stylesheet" href="${BASE}style.css"></head><body><h1>404</h1><p>Страницы нет. <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}en/">All topics</a></p></body></html>`, 'utf8');
