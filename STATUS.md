@@ -10,7 +10,7 @@
 сконвертированы: 6.30 «Депрессия» → `topics/depressiya/`, 6.31 «Поведенческая
 активация» → `topics/povedencheskaya-aktivaciya/`, 6.32 «Антидепрессанты» →
 `topics/antidepressanty/` (RU + EN + for-app) и `topics/prl/` — «Пограничное
-расстройство личности», RU-only, 22 источника + `for-app/prl/`. Всего 50
+расстройство личности», RU-only, 22 источника + `for-app/prl/`. Всего 56
 карточек источников в `sources/`. Следующая — 6.33 «Депрессия и ПРЛ». Сырьё
 спринта (`research/2026-11-25/`) — волны возобновлены 25.11.2026, идёт цикл
 волн (`research/queue.md`), последняя — 8-я: 1157 утверждений, 129 из них
@@ -105,10 +105,10 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
   приложения — `for-app/povedencheskaya-aktivaciya/`. `parity.mjs`: 5 заголовков
   и 97 чисел. Исходник — `legacy/inbox/06-31-povedencheskaya-aktivaciya.md`.
 - `topics/antidepressanty/` — «Антидепрессанты», пара `ru.md` + `en.md`,
-  9 источников (все карточки в `sources/`), пара для приложения —
-  `for-app/antidepressanty/`. `parity.mjs`: 5 заголовков и 91 число. Исходник —
-  `legacy/inbox/06-32-antidepressanty.md`. Все 9 DOI — `responseCode 1`,
-  9 PMID найдены через DOI и сверены Europe PMC (`hitCount 1`).
+  15 источников (все карточки в `sources/`), раздел «Смена препарата»,
+  пара для приложения — `for-app/antidepressanty/`. `parity.mjs`: 5 заголовков
+  и 129 чисел. Исходник — `legacy/inbox/06-32-antidepressanty.md`. Все 15 DOI —
+  `responseCode 1`, 15 PMID сверены Europe PMC (`hitCount 1`).
 - `topics/_example/` — пример структуры (`draft: true`), не факт, не публиковать.
 - `topics/prl/` — «Пограничное расстройство личности (ПРЛ)», только RU
   (`en.md` нет — долг перевода), 22 источника, `sources: 22`; пара для
@@ -135,6 +135,7 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
 | 2026-11-25 | Europe PMC (сырьё: `research/2026-11-25/depressiya-lechenie.md`) | `TITLE:"number needed to treat" AND TITLE:depress*`; `ABSTRACT:"number needed to treat" AND ABSTRACT:"baseline severity"`; `ABSTRACT:"number needed to treat" AND ABSTRACT:antidepressant AND ABSTRACT:severity`; `NNT AND SSRI AND "baseline severity"`; `AUTH:"Cuijpers" AND "number needed to treat"` | 20 / 10 / 24 / 54 / 76 записей; NNT по стратам исходной тяжести — **0**; у Montgomery & Möller 2009 (PMID 19357527) NNT обсуждается, числа в абстракте нет | **источника нет**, пункт закрыт; NNT самому из RR/OR не считать — это не разрешено правилами базы |
 | 2026-11-25 | Europe PMC (сырьё: `research/2026-11-25/trevozhnye.md`) | `TITLE:benzodiazepine AND (TITLE:dependence OR TITLE:"long-term use") AND ABSTRACT:"generalized anxiety disorder"`; `ABSTRACT:"benzodiazepine dependence" AND ABSTRACT:"generalized anxiety disorder"` | 3 / 7 записей, перекрёстной таблицы «ГТР × зависимость» **нет**; ближайшее — 61,2% ГТР среди длительных потребителей (PMID 17457292) и 9,5% зависимости у 65+ (PMID 23810753), но по разным выборкам | доля зависимости от бензодиазепинов **именно при ГТР** не найдена; складывать две разные доли нельзя |
 | 2026-11-25 | Europe PMC (сырьё: `research/2026-11-25/kognitivnye-iskazheniya.md`) | `ABSTRACT:"cross-lagged" AND (ABSTRACT:"interpretation bias" OR ABSTRACT:"negative bias") AND ABSTRACT:depress*` | hitCount 5; панельных RI-CLPM-работ по этому конструкту в рецензируемой литературе **0**, единственная прямая работа — препринт PsyArXiv 10.31234/osf.io/pefnw_v6 (n=581, 14-дневный дневник) | связь «предвзятость → симптомы» на уровне устойчивых различий есть, предиктивных связей «день ко дню» нет; пока это препринт, в тему не идёт без журнальной версии |
+| 2026-11-25 | Europe PMC (Q4 «Смена препарата»; сырьё: `research/2026-11-25/prl-preparaty-pobochnye-i-otmena.md`) | `TITLE:antidepressant AND (TITLE:switching OR TITLE:switch)`; `ABSTRACT:"switch" AND ABSTRACT:"adverse events" AND ABSTRACT:antidepressant`; `TITLE:"discontinuation emergent"` | 100 / 42 / 4 записи, из них отобрано 1 / 2 / 1 и добавлены два уже собранных обзора отмены; доли «стало хуже именно после переключения» **нет** ни в одной; попутно — частота переключений 15,0 % (PMID 41452123), проверка шкалы DESS (PMID 42814111), 3 случая быстрого переключения МАОИ (PMID 40679804); обзоры отмены 2024/2025 (PMID 38851198, 40632531) дали 31 % против 17 % и головокружение OR 5,52 | **Q4 сделан**: раздел «Смена препарата» в `topics/antidepressanty/`, 6 карточек; доля ухудшения после смены не найдена, РКИ стратегий по нежелательным явлениям нет, данных при ПРЛ отдельно нет; 6.33 остаётся следующей |
 
 ## Дальше (не в этом шаге)
 

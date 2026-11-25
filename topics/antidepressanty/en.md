@@ -2,7 +2,7 @@
 slug: antidepressanty
 title: Antidepressants
 updated: 2026-11-25
-sources: 9
+sources: 15
 ---
 
 ## What it is
@@ -65,6 +65,46 @@ minimum, hyperbolically: PET data show that serotonin transporter occupancy fall
 linearly with such tapering
 [`horowitz-taylor-2019-tapering`](../sources/horowitz-taylor-2019-tapering.md, `review`).
 
+**Switching medication.** The share of people who feel worse specifically after
+a switch is not reported in the studies found. What is measured is
+discontinuation symptoms — after stopping, not after switching. 50 studies,
+17 828 people; in the DESS meta-analysis (11 studies, 3915 people) symptoms in
+the first week after stopping were greater than on placebo — SMD 0.31 (0.23–0.39),
+equivalent to "one more symptom"; the most frequent were dizziness (OR 5.52;
+3.81–8.01), nausea (3.16), vertigo (6.40), nervousness (3.15); dizziness was the
+most prevalent symptom (risk difference 6.24%). In that study discontinuation was
+not associated with depression symptoms: the authors attribute later worsening
+to relapse, not to discontinuation
+[`kalfas-2025-discontinuation`](../sources/kalfas-2025-discontinuation.md, `meta`).
+Another estimate — 79 studies, 21 002 people: at least one discontinuation
+symptom in 31% versus 17% on placebo (difference 8%), severe in 2.8% versus
+0.6%; allowing for non-specific effects, about 15%, one in six to seven
+[`henssler-2024-incidence`](../sources/henssler-2024-incidence.md, `meta`). This
+is not the same as the 56% above: there 24 studies and a range of 27–86%, here
+79 studies and a pooled share; the numbers answer different questions and stand
+side by side rather than replace each other.
+
+The DESS scale used to measure these symptoms is reliable, but in 63 inpatients
+it poorly separated discontinuation from depression and side effects: scores did
+not differ between those who stopped and those who took no antidepressant, fell
+over time, and were highest before the dose reduction
+[`mass-2026-dess`](../sources/mass-2026-dess.md, `cohort`).
+
+How often switching happens at all: 15.0% of children and adolescents aged 5–18
+switched to another antidepressant within 12 months (44 381 people, Australia);
+the reasons for switching are not recorded in the data
+[`kassie-2026-switching`](../sources/kassie-2026-switching.md, `cohort`). Direct
+switching from an SSRI was studied in one 8-week double-blind RCT — in people
+with sexual dysfunction; the overall share who worsened is not reported
+[`jacobsen-2020-direct-switch`](../sources/jacobsen-2020-direct-switch.md, `rct`).
+Rapid switching between MAOIs is described in three cases, all without events
+[`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md, `case`): an
+illustration, not a rate.
+
+**In BPD there are no separate data.** The discontinuation reviews were
+recruited in depression and anxiety disorders, the switching reviews in
+depression; their shares cannot be transferred to BPD.
+
 **Bipolar disorder: the fear of a switch to mania is not confirmed by numbers.**
 13 RCTs, 1362 patients: no antidepressant raised the risk significantly against
 placebo. The maximum was venlafaxine, RR 4.53 (0.47–43.25): not significant, but
@@ -101,6 +141,17 @@ of those who started)
   quoted, so as not to retell it from memory.
 - **EMA and FDA primary documents on the incidence of withdrawal** — not
   opened.
+- **The share who feel worse specifically after switching medication** — not
+  found: a search on 25.11.2026 in Europe PMC
+  (`TITLE:antidepressant AND (TITLE:switching OR TITLE:switch)`,
+  `ABSTRACT:"switch" AND ABSTRACT:"adverse events" AND ABSTRACT:antidepressant`,
+  `TITLE:"discontinuation emergent"`) returned no study with that share.
+- **RCTs of switching strategies with adverse events as an outcome** — not
+  found: comparisons report depression symptoms, switching frequency or
+  individual cases; the outcome "share who worsened" is absent.
+- **BPD data separate from the general samples** — not found: the
+  discontinuation reviews were recruited in depression and anxiety disorders,
+  the switching reviews in depression.
 - **A Cochrane review of antidepressants in personality disorders** — not
   found.
 - **RCTs of antidepressants in BPD** — not opened; the topic covers prescribing
@@ -124,6 +175,18 @@ of those who started)
   incidence, severity and duration of withdrawal.
 - [`horowitz-taylor-2019-tapering`](../sources/horowitz-taylor-2019-tapering.md)
   — tapering schedules and PET data.
+- [`kalfas-2025-discontinuation`](../sources/kalfas-2025-discontinuation.md) —
+  discontinuation symptoms, dizziness, no link to worsening depression.
+- [`henssler-2024-incidence`](../sources/henssler-2024-incidence.md) — the share
+  with at least one discontinuation symptom versus placebo.
+- [`mass-2026-dess`](../sources/mass-2026-dess.md) — what the DESS scale
+  actually measures.
+- [`kassie-2026-switching`](../sources/kassie-2026-switching.md) — how often
+  children and adolescents switch.
+- [`jacobsen-2020-direct-switch`](../sources/jacobsen-2020-direct-switch.md) —
+  direct switching in an RCT for sexual dysfunction.
+- [`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md) — three
+  cases of rapid switching between MAOIs.
 - [`oliva-2025-bipolar-switch`](../sources/oliva-2025-bipolar-switch.md) —
   switch to mania in bipolar depression.
 - [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md)
