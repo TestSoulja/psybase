@@ -82,10 +82,10 @@ by "pulling yourself together"
   percentages and is not consistent with them: it is an inherited figure from an
   older source. The percentages are taken; the absolute is not quoted as "now".
 - **Comorbidity of depression and BPD comes from a review, not a meta-analysis.**
-  The primary work Zanarini 1998 gives no percentage for depression in its
-  abstract, so ">80%" is marked as a secondary figure. The introduction of an RCT
-  protocol names ">85%", but the protocol was not opened in full — that figure is
-  not used.
+  The primary work [`zanarini-1998-axis-i`](../sources/zanarini-1998-axis-i.md, `cohort`)
+  gives no percentage for depression in its abstract, so ">80%" is marked as a
+  secondary figure. The introduction of an RCT protocol names ">85%", but the
+  protocol was not opened in full — that figure is not used.
 
 ## Not found
 
@@ -109,6 +109,8 @@ by "pulling yourself together"
   median episode, recurrence, share with no year free of episodes.
 - [`wiedlocha-2024-bpd-mdd`](../sources/wiedlocha-2024-bpd-mdd.md) — link between
   depression and BPD, caveat that the figures are secondary.
+- [`zanarini-1998-axis-i`](../sources/zanarini-1998-axis-i.md) — comorbidity
+  profile in BPD, and what its abstract does not contain (a depression percentage).
 - [`li-2025-criticism`](../sources/li-2025-criticism.md) — criticism and symptoms,
   HR by grade.
 - [`nhs-depression-overview`](../sources/nhs-depression-overview.md) —
