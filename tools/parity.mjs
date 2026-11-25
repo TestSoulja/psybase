@@ -22,10 +22,28 @@ const ROOTS = ['topics', 'for-app'];
 const only = process.argv[2] ?? null;
 
 const URL_RE = /https?:\/\/[^\s)\]"'<>]+/g;
-const DOI_RE = /10\.\d{4,9}\/[^\s)\]"'<>,;]+/g;
+const DOI_RE = /10\.\d{4,9}\/\S+/g;
 const PMID_IN_URL_RE = /(?:pubmed\.ncbi\.nlm\.nih\.gov\/|europepmc\.org\/article\/MED\/)(\d{6,9})/g;
 const PMID_TEXT_RE = /\bPMID[:\s]+(\d{6,9})/gi;
 const NUMBER_RE = /(?<![\w.,-])\d+(?:[.,]\d+)?/g;
+
+// DOI бывает со скобками: 10.1016/S0140-6736(17)32802-7. Шаблон [^\s)]+ режет
+// его на первой «)» — ловушка из docs/env.md. Берём всё непробельное и снимаем
+// хвостовой мусор разметки и несбалансированные закрывающие скобки.
+function cleanDoi(raw) {
+  let d = raw;
+  for (;;) {
+    const before = d;
+    d = d.replace(/[.,;:'"\]>`*]+$/, '');
+    if (d.endsWith(')')) {
+      const open = (d.match(/\(/g) ?? []).length;
+      const close = (d.match(/\)/g) ?? []).length;
+      if (close > open) d = d.slice(0, -1);
+    }
+    if (d === before) break;
+  }
+  return d;
+}
 
 function stripPunct(s) {
   return s.replace(/[.,;:]+$/, '').toLowerCase();
@@ -56,7 +74,7 @@ function parse(md) {
 
 function extract(body) {
   const urls = uniqueSorted([...body.matchAll(URL_RE)].map((m) => stripPunct(m[0])));
-  const dois = uniqueSorted([...body.matchAll(DOI_RE)].map((m) => stripPunct(m[0])));
+  const dois = uniqueSorted([...body.matchAll(DOI_RE)].map((m) => cleanDoi(m[0]).toLowerCase()));
 
   const pmids = uniqueSorted([
     ...[...body.matchAll(PMID_IN_URL_RE)].map((m) => m[1]),
