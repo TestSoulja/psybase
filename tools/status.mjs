@@ -13,6 +13,10 @@
  *   - таблица тем в README.md расходится с topics/: тема есть на диске, но не
  *     в таблице; тема в таблице, а папки нет; число источников не равно
  *     `sources:` во front-matter темы.
+ *   - сноска под таблицей тем («N карточек в sources/: N в темах, N из них —
+ *     в двух темах, N — только в for-app») расходится с диском.
+ *   - в README.en.md есть число, которого нет в README.md: шпаргалка не вводит
+ *     своих чисел.
  *
  *   node tools/status.mjs
  */
@@ -270,6 +274,108 @@ if (!citation) {
   }
 }
 
+// 9. Сноска под таблицей тем: четыре числа, которые читатель видит рядом с
+// «50 карточками». Считать их руками после каждой новой карточки — занятие,
+// которое кончается устаревшей цифрой. Считаем так же, как читает человек:
+// карточки в sources/, уникальные карточки в topics/, карточки, попавшие
+// больше чем в одну тему, и карточки, которые есть только в for-app/.
+const SOURCES = join(ROOT, 'sources');
+const sourceCards = existsSync(SOURCES)
+  ? readdirSync(SOURCES).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -'.md'.length))
+  : [];
+
+function citedCards(base) {
+  const byOwner = new Map();
+  if (!existsSync(base)) return byOwner;
+  for (const d of readdirSync(base)) {
+    const dir = join(base, d);
+    if (!statSync(dir).isDirectory()) continue;
+    const refs = new Set();
+    for (const f of readdirSync(dir)) {
+      if (!f.endsWith('.md')) continue;
+      const text = readFileSync(join(dir, f), 'utf8').replace(/^\uFEFF/, '');
+      for (const m of text.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)) refs.add(m[1]);
+    }
+    byOwner.set(d, refs);
+  }
+  return byOwner;
+}
+
+const topicCites = citedCards(TOPICS);
+const appCites = citedCards(join(ROOT, 'for-app'));
+const appUnion = new Set();
+for (const refs of appCites.values()) for (const c of refs) appUnion.add(c);
+const cardTopics = new Map(sourceCards.map((c) => [c, new Set()]));
+for (const [topic, refs] of topicCites) {
+  for (const c of refs) cardTopics.get(c)?.add(topic);
+}
+
+const inTopics = sourceCards.filter((c) => cardTopics.get(c).size > 0);
+const multiTopic = inTopics.filter((c) => cardTopics.get(c).size > 1);
+const appOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && appUnion.has(c));
+const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c));
+
+for (const c of multiTopic) {
+  const n = cardTopics.get(c).size;
+  if (n > 2) {
+    problems.push(`sources/${c}.md — цитируется в ${n} темах, а сноска README говорит «в двух»`);
+  }
+}
+if (nowhere.length) {
+  problems.push(
+    `sources/: карточки не цитируются ни в topics/, ни в for-app/: ${nowhere.join(', ')}`,
+  );
+}
+
+const footnote = readmeText
+  .replace(/\s+/g, ' ')
+  .match(
+    /(\d+) карточек в `sources\/`: (\d+) в темах, (\d+) из них — в двух темах, (\d+) — только в `for-app`/,
+  );
+if (!footnote) {
+  problems.push(
+    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — в двух темах, N — только в `for-app`»',
+  );
+} else {
+  const asRead = [
+    ['карточек в sources/', Number(footnote[1]), sourceCards.length],
+    ['в темах', Number(footnote[2]), inTopics.length],
+    ['в двух темах', Number(footnote[3]), multiTopic.length],
+    ['только в for-app/', Number(footnote[4]), appOnly.length],
+  ];
+  for (const [label, written, actual] of asRead) {
+    if (written !== actual) {
+      problems.push(`README.md — сноска: ${label} ${written}, а на диске ${actual}`);
+    }
+  }
+}
+
+// 10. README.en.md — шпаргалка, а не второй канон. Любое число в ней обязано
+// встречаться в README.md: иначе английская версия вводит факт, которого в
+// русском тексте нет. Номера пунктов списков числом не считаются — «5.» в
+// перечне шагов не даёт права написать «5 тем».
+const EN_README = join(ROOT, 'README.en.md');
+const numbersIn = (text, { skipListMarkers = false } = {}) => {
+  const found = new Set();
+  for (const line of text.split(/\r?\n/)) {
+    const clean = skipListMarkers ? line.replace(/^\s*\d+[.)]\s+/, ' ') : line;
+    for (const m of clean.matchAll(/\d+(?:[.,]\d+)*/g)) found.add(m[0]);
+  }
+  return found;
+};
+if (existsSync(EN_README)) {
+  const enText = readFileSync(EN_README, 'utf8').replace(/^\uFEFF/, '');
+  const canonNumbers = numbersIn(readmeText, { skipListMarkers: true });
+  const extra = [...numbersIn(enText)].filter((n) => !canonNumbers.has(n));
+  if (extra.length) {
+    problems.push(
+      `README.en.md — числа, которых нет в README.md: ${extra.join(', ')} (шпаргалка не вводит своих чисел)`,
+    );
+  }
+} else if (/README\.en\.md/.test(readmeText)) {
+  problems.push('README.md ссылается на English summary, а README.en.md нет');
+}
+
 if (problems.length) {
   console.log('✖ STATUS.md расходится с диском:');
   for (const p of problems) console.log(`   ${p}`);
@@ -285,11 +391,14 @@ for (const t of publicTopics) {
 console.log(
   `· тем: ${publicTopics.length}, источников по темам: ${totalSources}, без перевода: ${untranslated.length}`,
 );
+console.log(
+  `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} в двух темах, ${appOnly.length} только в for-app`,
+);
 
 console.log(
   `✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем; ` +
     `тем без перевода: ${untranslated.length}; «Дыры и пустые поиски» — с датами; «Не нашёл» не пуст`,
 );
 console.log(
-  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники, языки и дата цитаты сверены`,
+  `✔ README.md: таблица тем сходится с topics/ — строк ${readmeRows}, источники, языки, сноска карточек и дата цитаты сверены; README.en.md — подмножество чисел`,
 );
