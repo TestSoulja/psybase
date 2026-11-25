@@ -265,10 +265,10 @@ function build() {
   writeFileSync(join(DIST, 'en', 'index.html'), index('en'), 'utf8');
   writeFileSync(
     join(DIST, 'index.html'),
-    `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><link rel="canonical" href="${SITE}ru/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
+    `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><link rel="canonical" href="${SITE}ru/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
     'utf8',
   );
-  writeFileSync(join(DIST, '404.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>404</title><link rel="stylesheet" href="${BASE}style.css"></head><body><h1>404</h1><p>Страницы нет. <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}en/">All topics</a></p></body></html>`, 'utf8');
+  writeFileSync(join(DIST, '404.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>404</title><link rel="stylesheet" href="${BASE}style.css"></head><body><h1>404</h1><p>Страницы нет. <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}en/">All topics</a></p></body></html>`, 'utf8');
   writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`, 'utf8');
   const urls = [`${SITE}ru/`, `${SITE}en/`, ...pages.map((p) => `${SITE}${p.lang}/${p.slug}/`)];
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
