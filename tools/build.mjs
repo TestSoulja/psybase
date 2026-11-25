@@ -14,6 +14,7 @@ const SITE = 'https://testsoulja.github.io' + BASE;
 const FIXTURE = process.argv.includes('--fixture');
 const DIST = FIXTURE ? join(tmpdir(), 'psybase-fixture-' + process.pid) : join(ROOT, 'dist');
 const TOPICS = join(ROOT, 'topics');
+const PAGES = join(ROOT, 'pages');
 const SOURCES = join(ROOT, 'sources');
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -423,6 +424,25 @@ function build() {
 
   const home = homeStats(topics, cards.size);
 
+  // pages/ — каталог, не темы: страницы не входят в «Тем: N» на главной и не
+  // получают счётчик источников. Пока только RU: en.md у страницы — ошибка,
+  // иначе сборка молча потеряла бы перевод.
+  const pages = [];
+  if (existsSync(PAGES)) {
+    for (const slug of readdirSync(PAGES).filter((d) => statSync(join(PAGES, d)).isDirectory())) {
+      if (slug.startsWith('.')) continue;
+      const ruPath = join(PAGES, slug, 'ru.md');
+      if (!existsSync(ruPath)) throw new Error(`pages/${slug}: нет ru.md — страница без текста не собирается`);
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`pages: слаг «${slug}» не годится: только a-z, 0-9 и дефис`);
+      if (existsSync(join(PAGES, slug, 'en.md'))) throw new Error(`pages/${slug}/en.md: страницы каталога пока только RU`);
+      const ru = frontMatter(readFileSync(ruPath, 'utf8'));
+      const fmSlug = String(ru.data.slug ?? '').trim();
+      if (fmSlug !== slug) throw new Error(`pages/${slug}/ru.md: во front-matter slug «${fmSlug}», а папка «${slug}»`);
+      if (!String(ru.data.title ?? '').trim()) throw new Error(`pages/${slug}/ru.md: во front-matter нет title`);
+      pages.push({ slug, ru, sections: splitSections(ru.body) });
+    }
+  }
+
   let ruPages = 0;
   let enPages = 0;
   for (const t of topics) {
@@ -468,6 +488,25 @@ function build() {
     );
     enPages++;
   }
+  const topicSlugs = new Set(topics.map((t) => t.slug));
+  for (const p of pages) {
+    if (topicSlugs.has(p.slug)) throw new Error(`pages/${p.slug} и topics/${p.slug}: один адрес /ru/${p.slug}/ на двоих`);
+    mkdirSync(join(DIST, 'ru', p.slug), { recursive: true });
+    writeFileSync(
+      join(DIST, 'ru', p.slug, 'index.html'),
+      page({
+        lang: 'ru',
+        slug: p.slug,
+        title: p.ru.data.title,
+        updated: p.ru.data.updated ?? '',
+        sections: p.sections,
+        cards,
+        hasPair: false,
+        stats: null,
+      }),
+      'utf8',
+    );
+  }
   const homeHtml = (lang) => {
     const ru = lang === 'ru';
     const num = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -495,6 +534,11 @@ function build() {
 <nav class="langs"><a href="${BASE}ru/">Русский</a><a href="${BASE}en/">English</a></nav>
 ${homeHtml(lang)}
 <ul>${items}</ul>
+${pages.length
+  ? `<nav class="pages-nav"><h2>${lang === 'ru' ? 'Ещё о базе' : 'More about the base'}</h2><ul>${pages
+      .map((p) => `<li><a href="${BASE}ru/${p.slug}/">${esc(p.ru.data.title)}</a>${lang === 'en' ? ' <span class="rt">(RU)</span>' : ''}</li>`)
+      .join('')}</ul></nav>`
+  : ''}
 </body></html>`;
   };
   for (const lang of ['ru', 'en']) mkdirSync(join(DIST, lang), { recursive: true });
@@ -514,11 +558,13 @@ ${homeHtml(lang)}
     `${SITE}en/`,
     ...topics.map((t) => `${SITE}ru/${t.slug}/`),
     ...topics.filter((t) => t.en).map((t) => `${SITE}en/${t.slug}/`),
+    ...pages.map((p) => `${SITE}ru/${p.slug}/`),
   ];
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
   const bytes = dirBytes(DIST);
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${ruPages + enPages} (RU ${ruPages}, EN ${enPages}, тем без перевода: ${ruPages - enPages}), пропущено draft: ${skipped}, размер: ${bytes} байт`);
+  console.log(`страниц каталога: ${pages.length} (в «Тем: N» не входят, адрес ${BASE}ru/<slug>/)`);
   console.log(`адреса: ${BASE}ru/<slug>/ для всех тем, ${BASE}en/<slug>/ — перевод или маршрут на RU`);
   if (FIXTURE) console.log('режим --fixture: topics/_example, во временную папку');
 }

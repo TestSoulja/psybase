@@ -2,9 +2,12 @@
 /**
  * Страж паритета RU/EN.
  *
- * Сравнивает пары ru.md / en.md в topics/ и for-app/ по тому, что не зависит
+ * Сравнивает пары ru.md / en.md в topics/, for-app/ и pages/ по тому, что не зависит
  * от языка: заголовки (количество и уровень), числа, PMID, DOI, ссылки,
  * ключи front-matter, наличие раздела «не нашёл».
+ *
+ * Файл без en.md — не ошибка, а долг перевода: он идёт в счёт «без перевода»
+ * отдельно по корням, чтобы темы и страницы каталога не смешивались.
  *
  * Стиль и смысл не проверяет — ловит молчаливые потери фактов.
  * Зависимостей нет: только Node.
@@ -18,7 +21,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const ROOTS = ['topics', 'for-app'];
+const ROOTS = ['topics', 'for-app', 'pages'];
 const only = process.argv[2] ?? null;
 
 const URL_RE = /https?:\/\/[^\s)\]"'<>]+/g;
@@ -299,7 +302,7 @@ function collect() {
       if (name.startsWith('.')) continue;
       if (only && name !== only) continue;
       if (!existsSync(join(dir, 'ru.md'))) continue;
-      pairs.push({ dir, slug: name });
+      pairs.push({ dir, slug: name, root });
     }
   }
   return pairs;
@@ -313,11 +316,14 @@ if (!pairs.length) {
 
 let failed = 0;
 let untranslated = 0;
-for (const { dir } of pairs) {
+const untranslatedByRoot = { topics: 0, 'for-app': 0, pages: 0 };
+for (const { dir, root } of pairs) {
   const { where, problems, stats, untranslated: noEn } = checkPair(dir);
   if (noEn) {
     untranslated++;
-    console.log(`· ${where} — без перевода (пары нет, проверять нечего)`);
+    untranslatedByRoot[root]++;
+    const label = root === 'pages' ? ' (страница каталога, пары нет)' : ' (пары нет, проверять нечего)';
+    console.log(`· ${where} — без перевода${label}`);
     continue;
   }
   if (problems.length) {
@@ -330,9 +336,14 @@ for (const { dir } of pairs) {
 }
 
 const pairsChecked = pairs.length - untranslated;
+const un = untranslated
+  ? `файлов без перевода: ${untranslated} (в темах ${untranslatedByRoot.topics}, в for-app ${untranslatedByRoot['for-app']}${
+      untranslatedByRoot.pages ? `, в pages ${untranslatedByRoot.pages}` : ''
+    })`
+  : '';
 console.log(
   failed
-    ? `\nпровалено пар: ${failed} из ${pairsChecked}` + (untranslated ? `; тем без перевода: ${untranslated}` : '')
-    : `\nвсе пары в порядке: ${pairsChecked}` + (untranslated ? `; тем без перевода: ${untranslated}` : ''),
+    ? `\nпровалено пар: ${failed} из ${pairsChecked}` + (un ? `; ${un}` : '')
+    : `\nвсе пары в порядке: ${pairsChecked}` + (un ? `; ${un}` : ''),
 );
 process.exit(failed ? 1 : 0);

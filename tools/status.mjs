@@ -14,11 +14,13 @@
  *     в таблице; тема в таблице, а папки нет; число источников не равно
  *     `sources:` во front-matter темы.
  *   - сноска под таблицей тем («N карточек в sources/: N в темах, N из них —
- *     в нескольких темах, N — только в for-app») расходится с диском.
+ *     больше чем в одной теме, N — только в for-app») расходится с диском.
  *   - в README.en.md пары «N topics/cards/claims/sources» расходятся с числами
  *     главной, которые считает build.mjs (home: topics, cards, claims, notFound).
  *   - в README.en.md есть число, которого нет в README.md: второй слой,
  *     ловит опечатку, а не смысл.
+ *   - pages/<slug>/ без ru.md; слаг страницы совпал с темой; страница попала
+ *     в таблицу тем; «Тем: N» на собранной главной не равна числу папок тем.
  *
  *   node tools/status.mjs
  */
@@ -65,6 +67,22 @@ for (const d of topics) {
   if (d === '_example') continue;
   if (!status.includes(`topics/${d}`) && !status.includes(`${d}/`)) {
     problems.push(`topics/${d}/ru.md — тема не отмечена в STATUS.md`);
+  }
+}
+
+// 2a. pages/ — каталог, а не темы. Папка без ru.md не бывает: иначе сборка
+// молча пропустит страницу, а README будет на неё ссылаться. Слаг страницы
+// не может совпасть с темой: адрес /ru/<slug>/ один.
+const PAGES = join(ROOT, 'pages');
+const pageDirs = existsSync(PAGES)
+  ? readdirSync(PAGES).filter((d) => statSync(join(PAGES, d)).isDirectory()).filter((d) => !d.startsWith('.'))
+  : [];
+for (const d of pageDirs) {
+  if (!existsSync(join(PAGES, d, 'ru.md'))) {
+    problems.push(`pages/${d}/ — папка без ru.md: страница без текста`);
+  }
+  if (topics.includes(d)) {
+    problems.push(`pages/${d}/ и topics/${d}/ — один адрес /ru/${d}/ на двоих`);
   }
 }
 
@@ -226,7 +244,11 @@ if (readmeHead === -1) {
     }
     const info = topicsInfo.find((t) => t.dir === slug);
     if (!info) {
-      problems.push(`README.md — тема «${cells[0]}» есть в таблице, а папки topics/${slug} нет`);
+      if (pageDirs.includes(slug)) {
+        problems.push(`README.md — «${cells[0]}»: это pages/${slug}/, а таблица тем только для topics/`);
+      } else {
+        problems.push(`README.md — тема «${cells[0]}» есть в таблице, а папки topics/${slug} нет`);
+      }
       continue;
     }
     seen.add(slug);
@@ -282,6 +304,8 @@ if (!citation) {
 // которое кончается устаревшей цифрой. Считаем так же, как читает человек:
 // карточки в sources/, уникальные карточки в topics/, карточки, попавшие
 // больше чем в одну тему, и карточки, которые есть только в for-app/.
+// pages/ сюда намеренно не читается: страница каталога не тема, и её ссылки
+// не должны попадать в «в темах».
 const SOURCES = join(ROOT, 'sources');
 const sourceCards = existsSync(SOURCES)
   ? readdirSync(SOURCES).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -'.md'.length))
@@ -318,6 +342,8 @@ const multiTopic = inTopics.filter((c) => cardTopics.get(c).size > 1);
 const appOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && appUnion.has(c));
 const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c));
 
+// С 25.11.2026 карточки законно живут в трёх темах; формулировка стала точной:
+// «больше чем в одной», проверять нечего — это определение множества.
 for (const c of nowhere) {
   problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/`);
 }
@@ -325,17 +351,17 @@ for (const c of nowhere) {
 const footnote = readmeText
   .replace(/\s+/g, ' ')
   .match(
-    /(\d+) карточ(?:ек|ки) в `sources\/`: (\d+) в темах, (\d+) из них — в нескольких темах, (\d+) — только в `for-app`/,
+    /(\d+) карточ(?:ек|ки) в `sources\/`: (\d+) в темах, (\d+) из них — больше чем в одной теме, (\d+) — только в `for-app`/,
   );
 if (!footnote) {
   problems.push(
-    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — в нескольких темах, N — только в `for-app`»',
+    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — больше чем в одной теме, N — только в `for-app`»',
   );
 } else {
   const asRead = [
     ['карточек в sources/', Number(footnote[1]), sourceCards.length],
     ['в темах', Number(footnote[2]), inTopics.length],
-    ['в нескольких темах', Number(footnote[3]), multiTopic.length],
+    ['больше чем в одной теме', Number(footnote[3]), multiTopic.length],
     ['только в for-app/', Number(footnote[4]), appOnly.length],
   ];
   for (const [label, written, actual] of asRead) {
@@ -382,6 +408,27 @@ const buildHome = {
   claims: buildStats.reduce((n, s) => n + s.claims, 0),
   notFound: buildStats.reduce((n, s) => n + s.notFound, 0),
 };
+
+// 9a. Главная: «Тем: N» — только topics/. pages/ — каталог, он в счётчик не
+// входит. Сверяем собранную страницу, а не формулу: если счётчик сложит темы
+// и страницы, число разойдётся.
+const DIST_HOME = join(ROOT, 'dist', 'ru', 'index.html');
+if (existsSync(DIST_HOME)) {
+  const html = readFileSync(DIST_HOME, 'utf8').replace(/^\uFEFF/, '');
+  const shown = html.match(/Тем:\s*([\d\s\u00a0]+)/);
+  if (!shown) {
+    problems.push('dist/ru/index.html — нет строки «Тем: N», сверять нечего');
+  } else {
+    const written = Number(shown[1].replace(/\D/g, ''));
+    if (written !== buildHome.topics) {
+      problems.push(
+        `dist/ru/index.html — «Тем: ${written}», а папок тем ${buildHome.topics}: страницы каталога не должны входить в счётчик`,
+      );
+    }
+  }
+} else {
+  console.log('· dist/ru/index.html нет — сверка «Тем: N» на главной пропущена (нужна сборка)');
+}
 
 const HOME_KEYS = {
   topics: 'topics',
@@ -445,8 +492,9 @@ console.log(
   `· тем: ${publicTopics.length}, источников по темам: ${totalSources}, без перевода: ${untranslated.length}`,
 );
 console.log(
-  `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} в нескольких темах, ${appOnly.length} только в for-app`,
+  `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} больше чем в одной теме, ${appOnly.length} только в for-app`,
 );
+console.log(`· страниц каталога: ${pageDirs.length} (в таблицу тем и сноску карточек не входят)`);
 
 console.log(
   `✔ STATUS.md совпадает с диском: ${inboxFiles.length} файлов в очереди, ${topics.length} папок тем; ` +
