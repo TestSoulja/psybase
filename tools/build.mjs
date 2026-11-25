@@ -179,9 +179,10 @@ function cite(html, cards) {
     }),
   );
 }
-const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 system-ui,sans-serif;color:#1b1b1b}h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.2rem}.meta{color:#555;font-size:.9rem}.disclaimer{background:#fff4e5;border-left:4px solid #c77;padding:.7rem 1rem;margin:1rem 0}.badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;background:#eee;border-radius:3px;padding:.05rem .35rem}.badge-meta{background:#d7f0d7}.badge-rct{background:#d7e8f7}.badge-cohort{background:#e7e2f7}.badge-case{background:#f7e7d7}.badge-review{background:#f2f2d0}.badge-opinion{background:#f7d7d7}.badge-unsure{background:#eee;color:#a00}.src{font-family:ui-monospace,monospace;font-size:.9em}.cite{color:#555;font-size:.85em}.not-found{background:#f6f6f6;padding:.2rem 1rem}nav.langs a{margin-right:.6rem}footer{margin-top:3rem;border-top:1px solid #ddd;padding-top:.8rem;font-size:.85rem;color:#555}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:.25rem .5rem}`;
+const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 system-ui,sans-serif;color:#1b1b1b}h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.2rem}.meta{color:#555;font-size:.9rem}.disclaimer{background:#fff4e5;border-left:4px solid #c77;padding:.7rem 1rem;margin:1rem 0}.badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;background:#eee;border-radius:3px;padding:.05rem .35rem}.badge-meta{background:#d7f0d7}.badge-rct{background:#d7e8f7}.badge-cohort{background:#e7e2f7}.badge-case{background:#f7e7d7}.badge-review{background:#f2f2d0}.badge-opinion{background:#f7d7d7}.badge-unsure{background:#eee;color:#a00}.src{font-family:ui-monospace,monospace;font-size:.9em}.cite{color:#555;font-size:.85em}.not-found{background:#f6f6f6;padding:.2rem 1rem}nav.langs a{margin-right:.6rem}footer{margin-top:3rem;border-top:1px solid #ddd;padding-top:.8rem;font-size:.85rem;color:#555}table{border-collapse:collapse;max-width:100%}td,th{border:1px solid #ccc;padding:.25rem .5rem}
+@media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
+@media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
 function page({ lang, slug, title, updated, sections, cards, hasPair }) {
-  const other = lang === 'ru' ? 'en' : 'ru';
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
   const body = sections
@@ -199,8 +200,8 @@ function page({ lang, slug, title, updated, sections, cards, hasPair }) {
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><link rel="canonical" href="${SITE}${lang}/${slug}/">
-<link rel="alternate" hreflang="${other}" href="${SITE}${other}/${slug}/">
-<style>${CSS}</style></head><body>
+<link rel="alternate" hreflang="ru" href="${SITE}ru/${slug}/"><link rel="alternate" hreflang="en" href="${SITE}en/${slug}/"><link rel="alternate" hreflang="x-default" href="${SITE}ru/${slug}/">
+<link rel="stylesheet" href="${BASE}style.css"></head><body>
 <nav class="langs">${hasPair ? `<a href="${ru}"${lang === 'ru' ? ' aria-current="page"' : ''}>Русский</a><a href="${en}"${lang === 'en' ? ' aria-current="page"' : ''}>English</a>` : ''}</nav>
 <header><h1>${esc(title)}</h1>
 <p class="meta">${updatedLabel}: ${esc(updated)}</p>
@@ -251,32 +252,26 @@ function build() {
   const index = (lang) => {
     const items = pages.filter((p) => p.lang === lang);
     return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><title>psybase</title>
-<link rel="canonical" href="${SITE}${lang}/"><style>${CSS}</style></head><body>
+<link rel="canonical" href="${SITE}${lang}/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body>
 <h1>${lang === 'ru' ? 'Пси-база' : 'Psybase'}</h1>
 <p class="disclaimer">${lang === 'ru' ? 'Не заменяет врача. При угрозе жизни — 112.' : 'Not a substitute for a doctor. If life is in danger, call 112.'}</p>
 <nav class="langs"><a href="${BASE}ru/">Русский</a><a href="${BASE}en/">English</a></nav>
 <ul>${items.map((p) => `<li><a href="${BASE}${lang}/${p.slug}/">${esc(p.title)}</a></li>`).join('')}</ul>
 </body></html>`;
   };
-  mkdirSync(join(DIST, 'ru'), { recursive: true });
-  mkdirSync(join(DIST, 'en'), { recursive: true });
+  for (const lang of ['ru', 'en']) mkdirSync(join(DIST, lang), { recursive: true });
+  writeFileSync(join(DIST, 'style.css'), CSS, 'utf8');
   writeFileSync(join(DIST, 'ru', 'index.html'), index('ru'), 'utf8');
   writeFileSync(join(DIST, 'en', 'index.html'), index('en'), 'utf8');
   writeFileSync(
     join(DIST, 'index.html'),
-    `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><link rel="canonical" href="${SITE}ru/"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
+    `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=${BASE}ru/"><link rel="canonical" href="${SITE}ru/"><link rel="alternate" hreflang="ru" href="${SITE}ru/"><link rel="alternate" hreflang="en" href="${SITE}en/"><link rel="stylesheet" href="${BASE}style.css"></head><body><a href="${BASE}ru/">Пси-база</a></body></html>`,
     'utf8',
   );
-  writeFileSync(join(DIST, '404.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>404</title><style>${CSS}</style></head><body><h1>404</h1><p>Страницы нет. <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}en/">All topics</a></p></body></html>`, 'utf8');
+  writeFileSync(join(DIST, '404.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>404</title><link rel="stylesheet" href="${BASE}style.css"></head><body><h1>404</h1><p>Страницы нет. <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}en/">All topics</a></p></body></html>`, 'utf8');
   writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`, 'utf8');
   const urls = [`${SITE}ru/`, `${SITE}en/`, ...pages.map((p) => `${SITE}${p.lang}/${p.slug}/`)];
-  writeFileSync(
-    join(DIST, 'sitemap.xml'),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-      .map((u) => `  <url><loc>${u}</loc></url>`)
-      .join('\n')}\n</urlset>\n`,
-    'utf8',
-  );
+  writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
   const bytes = dirBytes(DIST);
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${pages.length} (тем: ${pages.length / 2}), пропущено draft: ${skipped}, размер: ${bytes} байт`);
