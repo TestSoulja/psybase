@@ -51,16 +51,19 @@ Get-ChildItem -Force | Where-Object { $_.Name -ne '.git' } | Remove-Item -Recurs
 Copy-Item (Join-Path $repo 'dist\*') -Destination $tmp -Recurse -Force
 New-Item -ItemType File -Path (Join-Path $tmp '.nojekyll') -Force | Out-Null
 
-if (-not (git status --porcelain)) {
+git add -A
+# Сравнивать надо индекс, а не рабочее дерево: при включённом autocrlf status
+# видит CRLF↔LF как изменения, а git add нормализует их обратно в тот же blob.
+git diff --cached --quiet
+if ($LASTEXITCODE -eq 0) {
   Write-Host "✔ gh-pages уже совпадает с dist/ — коммит не нужен"
   Pop-Location
   git worktree remove $tmp --force
   exit 0
 }
 
-git add -A
 git commit -m ("site: " + (Get-Date -Format 'yyyy-MM-dd HH:mm'))
-if ($LASTEXITCODE -ne 0) { Pop-Location; Fail "коммит в gh-pages не создан" }
+if ($LASTEXITCODE -ne 0) { Pop-Location; git worktree remove $tmp --force; Fail "коммит в gh-pages не создан" }
 
 # Обычный push: если кто-то успел вперёд — упадёт, повторять с --force нельзя.
 git push origin HEAD:gh-pages

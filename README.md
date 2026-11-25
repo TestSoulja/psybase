@@ -122,11 +122,11 @@ Issue в этом репозитории — про текст и источни
 Подробно — [`docs/rules.md`](docs/rules.md). Где остановились — [`STATUS.md`](STATUS.md),
 читается первым. Что в этой среде не открывается — [`docs/env.md`](docs/env.md).
 
-Зависимостей нет: нужен только Node.
+Зависимостей нет: нужен только Node (для выкладки — ещё PowerShell).
 
 ```bash
 npm run check                # паритет RU/EN + STATUS.md: очереди, даты, «Не нашёл»
-node tools/parity.mjs паника # одна тема по слагу
+node tools/parity.mjs depressiya  # одна тема по слагу
 ```
 
 ### Сборка сайта и выкладка
