@@ -5,3 +5,6 @@ dist/
 
 # агентский файл — только для локальной работы, публике не нужен
 AGENTS.md
+
+# сгенерированная выжимка утверждений (tools/research-stats.mjs --tsv)
+research/*/claims.tsv

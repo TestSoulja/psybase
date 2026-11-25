@@ -1,7 +1,7 @@
 ---
 lane: 9
-status: остановлен по времени — заход 4, доля депрессии при РПП закрыта как «не нашёл» (10 формулировок за 4 захода); разрыв ОКР при РПП 18% vs 13,9% разобран методом — требование диагностического интервью заявлено только в 34216946, у 33065835 в абстракте его нет, и он смешивает дизайны (проспективно 38%)
-next: "Europe PMC: `TITLE:\"insomnia\" AND (TITLE:\"anxiety disorders\" OR TITLE:\"anxiety\") AND (TITLE:\"meta-analysis\" OR TITLE:\"systematic review\")`, при нуле — `ABSTRACT:\"insomnia\" AND ABSTRACT:\"anxiety disorders\" AND ABSTRACT:\"prevalence\" AND ABSTRACT:\"meta-analysis\"`; нужна сводная доля тревожных расстройств при бессоннице (или бессонницы при тревожных) с годом, популяцией и инструментом диагностики. Если оба 0 — закрыть ветку как «не нашёл» и взять 40339385 через resultType=lite: дизайн, N, чем измерен двойной диагноз. Направление не расширять."
+status: остановлен по времени — заход 5, 2026-11-25: доля тревожных расстройств при бессоннице закрыта как «не нашёл» (6 формулировок в этом заходе, 9 за два захода); 40339385 открыт через resultType=core — двойной диагноз у взрослых под стражей 25,3% (95% CI 18,6–32,7), 20 исследований в мета-анализе из 25 отобранных, инструмент диагностики в абстракте не назван; сравнение с клиническими 44,70% (41175340) разобрано как разница места набора
+next: "Europe PMC: TITLE:\"dual diagnosis\" AND (TITLE:\"general population\" OR TITLE:\"community\") — нужна третья точка для сравнения двойного диагноза (тюрьма 25,3%, PMID 40339385, против клиник 44,70%, PMID 41175340); если 0 — ABSTRACT:\"dual diagnosis\" AND ABSTRACT:\"prevalence\" AND ABSTRACT:\"meta-analysis\" AND ABSTRACT:\"community\". Параллельно добить долю тревожных при бессоннице не пытаться — ветка закрыта за 9 формулировок. Направление не расширять."
 updated: 2026-11-25
 ---
 
@@ -244,3 +244,59 @@ updated: 2026-11-25
 - Два запроса authorString к core-записи 34216946 оборвались по таймауту; авторский состав этой статьи в журнал не записан (на утверждения не влияет)
 - node tools/sources-index.mjs 33065835 — «✔ 4 упом. в 1 файл, не проверен — карточки нет», все упоминания в этом же файле
 - node tools/sources-index.mjs 34216946 — «✔ 2 упом. в 1 файл, не проверен — карточки нет», оба упоминания в этом же файле
+
+## Заход 5 (2026-11-25)
+
+Заход по пункту очереди: доля тревожных расстройств при бессоннице (запросы по названию и по абстракту), затем 40339385 через resultType=lite. Первая половина закрыта как «не нашёл» — 6 формулировок, сводной доли нет ни в одной; вторая половина дала цифру. Направление не расширялось.
+
+### Что нашёл
+
+- Двойной диагноз (психическое расстройство вместе с расстройством употребления психоактивных веществ) у взрослых под стражей: сводная доля 25,3% (95% CI 18,6–32,7), отобрано 25 исследований, в мета-анализ вошли 20, 2025 — PMID 40339385 / 10.1016/j.drugalcdep.2025.112675 — meta — абстракт Europe PMC (resultType=core), полный текст платный
+- Та же работа, дизайн: систематический обзор с мета-анализом случайных эффектов; сводная доля считалась по двоичным оценкам распространённости, а связи с факторами собраны описательно, без объединения коэффициентов; поиск в шести базах (CINAHL, CINCH, Embase, Medline, PsycINFO, Web of Science) плюс обратное цитирование предыдущего обзора по австралийским тюрьмам, 2025 — PMID 40339385 — meta — абстракт
+- Та же работа, чем определён двойной диагноз: совместная встречаемость психического расстройства и расстройства употребления психоактивных веществ; конкретный инструмент диагностики (интервью, шкала, регистр) в абстракте не назван — проверить нечем, полный текст закрыт, 2025 — PMID 40339385 — meta — абстракт
+- Та же работа, связанные факторы (перечислены без чисел): употребление запрещённых веществ до 15 лет, жизнь с человеком, употреблявшим вещества, до заключения, пережитое насилие, повышенный риск суицида, несколько судимостей за жизнь, 2025 — PMID 40339385 — meta — абстракт
+
+### Где расхождения
+
+- Двойной диагноз: 44,70% (95% CI 0,28–0,63) в клинических выборках (2025, 32 исследования, суммарно N=2 805 009, PMID 41175340, записан в первом заходе) против 25,3% (95% CI 18,6–32,7) у взрослых под стражей (2025, 20 исследований в мета-анализе, PMID 40339385) — разница по месту набора: клиники считают тех, кто уже пришёл за помощью, тюрьма — всех под стражей, включая не обращавшихся. Выборки не пересекаются, поэтому это не противоречие, а две популяции; ставить обе цифры рядом можно только с указанием места набора
+- Внутри 40339385: отобрано 25 исследований, а в мета-анализ вошли 20 — сводная доля посчитана не по всему пулу. Какие пять работ выпали и в какую сторону это могло сместить оценку, из абстракта не видно; писать «по 25 исследованиям» нельзя
+
+### Не открылось
+
+- Полный текст PMID 40339385 (Drug Alcohol Depend, Elsevier) — только абстракт: isOpenAccess N, inEPMC N, inPMC N, hasPDF N; перечень 25 исследований, определение «психического расстройства» (какие диагнозы входили) и инструменты диагностики не проверены, в утверждениях выше только то, что сказано в абстракте
+- NICE CG113 и CG31 — 403 в предыдущих заходах, в этом не перезапрашивал (правило: не перезапрашивать); CG78, NG222, NG225 не запрашивал
+
+### Не нашёл
+
+- Europe PMC — `TITLE:"insomnia" AND (TITLE:"anxiety disorders" OR TITLE:"anxiety") AND (TITLE:"meta-analysis" OR TITLE:"systematic review")` — вернулось 46: всё про лечение и вмешательства (КПТ, магний, лаванда, иглоукалывание), нейровизуализацию, COVID-19, беременность, медработников, трансплантацию печени; сводной доли тревожных расстройств **при** бессоннице нет ни в одной записи
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"prevalence" AND ABSTRACT:"meta-analysis"` (дословно из `next`) — вернулось 3, отобрано 0: два варианта одного обзора про стойкие нейропсихиатрические симптомы после COVID-19 (35169700, препринт и статья) и обзор психиатрических последствий тяжёлых коронавирусных инфекций (32437679) — там доли тревожных при бессоннице нет
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"comorbid" AND (ABSTRACT:"meta-analysis" OR ABSTRACT:"systematic review")` — вернулось 2, отобрано 0: расстройства сна у мигрантов и беженцев (32549917), растительные средства при депрессии, тревоге и бессоннице (21601431)
+- Europe PMC — `TITLE:"insomnia" AND TITLE:"comorbid" AND ABSTRACT:"anxiety disorders"` — вернулось 9, отобрано 0: назначение психотропных в Пекине, даридорексант, стоимость бессонницы в Мексике, КПТ при коморбидной бессоннице, циталопрам с доксепином — ни одной сводной доли
+- Europe PMC — `TITLE:"insomnia" AND TITLE:"anxiety" AND ABSTRACT:"prevalence" AND (ABSTRACT:"meta-analysis" OR ABSTRACT:"systematic review")` — вернулось 13, отобрано 0: те же COVID-19, беременность, медработники, Африка, Эбола, трансплантация
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"lifetime" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"prevalence"` — вернулось 3, отобрано 0: ПТСР и тревожные состояния (обзор Continuum), генерализованное тревожное расстройство (обзор 2002), хроническая усталость в Гонконге (2000)
+- Europe PMC — `ABSTRACT:"generalized anxiety disorder" AND ABSTRACT:"insomnia" AND ABSTRACT:"prevalence" AND ABSTRACT:"meta-analysis"` — 0 результатов
+- Europe PMC — `TITLE:"sleep disturbance" AND TITLE:"anxiety disorders" AND TITLE:"meta-analysis"` — 0 результатов
+- Europe PMC — обзор 40656083 (2024, Neurosci Appl, 93 статьи про бессонницу при тревожных расстройствах, ОКР и ПТСР) — сводной доли не даёт, только описание связи и механизмов; число из него не беру
+- Итог по ветке: доля тревожных расстройств при бессоннице за два захода (заход 1 — 3 формулировки, заход 5 — 6) не подтверждена источником; ни прямой доли (тревожные среди бессонных), ни обратной (бессонница при тревожных) в мета-анализах не нашлось. Цифру не записываю, ветку закрываю
+- Инструмент диагностики двойного диагноза в PMID 40339385 — в абстракте не назван, полный текст платный; ни подтверждено, ни опровергнуто, в утверждения не беру
+
+### Журнал запросов
+
+- Europe PMC — `TITLE:"insomnia" AND (TITLE:"anxiety disorders" OR TITLE:"anxiety") AND (TITLE:"meta-analysis" OR TITLE:"systematic review")` — вернулось 46, отобрано 0
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"prevalence" AND ABSTRACT:"meta-analysis"` — вернулось 3, отобрано 0
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"comorbid" AND (ABSTRACT:"meta-analysis" OR ABSTRACT:"systematic review")` — вернулось 2, отобрано 0
+- Europe PMC — `TITLE:"insomnia" AND TITLE:"comorbid" AND ABSTRACT:"anxiety disorders"` — вернулось 9, отобрано 0
+- Europe PMC — `TITLE:"insomnia" AND TITLE:"anxiety" AND ABSTRACT:"prevalence" AND (ABSTRACT:"meta-analysis" OR ABSTRACT:"systematic review")` — вернулось 13, отобрано 0
+- Europe PMC — `ABSTRACT:"insomnia" AND ABSTRACT:"lifetime" AND ABSTRACT:"anxiety disorders" AND ABSTRACT:"prevalence"` — вернулось 3, отобрано 0
+- Europe PMC — `ABSTRACT:"generalized anxiety disorder" AND ABSTRACT:"insomnia" AND ABSTRACT:"prevalence" AND ABSTRACT:"meta-analysis"` — вернулось 0, отобрано 0
+- Europe PMC — `TITLE:"sleep disturbance" AND TITLE:"anxiety disorders" AND TITLE:"meta-analysis"` — вернулось 0, отобрано 0
+- Один батч из трёх запросов через `fetch` в Code Mode оборвался по таймауту инструмента дважды подряд (запросы `TITLE:"insomnia" AND TITLE:"anxiety" AND ABSTRACT:"prevalence" ...`, `ABSTRACT:"insomnia" AND ABSTRACT:"anxiety disorder" AND ABSTRACT:"pooled prevalence"`, `TITLE:"insomnia" AND TITLE:"psychiatric comorbidity"`); перезапущены по одному через PowerShell, результаты учтены выше, `pooled prevalence` и `psychiatric comorbidity` в журнал не попали — ответ по ним в этой сессии не получен
+- Europe PMC — `EXT_ID:40339385 AND SRC:MED`, resultType=lite — вернулось 1: Taggart N., Kinner S.A., Young J.T., «The prevalence and correlates of dual diagnosis among adults in custody: A systematic review and meta-analysis», Drug Alcohol Depend, 2025, т. 272, с. 112675, DOI 10.1016/j.drugalcdep.2025.112675; isOpenAccess N, inEPMC N, inPMC N
+- Europe PMC — `EXT_ID:40339385 AND SRC:MED`, resultType=core — вернулось 1: абстракт прочитан, цифры и дизайн взяты оттуда
+- Europe PMC — `EXT_ID:40656083 AND SRC:MED`, resultType=core — вернулось 1: «Insomnia, anxiety and related disorders: a systematic review…», Neurosci Appl, 2024, DOI 10.1016/j.nsa.2024.103936; сводной доли в абстракте нет
+- doi.org — `10.1016/j.drugalcdep.2025.112675` — responseCode 1, ведёт на linkinghub.elsevier.com (pii S0376871625001280)
+- doi.org — `10.1016/j.nsa.2024.103936` — не запрашивал: запись Europe PMC без журнала и с пустым полем журнала, цифру из неё не беру
+- NCBI eutils не понадобился: 503 от Europe PMC в этом заходе не было
+- node tools/sources-index.mjs 40339385 — «✖ PMID 40339385 — нигде не упомянут»: упоминания в этом файле есть только как «не открылся» (заходы 1 и «Не дошёл до»), карточки в sources/ нет, утверждения не дублируются
+- node tools/sources-index.mjs 40656083 — «✖ нигде не упомянут», id новый
+- node tools/sources-index.mjs 41519366 — «✖ нигде не упомянут», id новый (не использован: обзор про упражнения при бессоннице)
