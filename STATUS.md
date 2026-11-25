@@ -6,12 +6,13 @@
 
 ## Одной строкой
 
-Корпус перенесён, 17 тем лежат в `legacy/inbox/`, ссылки проверены. Две темы
-сконвертированы: 6.30 «Депрессия» → `topics/depressiya/` и 6.31 «Поведенческая
-активация» → `topics/povedencheskaya-aktivaciya/` (RU + EN + for-app, 17 карточек
-источников на двоих). Следующая — 6.32 «Антидепрессанты». Сырьё спринта
-(`research/2026-11-25/`) — волны возобновлены 25.11.2026, идёт цикл волн
-(`research/queue.md`), шесть волн, последняя — 6-я.
+Корпус перенесён, 17 тем лежат в `legacy/inbox/`, ссылки проверены. Три темы
+сконвертированы: 6.30 «Депрессия» → `topics/depressiya/`, 6.31 «Поведенческая
+активация» → `topics/povedencheskaya-aktivaciya/` и 6.32 «Антидепрессанты» →
+`topics/antidepressanty/` (RU + EN + for-app, 26 карточек источников на троих).
+Следующая — 6.33 «Депрессия и ПРЛ». Сырьё спринта (`research/2026-11-25/`) —
+волны возобновлены 25.11.2026, идёт цикл волн (`research/queue.md`), семь волн,
+последняя — 7-я.
 
 Сайт выложен: <https://testsoulja.github.io/psybase/> — ветка `gh-pages`,
 источник Pages = `gh-pages` / root, выкладка через `scripts/deploy-pages.ps1`.
@@ -32,7 +33,7 @@
 | 6.29 | `06-29-yazyk-i-stigma.md` | 10 | проверены | ждёт конвертации |
 | 6.30 | `06-30-depressiya.md` | 6 | проверены | сконвертирована → `topics/depressiya/` |
 | 6.31 | `06-31-povedencheskaya-aktivaciya.md` | 10 | проверены | сконвертирована → `topics/povedencheskaya-aktivaciya/` |
-| 6.32 | `06-32-antidepressanty.md` | 9 | проверены | ждёт конвертации |
+| 6.32 | `06-32-antidepressanty.md` | 9 | проверены | сконвертирована → `topics/antidepressanty/` |
 | 6.33 | `06-33-depressiya-i-prl.md` | 14 | проверены | ждёт конвертации |
 | 6.34 | `06-34-trevozhnye.md` | 6 | проверены | ждёт конвертации |
 | 6.35 | `06-35-panika.md` | 18 | проверены | ждёт конвертации |
@@ -56,6 +57,11 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
   `ru.md` + `en.md`, 10 источников (все карточки в `sources/`), пара для
   приложения — `for-app/povedencheskaya-aktivaciya/`. `parity.mjs`: 5 заголовков
   и 97 чисел. Исходник — `legacy/inbox/06-31-povedencheskaya-aktivaciya.md`.
+- `topics/antidepressanty/` — «Антидепрессанты», пара `ru.md` + `en.md`,
+  9 источников (все карточки в `sources/`), пара для приложения —
+  `for-app/antidepressanty/`. `parity.mjs`: 5 заголовков и 91 число. Исходник —
+  `legacy/inbox/06-32-antidepressanty.md`. Все 9 DOI — `responseCode 1`,
+  9 PMID найдены через DOI и сверены Europe PMC (`hitCount 1`).
 - `topics/_example/` — пример структуры (`draft: true`), не факт, не публиковать.
 
 ## Дыры и пустые поиски
@@ -77,8 +83,8 @@ handle API, седьмой (`10.1016/S0196-0644(89)80515-3`) doi.org не отв
 
 ## Дальше (не в этом шаге)
 
-1. **Следующая тема — 6.32:** `legacy/inbox/06-32-antidepressanty.md`
-   (9 ссылок). Порядок тот же, что с 6.30 и 6.31: открыть и сверить источники →
+1. **Следующая тема — 6.33:** `legacy/inbox/06-33-depressiya-i-prl.md`
+   (14 ссылок). Порядок тот же, что с 6.30–6.32: открыть и сверить источники →
    карточки в `sources/` → `topics/<slug>/ru.md` + `en.md` → `for-app/<slug>/` →
    «Не нашёл» / «Not found» → `node tools/parity.mjs` → отметить в «Приёмке».
 2. **Спринт 2026-11-25 — сырьё (волны возобновлены 25.11.2026):**
