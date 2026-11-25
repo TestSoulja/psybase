@@ -3,6 +3,7 @@ slug: kannabis
 title: Каннабис и другие вещества
 updated: 2026-11-26
 sources: 118
+age: 18+
 ---
 
 ## Что это

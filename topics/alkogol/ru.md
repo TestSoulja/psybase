@@ -3,6 +3,7 @@ slug: alkogol
 title: Алкоголь
 updated: 2026-11-25
 sources: 156
+age: 18+
 ---
 
 ## Что это

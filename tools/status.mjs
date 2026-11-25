@@ -38,7 +38,7 @@
  */
 
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { frontMatter, topicStats } from './stats.mjs';
 
@@ -95,6 +95,37 @@ for (const d of pageDirs) {
   }
   if (topics.includes(d)) {
     problems.push(`pages/${d}/ и topics/${d}/ — один адрес /ru/${d}/ на двоих`);
+  }
+}
+
+// 2b. Возрастной маркер. 18+ — наше решение, а не требование закона (см.
+// docs/rules.md), но у тем о веществах он обязателен: без него страница
+// выглядит как совет для любого возраста. Список пополняется вместе с темой:
+// слаг, для которого нет topics/<slug>/, — ошибка, а не «запланировано».
+// Значение проверяется у всех тем: опечатка «18+ » или «16+» не должна
+// проходить молча.
+const SUBSTANCE_TOPICS = ['alkogol', 'kannabis'];
+const AGE_VALUES = ['18+'];
+for (const d of topics) {
+  const p = join(TOPICS, d, 'ru.md');
+  if (!existsSync(p)) continue;
+  const { data } = frontMatter(readFileSync(p, 'utf8'));
+  const age = String(data.age ?? '').trim();
+  if (!age) continue;
+  if (!AGE_VALUES.includes(age)) {
+    problems.push(`topics/${d}/ru.md — age: «${age}», допустимо только ${AGE_VALUES.join(' | ')}`);
+  }
+}
+for (const slug of SUBSTANCE_TOPICS) {
+  if (!topics.includes(slug)) {
+    problems.push(`SUBSTANCE_TOPICS: «${slug}» в списке, а папки topics/${slug}/ нет`);
+    continue;
+  }
+  const p = join(TOPICS, slug, 'ru.md');
+  const { data } = frontMatter(readFileSync(p, 'utf8'));
+  const age = String(data.age ?? '').trim();
+  if (!age) {
+    problems.push(`topics/${slug}/ru.md — у темы о веществе нет «age: 18+» (SUBSTANCE_TOPICS)`);
   }
 }
 
@@ -179,6 +210,62 @@ for (const d of topics) {
       `topics/${d}/ru.md — нет обязательных разделов: «${missing.join('», «')}» (README: минимум «Что это», «Что не доказано», «Не нашёл», «Источники»)`,
     );
   }
+}
+
+// 5c. Инструкции по употреблению. Правило 4 из docs/rules.md и обещание на
+// странице «Как мы работаем»: база не описывает способы, дозы, пути и места.
+// Страж ищет формулы, а не смысл: он не отличит предупреждение от совета, и
+// это осознанно — база не должна содержать такие фразы даже в отрицании.
+// «Ё» и регистр не спасают: текст приводится к нижнему регистру, поиск идёт
+// без учёта регистра.
+//
+// Дозы регуляркой не проверяются: числа в миллиграммах законно стоят в
+// описании исследований (например, «доза ТГК в экспериментальной работе»),
+// и шаблон «цифра + мг» ловил бы научные данные, а не инструкцию. Запрет на
+// дозы держится редактурой и тем, что в темах нет раздела «как принимать».
+const INSTRUCTION_FORMULAS = [
+  {
+    re: /как\s+(?:принимать|принять|употреблять|употребить|приготовить|приготовлять|изготовить|изготовлять|вырастить|выращивать|экстрагировать|экстрагируют)/iu,
+    label: 'инструкция «как …»',
+  },
+  {
+    re: /способ(?:ы|ов)?\s+(?:употребления|введения|изготовления)/iu,
+    label: 'описание способа',
+  },
+  {
+    re: /где\s+(?:можно\s+)?(?:купить|достать|приобрести|заказать)/iu,
+    label: 'место приобретения',
+  },
+  {
+    re: /обойти\s+(?:тест|тесты|проверку|проверки)/iu,
+    label: 'обход проверки',
+  },
+  {
+    re: /(?:для\s+усиления\s+эффекта|чтобы\s+усилить\s+эффект)/iu,
+    label: 'усиление эффекта',
+  },
+];
+const instructionFiles = [];
+for (const d of topics) {
+  const p = join(TOPICS, d, 'ru.md');
+  if (existsSync(p)) instructionFiles.push(p);
+}
+for (const d of pageDirs) {
+  const p = join(PAGES, d, 'ru.md');
+  if (existsSync(p)) instructionFiles.push(p);
+}
+for (const p of instructionFiles) {
+  const text = readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
+  text.split(/\r?\n/).forEach((line, i) => {
+    for (const { re, label } of INSTRUCTION_FORMULAS) {
+      const m = line.match(re);
+      if (m) {
+        problems.push(
+          `${relative(ROOT, p).replace(/\\/g, '/')}:${i + 1} — запрещённая формула «${m[0]}» (${label})`,
+        );
+      }
+    }
+  });
 }
 
 // 6. `sources: N` во front-matter = числу различных карточек, на которые ссылается

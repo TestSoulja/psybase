@@ -444,7 +444,7 @@ function sourceIndexPage({ cards, topics, topicTitles }) {
 <p>Порядок — от обзоров и мета-анализов к отдельным наблюдениям, внутри типа — по году, затем по названию. Это порядок показа, а не рейтинг: тип говорит, какие выводы исследование в принципе позволяет, и не заменяет оценку качества (почему мы не считаем GRADE — <a href="${BASE}ru/dokazatelnost/">на странице о доказательствах</a>).</p>
 <table class="sources"><thead><tr><th>Источник</th><th>Год</th><th>Тип</th><th>Цитируется в темах</th><th>PMID / DOI</th></tr></thead><tbody>${rows}</tbody></table>
 </main>
-<footer><p><a href="${BASE}ru/">Все темы</a> · <a href="${BASE}">psybase</a></p></footer>
+<footer><p><a href="${BASE}ru/">Все темы</a> · <a href="${BASE}ru/kak-my-rabotaem/" lang="ru">Как мы работаем</a> · <a href="${BASE}">psybase</a></p></footer>
 </body></html>`;
 }
 function sourceCardPage({ id, card, topicTitles, topicsCited, cards }) {
@@ -472,7 +472,7 @@ function sourceCardPage({ id, card, topicTitles, topicsCited, cards }) {
 <section><h2>Цитируется в темах</h2>${cited}</section>
 <p><a href="${BASE}ru/istochniki/">← все источники</a> · <a href="${BASE}ru/">все темы</a></p>
 </main>
-<footer><p><a href="${BASE}ru/istochniki/">Все источники</a> · <a href="${BASE}ru/">Все темы</a></p></footer>
+<footer><p><a href="${BASE}ru/istochniki/">Все источники</a> · <a href="${BASE}ru/">Все темы</a> · <a href="${BASE}ru/kak-my-rabotaem/" lang="ru">Как мы работаем</a></p></footer>
 </body></html>`;
 }
 function citationInner(card) {
@@ -497,7 +497,7 @@ function cite(html, cards) {
     }),
   );
 }
-const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 system-ui,sans-serif;color:#1b1b1b}h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.2rem}.meta{color:#555;font-size:.9rem}.disclaimer{background:#fff4e5;border-left:4px solid #c77;padding:.7rem 1rem;margin:1rem 0}.badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;background:#eee;border-radius:3px;padding:.05rem .35rem}.badge-meta{background:#d7f0d7}.badge-rct{background:#d7e8f7}.badge-cohort{background:#e7e2f7}.badge-case{background:#f7e7d7}.badge-review{background:#f2f2d0}.badge-opinion{background:#f7d7d7}.badge-unsure{background:#eee;color:#a00}.src{font-family:ui-monospace,monospace;font-size:.9em}.cite{color:#555;font-size:.85em}.not-found{background:#f6f6f6;padding:.2rem 1rem}nav.langs a{margin-right:.6rem}nav.langs .no-translation{color:#777;font-size:.9rem}.rt{color:#777;font-size:.85rem}footer{margin-top:3rem;border-top:1px solid #ddd;padding-top:.8rem;font-size:.85rem;color:#555}table{border-collapse:collapse;max-width:100%}td,th{border:1px solid #ccc;padding:.25rem .5rem}
+const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 system-ui,sans-serif;color:#1b1b1b}h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.2rem}.meta{color:#555;font-size:.9rem}.disclaimer{background:#fff4e5;border-left:4px solid #c77;padding:.7rem 1rem;margin:1rem 0}.age-marker{display:inline-block;border:1px solid #c77;background:#fff4e5;color:#8a2b2b;font-weight:600;padding:.05rem .45rem;margin:.2rem 0}.badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;background:#eee;border-radius:3px;padding:.05rem .35rem}.badge-meta{background:#d7f0d7}.badge-rct{background:#d7e8f7}.badge-cohort{background:#e7e2f7}.badge-case{background:#f7e7d7}.badge-review{background:#f2f2d0}.badge-opinion{background:#f7d7d7}.badge-unsure{background:#eee;color:#a00}.src{font-family:ui-monospace,monospace;font-size:.9em}.cite{color:#555;font-size:.85em}.not-found{background:#f6f6f6;padding:.2rem 1rem}nav.langs a{margin-right:.6rem}nav.langs .no-translation{color:#777;font-size:.9rem}.rt{color:#777;font-size:.85rem}footer{margin-top:3rem;border-top:1px solid #ddd;padding-top:.8rem;font-size:.85rem;color:#555}table{border-collapse:collapse;max-width:100%}td,th{border:1px solid #ccc;padding:.25rem .5rem}
 .chart{margin:1.2rem 0;border:1px solid #ddd;padding:.8rem;break-inside:avoid}
 .chart-caption{color:#555;font-size:.85rem;margin:0 0 .6rem}
 .chart-row{display:flex;align-items:center;gap:.5rem;margin:.25rem 0}
@@ -515,7 +515,7 @@ const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 sys
 @media print{.chart,.evidence,.gaps,.home-stats{break-inside:avoid}.chart-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#ccc!important;border-right:1px solid #000}.chart-track{border:1px solid #000}}
 @media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
 @media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
-function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '', readStats: readStatsText = '' }) {
+function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '', readStats: readStatsText = '', age = '' }) {
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
   const ctx = { lang, cards, typesTable, readStats: readStatsText, pageLabel: `${lang}/${slug}` };
@@ -563,11 +563,12 @@ ${alternates}
 <nav class="langs">${langsNav}</nav>
 <header><h1>${esc(title)}</h1>
 <p class="meta">${updatedLabel}: ${esc(updated)}</p>
+${age ? `<p class="age-marker">${esc(age)}</p>` : ''}
 <p class="disclaimer">${disclaimer}</p></header>
 <main>${body}
 ${stats ? evidenceHtml(stats, lang) : ''}
 </main>
-<footer><p><a href="${BASE}${lang}/">${lang === 'ru' ? 'Все темы' : 'All topics'}</a> · <a href="${BASE}">psybase</a></p></footer>
+<footer><p><a href="${BASE}${lang}/">${lang === 'ru' ? 'Все темы' : 'All topics'}</a> · <a href="${BASE}ru/kak-my-rabotaem/" lang="ru">Как мы работаем</a> · <a href="${BASE}">psybase</a></p></footer>
 </body></html>`;
 }
 // /en/<slug>/ для темы без перевода — страница-маршрут: canonical на RU, noindex,
@@ -670,6 +671,7 @@ function build() {
         cards,
         hasPair: Boolean(t.en),
         stats: t.ruStats,
+        age: String(t.ru.data.age ?? ''),
       }),
       'utf8',
     );
@@ -694,6 +696,7 @@ function build() {
         cards,
         hasPair: true,
         stats: t.enStats ?? t.ruStats,
+        age: String(t.en?.data.age ?? ''),
       }),
       'utf8',
     );
@@ -738,6 +741,7 @@ function build() {
         stats: null,
         typesTable: typesTable(cards),
         readStats: readSummary,
+        age: String(p.ru.data.age ?? ''),
       }),
       'utf8',
     );
