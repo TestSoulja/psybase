@@ -83,11 +83,79 @@ function extract(body) {
 
   const headings = [...body.matchAll(/^(#{1,6})\s+(.+?)\s*#*\s*$/gm)].map((m) => m[1].length);
 
-  // числа считаем по тексту без ссылок и DOI: там цифры — часть адреса
-  const plain = body.replace(URL_RE, ' ').replace(DOI_RE, ' ');
+  // числа считаем по тексту без ссылок и DOI: там цифры — часть адреса.
+  // Тире между цифрами — разделитель диапазона, а не минус: «5-10», «5–10»
+  // и «5 − 10» дают один и тот же набор чисел, иначе дефис в EN против тире
+  // в RU выглядел бы как потеря числа.
+  const plain = body
+    .replace(URL_RE, ' ')
+    .replace(DOI_RE, ' ')
+    .replace(/(\d)\s*[-–—−]\s*(\d)/g, '$1–$2');
   const numbers = multiset([...plain.matchAll(NUMBER_RE)].map((m) => m[0].replace(',', '.')));
 
   return { urls, dois, pmids, headings, numbers };
+}
+
+// ```chart в тексте: значения сравниваются и как обычные числа (они попадают
+// в общий набор), и структурно — тип, число значений, подписи, источник.
+function chartBlocks(body) {
+  const out = [];
+  const re = /```chart\r?\n([\s\S]*?)```/g;
+  let m;
+  while ((m = re.exec(body))) {
+    const data = { type: '', values: [], labels: 0, source: '' };
+    for (const line of m[1].split(/\r?\n/)) {
+      const kv = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
+      if (!kv) continue;
+      const key = kv[1].toLowerCase();
+      const val = kv[2].trim();
+      if (key === 'type') data.type = val.toLowerCase();
+      else if (key === 'values') data.values = val.split(',').map((s) => s.trim()).filter(Boolean);
+      else if (key === 'labels') data.labels = val.split(',').filter((s) => s.trim()).length;
+      else if (key === 'source') data.source = val;
+    }
+    out.push(data);
+  }
+  return out;
+}
+
+// Значение графика сравнивается как строка после нормализации: «51,6» = «51.6»,
+// «1,2–4,6» = «1.2-4.6», «1 000» = «1000». Так перевод вправе писать десятичную
+// запятую, а подмена числа всё равно видна.
+const canonValue = (s) =>
+  String(s)
+    .trim()
+    .replace(/\s+/g, '')
+    .replace(/[–—]/g, '-')
+    .replace(/,/g, '.');
+
+function checkCharts(ruBody, enBody, where, problems) {
+  const a = chartBlocks(ruBody);
+  const b = chartBlocks(enBody);
+  if (a.length !== b.length) {
+    problems.push(`${where}: графиков RU ${a.length}, EN ${b.length}`);
+    return;
+  }
+  for (let i = 0; i < a.length; i++) {
+    const x = a[i];
+    const y = b[i];
+    const n = i + 1;
+    if (x.type !== y.type) problems.push(`${where}: график ${n} — тип RU «${x.type}», EN «${y.type}»`);
+    if (x.source !== y.source) problems.push(`${where}: график ${n} — источник RU «${x.source}», EN «${y.source}»`);
+    if (x.labels !== y.labels) problems.push(`${where}: график ${n} — подписей RU ${x.labels}, EN ${y.labels}`);
+    if (x.values.length !== y.values.length) {
+      problems.push(
+        `${where}: график ${n} — значений RU ${x.values.length}, EN ${y.values.length} (дробная часть в блоке chart — точкой, запятая разделяет значения)`,
+      );
+      continue;
+    }
+    const bad = x.values.some((v, k) => canonValue(v) !== canonValue(y.values[k]));
+    if (bad) {
+      problems.push(
+        `${where}: график ${n} — значения RU [${x.values.join(', ')}], EN [${y.values.join(', ')}]`,
+      );
+    }
+  }
 }
 
 function diffSets(a, b, label, problems, where) {
@@ -139,6 +207,8 @@ function checkPair(dir, slug) {
   diffSets(A.pmids, B.pmids, 'PMID', problems, where);
   diffSets(A.dois, B.dois, 'DOI', problems, where);
   diffSets(A.urls, B.urls, 'ссылки', problems, where);
+
+  checkCharts(ru.body, en.body, where, problems);
 
   if (!/^#{1,6}\s*Не нашёл/m.test(ru.body)) problems.push(`${where}: в RU нет раздела «Не нашёл»`);
   if (!/^#{1,6}\s*Not found/im.test(en.body)) problems.push(`${where}: в EN нет раздела «Not found»`);

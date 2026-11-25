@@ -84,7 +84,7 @@ function table(lines) {
     rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')
   }</tbody></table>`;
 }
-function renderBody(lines) {
+function renderBody(lines, ctx) {
   const out = [];
   let i = 0;
   while (i < lines.length) {
@@ -94,10 +94,15 @@ function renderBody(lines) {
       continue;
     }
     if (/^```/.test(line)) {
+      const fence = line.slice(3).trim().toLowerCase();
       const buf = [];
       i++;
       while (i < lines.length && !/^```/.test(lines[i])) buf.push(lines[i++]);
       i++;
+      if (fence === 'chart') {
+        out.push(chartHtml(buf.join('\n'), ctx));
+        continue;
+      }
       out.push(`<pre><code>${esc(buf.join('\n'))}</code></pre>`);
       continue;
     }
@@ -137,6 +142,152 @@ function renderBody(lines) {
   }
   return out.join('\n');
 }
+// --- графики: ```chart в markdown -> CSS-бары, таблица-эквивалент, подпись ------
+// Без библиотек и без hover: всё видно на печати и в чёрно-белом виде.
+const CHART_LEVELS = ['meta', 'rct', 'cohort', 'case', 'review', 'opinion', 'unsure'];
+
+function parseChart(raw) {
+  const data = { type: 'bar', values: [], labels: [], source: '' };
+  for (const line of raw.split(/\r?\n/)) {
+    const m = line.match(/^\s*([a-zA-Z]+)\s*:\s*(.*)$/);
+    if (!m) continue;
+    const key = m[1].toLowerCase();
+    const val = m[2].trim();
+    if (key === 'type') data.type = val.toLowerCase();
+    else if (key === 'values') data.values = val.split(',').map((s) => s.trim()).filter(Boolean);
+    else if (key === 'labels') data.labels = val.split(',').map((s) => s.trim());
+    else if (key === 'source') data.source = val;
+  }
+  return data;
+}
+
+const toNum = (s) => Number(String(s).replace(',', '.'));
+
+// Диапазон пишется точкой: `1.2–4.6`. Запятая — разделитель значений, поэтому
+// внутри значения её быть не может: иначе `1,2–4,6` распалось бы на три числа.
+function chartRange(raw) {
+  const m = String(raw).match(/^([\d.]+)\s*[–—-]\s*([\d.]+)$/);
+  if (m) return { lo: toNum(m[1]), hi: toNum(m[2]), raw };
+  const v = toNum(raw);
+  return { lo: v, hi: v, raw };
+}
+
+function chartHtml(raw, ctx) {
+  const { lang, cards } = ctx;
+  const ru = lang === 'ru';
+  const d = parseChart(raw);
+  if (!d.values.length) {
+    throw new Error(
+      `график без values (${ru ? 'ru' : 'en'}): ${raw.trim().split(/\r?\n/).join(' | ')}`,
+    );
+  }
+  if (!d.labels.length) {
+    throw new Error(`график без labels: ${raw.trim().split(/\r?\n/).join(' | ')}`);
+  }
+  if (d.values.length !== d.labels.length) {
+    throw new Error(
+      `график: значений ${d.values.length}, подписей ${d.labels.length} — подписи не совпадают с барами (в блоке chart дробная часть пишется точкой: запятая разделяет значения)`,
+    );
+  }
+  const nums = d.values.map(chartRange);
+  const bad = nums.find((n) => !Number.isFinite(n.lo) || !Number.isFinite(n.hi));
+  if (bad) {
+    throw new Error(`график: значение «${bad.raw}» не число (ось считается от нуля)`);
+  }
+  const peak = Math.max(...nums.map((n) => n.hi));
+  // Ось всегда от нуля. Верх шкалы — круглое число, а не «максимум данных»:
+  // 100 для процентов, иначе ближайшее кратное, чтобы деления были целыми.
+  const top = peak > 100 ? Math.ceil(peak / 40) * 40 : peak > 10 ? 100 : Math.max(4, Math.ceil(peak / 4) * 4);
+  const pct = (v) => `${Math.max(0, Math.min(100, (v / top) * 100)).toFixed(2)}%`;
+  const tick = (v) => String(Math.round(v * 100) / 100).replace('.', ru ? ',' : '.');
+  const showVal = (n) => (n.hi !== n.lo ? `${tick(n.lo)}–${tick(n.hi)}` : tick(n.lo));
+  const isRange = nums.some((n) => n.hi !== n.lo);
+  const bars = nums
+    .map((n, idx) => {
+      const label = d.labels[idx] ?? d.values[idx];
+      const width = isRange ? pct(n.hi - n.lo) : pct(n.hi);
+      const left = isRange ? pct(n.lo) : '0';
+      const cls = d.type === 'funnel' ? 'chart-bar chart-bar-funnel' : 'chart-bar';
+      return `<div class="chart-row"><span class="chart-label">${esc(label)}</span><span class="chart-track"><span class="${cls}" style="left:${left};width:${width}"></span></span><span class="chart-value">${esc(showVal(n))}</span></div>`;
+    })
+    .join('');
+  const axis = [0, top / 4, top / 2, (top * 3) / 4, top]
+    .map((v) => `<span>${tick(v)}</span>`)
+    .join('');
+  const card = cards.get(d.source);
+  const population = card && card.taken ? String(card.taken).split(' — ')[0].split(',').slice(0, 2).join(',').trim() : '';
+  const caption = [d.source, card && card.year ? String(card.year) : '', population]
+    .filter(Boolean)
+    .join(' · ');
+  const rows = nums
+    .map(
+      (n, idx) =>
+        `<tr><td>${esc(d.labels[idx] ?? '')}</td><td>${esc(showVal(n))}</td></tr>`,
+    )
+    .join('');
+  return `<figure class="chart" data-chart="${esc(d.type)}">
+<figcaption class="chart-caption">${ru ? 'Источник' : 'Source'}: ${esc(caption)}</figcaption>
+<div class="chart-axis chart-axis-top">${axis}</div>
+${bars}
+<div class="chart-axis">${axis}</div>
+<table class="chart-table"><caption>${ru ? 'Те же данные таблицей' : 'The same data as a table'}</caption>
+<thead><tr><th>${ru ? 'Что' : 'What'}</th><th>${ru ? 'Значение' : 'Value'}</th></tr></thead><tbody>${rows}</tbody></table>
+</figure>`;
+}
+
+// --- счёт для главной и для блоков «состав доказательств» / «чего нет» ---------
+function blockItems(sec) {
+  if (!sec) return [];
+  const text = sec.lines.join('\n').trim();
+  if (!text) return [];
+  const bullets = text.split('\n').filter((l) => /^\s*(?:[-*]|\d+\.)\s+/.test(l));
+  if (bullets.length) return bullets.map((l) => l.replace(/^\s*(?:[-*]|\d+\.)\s+/, ''));
+  return text.split(/\n\s*\n/).filter((p) => p.trim());
+}
+
+function topicStats(doc) {
+  const body = doc.body;
+  const sections = splitSections(body);
+  const find = (re) => sections.find((s) => re.test(s.title ?? ''));
+  const levels = Object.fromEntries(CHART_LEVELS.map((l) => [l, 0]));
+  for (const m of body.matchAll(/`(meta|rct|cohort|case|review|opinion|unsure)`\)/g)) levels[m[1]]++;
+  const claims = sections
+    .filter((s) => !/^(Источники|Sources|Не нашёл|Not found|Не открылось|Not opened)$/i.test(s.title ?? ''))
+    .flatMap((s) => s.lines.join('\n').split(/\n\s*\n/))
+    .filter((p) => /\]\(\.\.\/sources\/[a-z0-9-]+\.md/.test(p)).length;
+  const cards = new Set([...body.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)].map((m) => m[1]));
+  const notFoundItems = blockItems(find(/^(Не нашёл|Not found)$/i));
+  // «не открылось» отдельным разделом в темах не ведётся — считаем упоминания
+  // недоступного источника внутри «Не нашёл»: это и есть закрытые двери базы.
+  const closedDoors = notFoundItems.filter((t) =>
+    /не открыт|не открылось|not opened|нет доступа|no access|подписк|paywall/i.test(t),
+  ).length;
+  return {
+    levels,
+    claims,
+    cards: cards.size,
+    notFound: notFoundItems.length,
+    closedDoors,
+  };
+}
+
+function evidenceHtml(st, lang) {
+  const ru = lang === 'ru';
+  const total = Object.values(st.levels).reduce((a, b) => a + b, 0);
+  const chips = CHART_LEVELS.map(
+    (l) => `<li><span class="badge badge-${l}">${l}</span> ${st.levels[l]}</li>`,
+  ).join('');
+  return `<section class="evidence" id="evidence"><h2>${ru ? 'Состав доказательств' : 'Evidence mix'}</h2>
+<p class="meta">${ru ? `Утверждений со ссылкой на источник: ${st.claims}; карточек: ${st.cards}; меток уровня в тексте: ${total}.` : `Claims with a source link: ${st.claims}; cards: ${st.cards}; level tags in the text: ${total}.`}</p>
+<ul class="levels">${chips}</ul>
+<p class="meta">${ru ? 'Уровень ставится к каждому числу; meta и opinion в одном списке не уравниваются.' : 'Every number carries a level; meta and opinion are not equalised by appearing in one list.'}</p>
+</section>
+<section class="gaps" id="gaps"><h2>${ru ? 'Чего нет' : 'What is missing'}</h2>
+<p>${ru ? `Вопросов без ответа («Не нашёл»): ${st.notFound}; из них ${st.closedDoors} — источник не открылся (403, подписка, обрыв).` : `Unanswered (“Not found”): ${st.notFound}; in ${st.closedDoors} of them a source would not open (403, paywall, cut connection).`}</p>
+<p><a href="#not-found">${ru ? 'Список «Не нашёл» ниже' : 'The “Not found” list below'}</a> · <a href="${BASE}${lang}/">${ru ? 'Все темы' : 'All topics'}</a></p>
+</section>`;
+}
+
 function splitSections(body) {
   const secs = [];
   let cur = { title: null, lines: [] };
@@ -180,17 +331,33 @@ function cite(html, cards) {
   );
 }
 const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 system-ui,sans-serif;color:#1b1b1b}h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.2rem}.meta{color:#555;font-size:.9rem}.disclaimer{background:#fff4e5;border-left:4px solid #c77;padding:.7rem 1rem;margin:1rem 0}.badge{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;background:#eee;border-radius:3px;padding:.05rem .35rem}.badge-meta{background:#d7f0d7}.badge-rct{background:#d7e8f7}.badge-cohort{background:#e7e2f7}.badge-case{background:#f7e7d7}.badge-review{background:#f2f2d0}.badge-opinion{background:#f7d7d7}.badge-unsure{background:#eee;color:#a00}.src{font-family:ui-monospace,monospace;font-size:.9em}.cite{color:#555;font-size:.85em}.not-found{background:#f6f6f6;padding:.2rem 1rem}nav.langs a{margin-right:.6rem}nav.langs .no-translation{color:#777;font-size:.9rem}.rt{color:#777;font-size:.85rem}footer{margin-top:3rem;border-top:1px solid #ddd;padding-top:.8rem;font-size:.85rem;color:#555}table{border-collapse:collapse;max-width:100%}td,th{border:1px solid #ccc;padding:.25rem .5rem}
+.chart{margin:1.2rem 0;border:1px solid #ddd;padding:.8rem;break-inside:avoid}
+.chart-caption{color:#555;font-size:.85rem;margin:0 0 .6rem}
+.chart-row{display:flex;align-items:center;gap:.5rem;margin:.25rem 0}
+.chart-label{flex:0 0 40%;font-size:.9rem}
+.chart-track{position:relative;flex:1 1 auto;height:.9rem;background:#f2f2f2;border:1px solid #ddd}
+.chart-bar{position:absolute;top:0;bottom:0;background:#8ab4d8;border-right:2px solid #1b1b1b}
+.chart-bar-funnel{background:#6f9fc9}
+.chart-value{flex:0 0 3.6rem;text-align:right;font-family:ui-monospace,monospace;font-size:.85rem}
+.chart-axis{display:flex;justify-content:space-between;color:#666;font-size:.75rem;margin:.15rem 0 .5rem;padding-left:calc(40% + .5rem);padding-right:calc(3.6rem + .5rem)}
+.chart-table{width:100%;font-size:.85rem;margin-top:.6rem}
+.chart-table caption{text-align:left;color:#555;font-size:.8rem;padding-bottom:.2rem}
+.evidence,.gaps{margin-top:2rem;border-top:1px solid #ddd;padding-top:.6rem}
+.levels{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:.6rem;margin:.4rem 0}
+.home-stats{border:1px solid #ddd;padding:.6rem .9rem;margin:1rem 0}
+@media print{.chart,.evidence,.gaps,.home-stats{break-inside:avoid}.chart-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#ccc!important;border-right:1px solid #000}.chart-track{border:1px solid #000}}
 @media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
 @media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
-function page({ lang, slug, title, updated, sections, cards, hasPair }) {
+function page({ lang, slug, title, updated, sections, cards, hasPair, stats }) {
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
+  const ctx = { lang, cards };
   const body = sections
     .map((s) => {
-      if (!s.title) return `<section>${renderBody(s.lines)}</section>`;
+      if (!s.title) return `<section>${renderBody(s.lines, ctx)}</section>`;
       const nf = /^(Не нашёл|Not found)$/i.test(s.title);
       const isSources = /^(Источники|Sources)$/i.test(s.title);
-      const html = renderBody(s.lines);
+      const html = renderBody(s.lines, ctx);
       const inner = isSources ? cite(html, cards) : html;
       return `<section${nf ? ' class="not-found"' : ''}><h2${nf ? ' id="not-found"' : ''}>${inline(s.title)}</h2>${inner}</section>`;
     })
@@ -215,7 +382,9 @@ ${alternates}
 <header><h1>${esc(title)}</h1>
 <p class="meta">${updatedLabel}: ${esc(updated)}</p>
 <p class="disclaimer">${disclaimer}</p></header>
-<main>${body}</main>
+<main>${body}
+${stats ? evidenceHtml(stats, lang) : ''}
+</main>
 <footer><p><a href="${BASE}${lang}/">${lang === 'ru' ? 'Все темы' : 'All topics'}</a> · <a href="${BASE}">psybase</a></p></footer>
 </body></html>`;
 }
@@ -261,7 +430,22 @@ function build() {
     const en = existsSync(enPath) ? frontMatter(readFileSync(enPath, 'utf8')) : null;
     const enSections = en ? splitSections(en.body) : null;
     if (enSections && !enSections.some((s) => /^(Не нашёл|Not found)$/i.test(s.title ?? ''))) throw new Error(`topics/${slug}/en.md: нет раздела «Not found»`);
-    topics.push({ slug, ru, en, ruSections, enSections });
+    topics.push({
+      slug,
+      ru,
+      en,
+      ruSections,
+      enSections,
+      ruStats: topicStats(ru),
+      enStats: en ? topicStats(en) : null,
+    });
+  }
+
+  const home = { topics: topics.length, cards: cards.size, claims: 0, closedDoors: 0, notFound: 0 };
+  for (const t of topics) {
+    home.claims += t.ruStats.claims;
+    home.closedDoors += t.ruStats.closedDoors;
+    home.notFound += t.ruStats.notFound;
   }
 
   let ruPages = 0;
@@ -279,6 +463,7 @@ function build() {
         sections: t.ruSections,
         cards,
         hasPair: Boolean(t.en),
+        stats: t.ruStats,
       }),
       'utf8',
     );
@@ -302,11 +487,22 @@ function build() {
         sections: t.enSections,
         cards,
         hasPair: true,
+        stats: t.enStats ?? t.ruStats,
       }),
       'utf8',
     );
     enPages++;
   }
+  const homeHtml = (lang) => {
+    const ru = lang === 'ru';
+    const num = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return `<section class="home-stats"><h2>${ru ? 'Что есть в базе' : 'What the base contains'}</h2>
+<p class="meta">${ru
+      ? `Тем: ${num(home.topics)} · карточек источников: ${num(home.cards)} · утверждений со ссылкой на источник: ${num(home.claims)} · вопросов без ответа: ${num(home.notFound)}, из них ${num(home.closedDoors)} — источник не открылся`
+      : `Topics: ${num(home.topics)} · source cards: ${num(home.cards)} · claims with a source link: ${num(home.claims)} · unanswered: ${num(home.notFound)}, ${num(home.closedDoors)} of them a source would not open`}</p>
+<p class="meta">${ru ? 'Числа считает сборка из файлов, руками не правятся.' : 'Numbers are computed by the build from the files, never typed by hand.'}</p>
+</section>`;
+  };
   const index = (lang) => {
     const items = topics
       .map((t) => {
@@ -322,6 +518,7 @@ function build() {
 <h1>${lang === 'ru' ? 'Пси-база' : 'Psybase'}</h1>
 <p class="disclaimer">${lang === 'ru' ? 'Не заменяет врача. При угрозе жизни — 112.' : 'Not a substitute for a doctor. If life is in danger, call 112.'}</p>
 <nav class="langs"><a href="${BASE}ru/">Русский</a><a href="${BASE}en/">English</a></nav>
+${homeHtml(lang)}
 <ul>${items}</ul>
 </body></html>`;
   };

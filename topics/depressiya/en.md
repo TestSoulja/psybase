@@ -39,11 +39,25 @@ another episode, and 35% recurred
 "it will pass by itself" is true for half and false for 15% — both numbers are
 needed together.
 
+```chart
+type: bar
+values: 50, 35, 15
+labels: no relapse, relapse, no episode-free year
+source: eaton-2008-baltimore
+```
+
 **Treatment.** Among 12-month cases 51.6% received some treatment, treatment was
 adequate in 41.9% of them — that is, 21.7% of all cases were adequately treated
 [`kessler-2003-ncsr`](../sources/kessler-2003-ncsr.md, `cohort`). In high-income
 countries about one third of people with depression receive treatment
 [`who-2025-depression`](../sources/who-2025-depression.md, `review`).
+
+```chart
+type: funnel
+values: 51.6, 41.9, 21.7
+labels: received any treatment, adequate among them, adequately treated overall
+source: kessler-2003-ncsr
+```
 
 **What is offered first.** Psychological treatments are named first; in moderate
 and severe depression they are combined with medicines, and for mild depression
