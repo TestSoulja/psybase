@@ -288,6 +288,24 @@ function chartHtml(raw, ctx) {
       `${chartName} (${d.source}): отрицательное значение «${negative.raw}» — ось от нуля, бар соврал бы; ось от середины — отдельная задача`,
     );
   }
+  // Перевёрнутый диапазон: left считался бы от верхней границы, а ширина была
+  // бы отрицательной — бар уехал бы вправо и схлопнулся.
+  const inverted = nums.find((n) => n.hi < n.lo);
+  if (inverted) {
+    throw new Error(
+      `${chartName} (${d.source}): значение «${inverted.raw}» — границы диапазона переставлены (lo > hi)`,
+    );
+  }
+  // В воронке бар — доля шага от нуля. Диапазон нарисовал бы плавающий отрезок
+  // шириной в интервал; доверительный интервал шага идёт в note.
+  if (d.type === 'funnel') {
+    const ranged = nums.find((n) => n.hi !== n.lo);
+    if (ranged) {
+      throw new Error(
+        `${chartName} (${d.source}): диапазон «${ranged.raw}» в type: funnel — бар воронки считается от нуля, интервал шага идёт в note`,
+      );
+    }
+  }
   // Смесь точки и диапазона: isRange один на весь график, поэтому точка при
   // наличии диапазона получила бы width = hi − lo = 0 — бар нулевой ширины.
   const rangeCount = nums.filter((n) => n.hi !== n.lo).length;
