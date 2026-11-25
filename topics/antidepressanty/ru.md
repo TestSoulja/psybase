@@ -2,7 +2,7 @@
 slug: antidepressanty
 title: Антидепрессанты
 updated: 2026-11-25
-sources: 15
+sources: 19
 ---
 
 ## Что это
@@ -98,6 +98,20 @@ sources: 15
 [`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md, `case`):
 это иллюстрация, а не доля.
 
+**Доза — не то же, что препарат.** Доли тех, кому стало хуже именно после
+повышения дозы, в найденных работах нет. Ближе всего — частота активации
+(джиттернесса) при начале приёма: 27,7 % за 6 недель у 209 человек, из них
+6,7 % — в первые 2 недели; высокая доза была связана с активацией (OR 2,68;
+1,37–5,25) [`sinha-2017-jitteriness`](../sources/sinha-2017-jitteriness.md, `cohort`).
+Обзор 107 статей даёт разброс 4–65 % и прямо пишет, что определения расходятся
+[`sinclair-2009-jitteriness-review`](../sources/sinclair-2009-jitteriness-review.md, `review`).
+Проспективно у 301 человека — 7,0 % за первый месяц
+[`harada-2014-jitteriness`](../sources/harada-2014-jitteriness.md, `cohort`).
+Мета-анализ повышения дозы (9 РКИ, 1273 человека) эффекта не нашёл — SMD 0,053
+(−0,143–0,248), но и он про эффективность, а не про долю ухудшения
+[`rink-2018-dose-increase`](../sources/rink-2018-dose-increase.md, `meta`).
+Переключение в манию — другой исход, он разобран ниже.
+
 **При ПРЛ отдельных данных нет.** Обзоры отмены набраны на депрессии и
 тревожных расстройствах, обзоры переключения — на депрессии; переносить их доли
 на ПРЛ нельзя.
@@ -148,6 +162,13 @@ sources: 15
   отдельным случаям; исхода «доля ухудшившихся» нет.
 - **Данные при ПРЛ отдельно от общих** — не найдены: обзоры отмены набраны на
   депрессии и тревожных расстройствах, обзоры переключения — на депрессии.
+- **Доля тех, кому стало хуже именно после повышения дозы** — не найдена:
+  поиск 25.11.2026 в Europe PMC по запросам
+  `(TITLE:"dose increase" OR TITLE:"dose escalation") AND (TITLE:antidepressant OR TITLE:SSRI OR TITLE:serotonin)`,
+  `TITLE:"activation syndrome" AND (TITLE:SSRI OR TITLE:antidepressant OR TITLE:serotonergic)`,
+  `(ABSTRACT:jitteriness OR ABSTRACT:"activation syndrome") AND ABSTRACT:antidepressant`
+  дал частоту активации при начале приёма и связь с высокой дозой, но не эту
+  долю.
 - **Cochrane-обзор антидепрессантов при расстройствах личности** — не найден.
 - **РКИ антидепрессантов при ПРЛ** — не открывались; в теме только практика
   назначений.
@@ -182,6 +203,14 @@ sources: 15
   прямое переключение в РКИ при сексуальной дисфункции.
 - [`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md) — три случая
   быстрого переключения между МАОИ.
+- [`sinha-2017-jitteriness`](../sources/sinha-2017-jitteriness.md) — частота
+  джиттернесса и связь с высокой дозой.
+- [`sinclair-2009-jitteriness-review`](../sources/sinclair-2009-jitteriness-review.md)
+  — обзор 107 статей: разброс 4–65 %.
+- [`harada-2014-jitteriness`](../sources/harada-2014-jitteriness.md) —
+  проспективно 7,0 % за первый месяц.
+- [`rink-2018-dose-increase`](../sources/rink-2018-dose-increase.md) — повышение
+  дозы: эффекта нет.
 - [`oliva-2025-bipolar-switch`](../sources/oliva-2025-bipolar-switch.md) —
   переключение в манию при биполярной депрессии.
 - [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md)

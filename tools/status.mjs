@@ -14,7 +14,7 @@
  *     в таблице; тема в таблице, а папки нет; число источников не равно
  *     `sources:` во front-matter темы.
  *   - сноска под таблицей тем («N карточек в sources/: N в темах, N из них —
- *     в двух темах, N — только в for-app») расходится с диском.
+ *     в нескольких темах, N — только в for-app») расходится с диском.
  *   - в README.en.md пары «N topics/cards/claims/sources» расходятся с числами
  *     главной, которые считает build.mjs (home: topics, cards, claims, notFound).
  *   - в README.en.md есть число, которого нет в README.md: второй слой,
@@ -318,12 +318,6 @@ const multiTopic = inTopics.filter((c) => cardTopics.get(c).size > 1);
 const appOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && appUnion.has(c));
 const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c));
 
-for (const c of multiTopic) {
-  const n = cardTopics.get(c).size;
-  if (n > 2) {
-    problems.push(`sources/${c}.md — цитируется в ${n} темах, а сноска README говорит «в двух»`);
-  }
-}
 for (const c of nowhere) {
   problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/`);
 }
@@ -331,17 +325,17 @@ for (const c of nowhere) {
 const footnote = readmeText
   .replace(/\s+/g, ' ')
   .match(
-    /(\d+) карточек в `sources\/`: (\d+) в темах, (\d+) из них — в двух темах, (\d+) — только в `for-app`/,
+    /(\d+) карточ(?:ек|ки) в `sources\/`: (\d+) в темах, (\d+) из них — в нескольких темах, (\d+) — только в `for-app`/,
   );
 if (!footnote) {
   problems.push(
-    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — в двух темах, N — только в `for-app`»',
+    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — в нескольких темах, N — только в `for-app`»',
   );
 } else {
   const asRead = [
     ['карточек в sources/', Number(footnote[1]), sourceCards.length],
     ['в темах', Number(footnote[2]), inTopics.length],
-    ['в двух темах', Number(footnote[3]), multiTopic.length],
+    ['в нескольких темах', Number(footnote[3]), multiTopic.length],
     ['только в for-app/', Number(footnote[4]), appOnly.length],
   ];
   for (const [label, written, actual] of asRead) {
@@ -451,7 +445,7 @@ console.log(
   `· тем: ${publicTopics.length}, источников по темам: ${totalSources}, без перевода: ${untranslated.length}`,
 );
 console.log(
-  `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} в двух темах, ${appOnly.length} только в for-app`,
+  `· карточки: ${sourceCards.length} в sources/, ${inTopics.length} в темах, ${multiTopic.length} в нескольких темах, ${appOnly.length} только в for-app`,
 );
 
 console.log(

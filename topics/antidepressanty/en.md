@@ -2,7 +2,7 @@
 slug: antidepressanty
 title: Antidepressants
 updated: 2026-11-25
-sources: 15
+sources: 19
 ---
 
 ## What it is
@@ -101,6 +101,22 @@ Rapid switching between MAOIs is described in three cases, all without events
 [`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md, `case`): an
 illustration, not a rate.
 
+**A dose is not the same as a drug.** The share of people who feel worse
+specifically after a dose increase is not reported in the studies found. The
+closest measure is activation (jitteriness) at treatment start: 27.7% over
+6 weeks in 209 people, of whom 6.7% in the first 2 weeks; a high dose was
+associated with activation (OR 2.68; 1.37–5.25)
+[`sinha-2017-jitteriness`](../sources/sinha-2017-jitteriness.md, `cohort`). A
+review of 107 articles gives a range of 4–65% and states outright that
+definitions differ
+[`sinclair-2009-jitteriness-review`](../sources/sinclair-2009-jitteriness-review.md, `review`).
+Prospectively, in 301 people — 7.0% in the first month
+[`harada-2014-jitteriness`](../sources/harada-2014-jitteriness.md, `cohort`). A
+meta-analysis of dose increase (9 RCTs, 1273 people) found no effect — SMD 0.053
+(−0.143–0.248), but it is about efficacy, not about the share who worsen
+[`rink-2018-dose-increase`](../sources/rink-2018-dose-increase.md, `meta`).
+Switching into mania is a different outcome, covered below.
+
 **In BPD there are no separate data.** The discontinuation reviews were
 recruited in depression and anxiety disorders, the switching reviews in
 depression; their shares cannot be transferred to BPD.
@@ -152,6 +168,13 @@ of those who started)
 - **BPD data separate from the general samples** — not found: the
   discontinuation reviews were recruited in depression and anxiety disorders,
   the switching reviews in depression.
+- **The share who feel worse specifically after a dose increase** — not found:
+  a search on 25.11.2026 in Europe PMC
+  (`(TITLE:"dose increase" OR TITLE:"dose escalation") AND (TITLE:antidepressant OR TITLE:SSRI OR TITLE:serotonin)`,
+  `TITLE:"activation syndrome" AND (TITLE:SSRI OR TITLE:antidepressant OR TITLE:serotonergic)`,
+  `(ABSTRACT:jitteriness OR ABSTRACT:"activation syndrome") AND ABSTRACT:antidepressant`)
+  returned activation rates at treatment start and an association with high
+  dose, but not that share.
 - **A Cochrane review of antidepressants in personality disorders** — not
   found.
 - **RCTs of antidepressants in BPD** — not opened; the topic covers prescribing
@@ -187,6 +210,14 @@ of those who started)
   direct switching in an RCT for sexual dysfunction.
 - [`rached-2025-maoi-switch`](../sources/rached-2025-maoi-switch.md) — three
   cases of rapid switching between MAOIs.
+- [`sinha-2017-jitteriness`](../sources/sinha-2017-jitteriness.md) — jitteriness
+  rate and the association with high dose.
+- [`sinclair-2009-jitteriness-review`](../sources/sinclair-2009-jitteriness-review.md)
+  — review of 107 articles: a range of 4–65%.
+- [`harada-2014-jitteriness`](../sources/harada-2014-jitteriness.md) —
+  prospectively 7.0% in the first month.
+- [`rink-2018-dose-increase`](../sources/rink-2018-dose-increase.md) — dose
+  increase: no effect.
 - [`oliva-2025-bipolar-switch`](../sources/oliva-2025-bipolar-switch.md) —
   switch to mania in bipolar depression.
 - [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md)
