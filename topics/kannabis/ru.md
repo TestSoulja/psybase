@@ -82,6 +82,15 @@ DSM-5 свёл злоупотребление и зависимость в од�
 | Переход от употребления к CUD за жизнь | **≈27%** | NESARC-III, 11 272 потребителя | [`feingold-2020-probability-correlates-transition-dsm`](../sources/feingold-2020-probability-correlates-transition-dsm.md, `cohort`) |
 | Вредный паттерн и зависимость по МКБ-11 | **9,3%** (7,4–11,1) и **3,2%** (2,3–4,0) | 10 стран, WMH, 1 788 потребителей | [`degenhardt-2019-concordance-diagnostic-guidelines-alcohol`](../sources/degenhardt-2019-concordance-diagnostic-guidelines-alcohol.md, `cohort`) |
 
+```chart
+type: bar
+values: 9.3, 3.2
+labels: вредный паттерн, зависимость
+unit: %
+source: degenhardt-2019-concordance-diagnostic-guidelines-alcohol
+note: 1 788 потребителей каннабиса, 10 стран, WMH; категории МКБ-11
+```
+
 Первая строка и вторая не противоречат друг другу: 8–22% — это доля тех, кто
 стал зависимым среди когда-либо употреблявших, а 2–3% — доля населения за
 12 месяцев. Разные знаменатели — разные числа.

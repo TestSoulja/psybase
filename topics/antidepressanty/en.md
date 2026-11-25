@@ -24,6 +24,15 @@ risk of bias in 46 (9%) trials, moderate in 380 (73%), low in 96 (18%); the
 authors' certainty was moderate to very low
 [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
 
+```chart
+type: bar
+values: 9, 73, 18
+labels: high, moderate, low
+unit: %
+source: cipriani-2018-21-antidepressants
+note: 522 RCTs, 116 477 people; risk of bias in the trials
+```
+
 **The mean difference from placebo is 1.75 HAMD points.** 232 RCTs, 73 388
 people, FDA data 1979–2016: 1.75 (1.63–1.86). A large response in 24.5% versus
 9.6%, a minimal one in 12.2% versus 21.5%; "about 15% have a substantial effect

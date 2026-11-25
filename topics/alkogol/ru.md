@@ -350,6 +350,15 @@ NSDUH (замер 2020, США): 10,1% по DSM-5 против 5,4% по DSM-IV 
 | 199 человек после судорог отмены | рецидив **11%**, медиана 470,5 дня; смертность **2,9% в год** — в 13 раз выше населения | [`sansone-2024-long-term-outcome-alcohol-withdrawal`](../sources/sansone-2024-long-term-outcome-alcohol-withdrawal.md, `cohort`) |
 | 36 287 человек, Норвегия, 2009–2015 | годовая смертность: делирий **8,0%**, отмена **5,0%**, зависимость **3,6%**; SMR 9,8 / 7,8 / 7,0; от внешних причин 26,9 (21,7–33,4) | [`bramness-2023-mortality-alcohol-related-morbidity-patients`](../sources/bramness-2023-mortality-alcohol-related-morbidity-patients.md, `cohort`) |
 
+```chart
+type: bar
+values: 59, 34, 7
+labels: лёгкая, средняя, тяжёлая
+unit: %
+source: salehi-2026-clinical-characteristics-outcomes-adult
+note: 98 мужчин с отменой; тяжесть отмены в одной выборке
+```
+
 Факторы риска:
 
 - Мета-анализ 15 исследований: прежний делирий предсказывал новый (OR 2,58;

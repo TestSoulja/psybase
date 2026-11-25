@@ -188,17 +188,55 @@ const toNum = (s) => Number(String(s).replace(',', '.'));
 
 // Диапазон пишется точкой: `1.2–4.6`. Запятая — разделитель значений, поэтому
 // внутри значения её быть не может: иначе `1,2–4,6` распалось бы на три числа.
+// Отрицательные значения разбираются отдельно, чтобы сборка сказала «минус»,
+// а не «не число»: бар отрицательной ширины молча обрезался бы в ноль.
 function chartRange(raw) {
-  const m = String(raw).match(/^([\d.]+)\s*[–—-]\s*([\d.]+)$/);
-  if (m) return { lo: toNum(m[1]), hi: toNum(m[2]), raw };
-  const v = toNum(raw);
-  return { lo: v, hi: v, raw };
+  const s = String(raw).trim();
+  const neg = s.match(/^[−-]\s*([\d.]+)$/);
+  if (neg) {
+    const v = -toNum(neg[1]);
+    return { lo: v, hi: v, raw: s };
+  }
+  const m = s.match(/^([\d.]+)\s*[–—-]\s*([\d.]+)$/);
+  if (m) return { lo: toNum(m[1]), hi: toNum(m[2]), raw: s };
+  const v = toNum(s);
+  return { lo: v, hi: v, raw: s };
 }
+
+// Числа в тексте темы пишутся по-русски с запятой, в блоке chart — с точкой
+// (запятая там разделитель). Ищем дословно: «2,41» как «2,41», но не «2,41»
+// внутри «12,41» и не «2,4» внутри «2,41».
+function numberInText(text, raw, lang) {
+  const needle = lang === 'ru' ? String(raw).replace('.', ',') : String(raw);
+  const esc = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const sep = lang === 'ru' ? ',' : '\\.';
+  return new RegExp(`(?<![\\d${sep}])${esc}(?![\\d${sep}])`).test(text);
+}
+
+// Текст темы без блоков chart: иначе значение нашлось бы само в себе, и проверка
+// «график не вводит чисел, которых в тексте нет» стала бы бессмысленной.
+function proseOnly(body) {
+  return String(body).replace(/```chart\b[\s\S]*?```/g, ' ');
+}
+
+const chartChecks = [];
 
 function chartHtml(raw, ctx) {
   const { lang, cards } = ctx;
   const ru = lang === 'ru';
   const d = parseChart(raw);
+  ctx.chartNo = (ctx.chartNo ?? 0) + 1;
+  const chartName = `график ${ctx.pageLabel ?? 'страница'} #${ctx.chartNo}`;
+  if (!d.source) {
+    throw new Error(
+      `${chartName}: нет source — подпись без источника не публикуется (${raw.trim().split(/\r?\n/).join(' | ')})`,
+    );
+  }
+  if (!cards.has(d.source)) {
+    throw new Error(
+      `${chartName}: source «${d.source}» — карточки sources/${d.source}.md нет (опечатка в id убрала бы год и выборку из подписи)`,
+    );
+  }
   if (!d.values.length) {
     throw new Error(
       `график без values (${ru ? 'ru' : 'en'}): ${raw.trim().split(/\r?\n/).join(' | ')}`,
@@ -239,8 +277,31 @@ function chartHtml(raw, ctx) {
   const nums = d.values.map(chartRange);
   const bad = nums.find((n) => !Number.isFinite(n.lo) || !Number.isFinite(n.hi));
   if (bad) {
-    throw new Error(`график: значение «${bad.raw}» не число (ось считается от нуля)`);
+    throw new Error(`${chartName}: значение «${bad.raw}» не число (ось считается от нуля)`);
   }
+  // Ось всегда от нуля. Отрицательное значение дало бы бар нулевой ширины:
+  // «g −0,52» выглядел бы как «эффекта нет». Это отдельная задача с осью от
+  // середины, а не молчаливая обрезка.
+  const negative = nums.find((n) => n.lo < 0 || n.hi < 0);
+  if (negative) {
+    throw new Error(
+      `${chartName} (${d.source}): отрицательное значение «${negative.raw}» — ось от нуля, бар соврал бы; ось от середины — отдельная задача`,
+    );
+  }
+  // График не вводит чисел, которых в тексте нет: каждое значение (и каждый
+  // конец диапазона) ищется в своей теме дословно. Это печать, а не падение:
+  // расхождение видит редактор, а сборка не блокируется.
+  const missing = [];
+  for (const n of nums) {
+    const rawParts = n.raw.split(/\s*[–—-]\s*/);
+    for (let k = 0; k < rawParts.length; k++) {
+      const part = rawParts[k];
+      if (!numberInText(ctx.sourceText ?? '', part, lang)) {
+        missing.push(lang === 'ru' ? part.replace('.', ',') : part);
+      }
+    }
+  }
+  chartChecks.push({ page: ctx.pageLabel ?? 'страница', no: ctx.chartNo, source: d.source, total: nums.length, missing });
   // У воронки все бары — доли от всех случаев: одна ось, один знаменатель.
   // Условные доли (из лечившихся) сюда не попадают — для них есть note.
   const widths = nums;
@@ -248,7 +309,7 @@ function chartHtml(raw, ctx) {
   // Ось всегда от нуля. Верх шкалы — круглое число, а не «максимум данных»:
   // 100 для процентов, иначе ближайшее кратное, чтобы деления были целыми.
   const top = peak > 100 ? Math.ceil(peak / 40) * 40 : peak > 10 ? 100 : Math.max(4, Math.ceil(peak / 4) * 4);
-  const pct = (v) => `${Math.max(0, Math.min(100, (v / top) * 100)).toFixed(2)}%`;
+  const pct = (v) => `${((v / top) * 100).toFixed(2)}%`;
   const tick = (v) => String(Math.round(v * 100) / 100).replace('.', ru ? ',' : '.');
   const unitSuffix = d.unit ? (d.unit === '%' ? ' %' : ` ${d.unit}`) : '';
   const showVal = (n) => `${n.hi !== n.lo ? `${tick(n.lo)}–${tick(n.hi)}` : tick(n.lo)}${unitSuffix}`;
@@ -267,7 +328,21 @@ function chartHtml(raw, ctx) {
     .map((v) => `<span>${axisValue(v)}</span>`)
     .join('');
   const card = cards.get(d.source);
-  const population = card && card.taken ? String(card.taken).split(' — ')[0].split(',').slice(0, 2).join(',').trim() : '';
+  const populationRaw =
+    card && card.taken ? String(card.taken).split(' — ')[0].split(';')[0].split(',').slice(0, 2).join(',').trim() : '';
+  // Подпись — выборка, а не второй абзац: длинный «taken» обрезаем по слову и
+  // не оставляем раскрытую скобку.
+  let population = populationRaw;
+  let cut = false;
+  if (population.length > 80) {
+    population = population.slice(0, 80).replace(/\s+\S*$/, '');
+    cut = true;
+  }
+  if ((population.match(/\(/g) ?? []).length > (population.match(/\)/g) ?? []).length) {
+    population = population.slice(0, population.lastIndexOf('('));
+    cut = true;
+  }
+  if (cut) population = `${population.replace(/[\s,;:–—-]+$/, '')}…`;
   const caption = [d.source, card && card.year ? String(card.year) : '', population]
     .filter(Boolean)
     .join(' · ');
@@ -515,10 +590,18 @@ const CSS = `body{max-width:46rem;margin:0 auto;padding:1.5rem;font:16px/1.6 sys
 @media print{.chart,.evidence,.gaps,.home-stats{break-inside:avoid}.chart-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#ccc!important;border-right:1px solid #000}.chart-track{border:1px solid #000}}
 @media(max-width:480px){body{padding:.9rem;font-size:15px}h1{font-size:1.35rem}h2{font-size:1.1rem}table{display:block;overflow-x:auto}td,th{padding:.2rem .35rem;font-size:.9rem}}
 @media print{@page{margin:14mm}body{max-width:100%;padding:0;font-size:11pt;color:#000}nav.langs,footer{display:none}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;border-bottom:1px solid #000;break-after:avoid}.disclaimer{border-left:2px solid #000;background:#fff;padding:.3rem .6rem}.badge{border:1px solid #777;background:#fff!important;color:#000!important}.not-found{background:#fff;border:1px solid #999;break-inside:avoid}p,li{break-inside:avoid;orphans:2;widows:2}a{color:#000;text-decoration:underline}td,th{border:1px solid #000}}`;
-function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '', readStats: readStatsText = '', age = '' }) {
+function page({ lang, slug, title, updated, sections, cards, hasPair, stats, typesTable = '', readStats: readStatsText = '', age = '', sourceText = '' }) {
   const ru = `${BASE}ru/${slug}/`;
   const en = `${BASE}en/${slug}/`;
-  const ctx = { lang, cards, typesTable, readStats: readStatsText, pageLabel: `${lang}/${slug}` };
+  const ctx = {
+    lang,
+    cards,
+    typesTable,
+    readStats: readStatsText,
+    pageLabel: `${lang}/${slug}`,
+    sourceText: proseOnly(sourceText),
+    chartNo: 0,
+  };
   const body = sections
     .map((s) => {
       if (!s.title) return `<section>${renderBody(s.lines, ctx)}</section>`;
@@ -672,6 +755,7 @@ function build() {
         hasPair: Boolean(t.en),
         stats: t.ruStats,
         age: String(t.ru.data.age ?? ''),
+        sourceText: t.ru.body,
       }),
       'utf8',
     );
@@ -697,6 +781,7 @@ function build() {
         hasPair: true,
         stats: t.enStats ?? t.ruStats,
         age: String(t.en?.data.age ?? ''),
+        sourceText: t.en.body,
       }),
       'utf8',
     );
@@ -742,6 +827,7 @@ function build() {
         typesTable: typesTable(cards),
         readStats: readSummary,
         age: String(p.ru.data.age ?? ''),
+        sourceText: p.ru.body,
       }),
       'utf8',
     );
@@ -812,6 +898,28 @@ ${pages
     if (text.includes('{{')) {
       throw new Error(`${f.replace(DIST + '\\', '').replace(DIST + '/', '')} — остался незаменённый «{{…}}»: шаблон страницы не собран`);
     }
+  }
+  if (chartChecks.length) {
+    let missTotal = 0;
+    for (const c of chartChecks) {
+      const head = `· график ${c.page} #${c.no} (${c.source})`;
+      if (!c.missing.length) {
+        if (c.total === 1) {
+          console.log(`${head}: значение найдено в тексте дословно`);
+        } else {
+          const nWord = c.total < 5 ? 'значения' : 'значений';
+          console.log(`${head}: все ${c.total} ${nWord} найдены в тексте дословно`);
+        }
+      } else {
+        missTotal += c.missing.length;
+        const word = c.missing.length === 1 ? 'значение' : 'значения';
+        const tail = c.missing.length === 1 ? 'не найдено' : 'не найдены';
+        console.log(
+          `${head}: ${word} ${c.missing.map((m) => `«${m}»`).join(', ')} ${tail} в тексте дословно`,
+        );
+      }
+    }
+    console.log(`· графики: ${chartChecks.length}, значений не найдено: ${missTotal}`);
   }
   console.log(`сборка: ${DIST}`);
   console.log(`страниц: ${ruPages + enPages} (RU ${ruPages}, EN ${enPages}, тем без перевода: ${ruPages - enPages}), пропущено draft: ${skipped}, размер: ${bytes} байт`);

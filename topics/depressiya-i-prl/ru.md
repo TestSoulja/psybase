@@ -56,6 +56,15 @@ sources: 10
 полипрагмазия — 83,1 %, 1461 пациент
 [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md, `cohort`).
 
+```chart
+type: bar
+values: 80.4, 83.1
+labels: антидепрессанты на старте, полипрагмазия
+unit: %
+source: white-2026-bpd-antidepressants
+note: 1461 пациент; полипрагмазия — по методам авторов больше одного препарата одновременно
+```
+
 Сравнение ДБТ и СИОЗС: 84 взрослых, 6 месяцев — при ДБТ меньше суицидальных
 событий, по риску попытки разницы нет
 [`brodsky-2025-dbt-vs-ssri`](../sources/brodsky-2025-dbt-vs-ssri.md, `rct`).
