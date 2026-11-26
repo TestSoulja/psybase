@@ -164,9 +164,7 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - EU-GEI, симптомы: дозозависимая связь позитивного измерения с пожизненной
   экспозицией, максимум у ежедневных высокопотентных B=0,35 (0,14–0,56);
   негативные реже у любых потребителей B=−0,22 (−0,37…−0,07) [`quattrone-2021-daily-high-potency-more-positive`](../sources/quattrone-2021-daily-high-potency-more-positive.md, `case`).
-  То есть B — коэффициент связи пожизненной экспозиции с позитивным и
-  негативным измерениями симптомов по уровням экспозиции, а не разница между
-  двумя группами.
+  То есть B — коэффициент линейной регрессии в исследовании случай–контроль.
 - NAPLS-2, 1 012 человек (734 в группе риска): тяжёлый каннабис и лёгкий табак —
   HR конверсии 2,93 (1,23–6,97) против неупотребляющих [`bello-2026-tobacco-predicts-psychosis-clinical-high`](../sources/bello-2026-tobacco-predicts-psychosis-clinical-high.md, `cohort`).
 
@@ -265,8 +263,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - NEMESIS-2: каннабис объясняет 1,00% связи тревоги и 1,4% связи депрессии с
   психотическим опытом; обратно тревога объясняет 17%, депрессия 37% связи
   каннабиса с психотическим опытом [`radhakrishnan-2023-bidirectional-relationships-anxiety`](../sources/radhakrishnan-2023-bidirectional-relationships-anxiety.md, `cohort`).
-  То есть это доли объяснённой связи в обе стороны внутри одной когорты;
-  большая часть связи в этих данных идёт не от каннабиса.
+  То есть это доли объяснённой связи: сколько процентов ассоциации проходит
+  через каннабис в одну сторону и сколько — в обратную.
 - Квебек, 1 548 подростков в 13, 15 и 17 лет: связи слабые, но двусторонние —
   каннабис в 13 и 15 предсказывает тревогу в 15 и 17, депрессия в 15
   предсказывает каннабис в 17 [`london-nadeau-2021-longitudinal-associations-depression`](../sources/london-nadeau-2021-longitudinal-associations-depression.md, `cohort`).
@@ -313,12 +311,12 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - 469 взрослых вне лечения: 42,4% имели синдром отмены за жизнь; 95,5% — хотя
   бы один симптом, в среднем 9,5 (SD 6,1), у 43,1% — 10 и больше; 70,4% курили,
   чтобы снять симптомы [`levin-2010-withdrawal-symptoms-treatment-seeking-adult`](../sources/levin-2010-withdrawal-symptoms-treatment-seeking-adult.md, `cohort`).
-  То есть это доли и средние внутри одной выборки взрослых вне лечения, а не
-  сравнение групп.
+  То есть это доли и средние в выборке вне лечения: распространённость,
+  средняя тяжесть и доля куривших ради облегчения.
 - 118 стационарных 16–36 лет (73 прошли 10 дней): у большинства пик в 1-й день,
   спад линейный [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`).
-  То есть это сроки течения отмены внутри одной стационарной выборки, а не
-  сравнение групп.
+  То есть это описание течения: срок до пика и форма спада внутри одной
+  выборки, без группы сравнения.
 
 Пик отмены в источниках расходится: 1-й день в стационарной проспективной
 выборке [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`) против 2–6-го дня в амбулаторной и в обзоре
@@ -524,7 +522,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - 2 случая: спутанность на клозапине после прекращения табака и каннабиса (рост
   плазменных уровней), экстрапирамидные симптомы на оланзапине при снижении
   курения [`zullino-2002-tobacco-smoking-cessation-can-lead`](../sources/zullino-2002-tobacco-smoking-cessation-can-lead.md, `case`).
-  То есть это описание двух случаев, а не сравнение групп.
+  То есть это описание двух наблюдений, а не оценка частоты.
 - Нонадгерентность, 15 наблюдений, n=3 678: OR 2,46 у потребителей против
   непотребителей (n=3 055); текущие против непотребителей 5,79 (n=175), против
   бывших 5,5 (n=192); бывшие против непотребителей 1,12 (n=187) [`foglia-2017-adherence-antipsychotic-medication`](../sources/foglia-2017-adherence-antipsychotic-medication.md, `meta`).
@@ -559,7 +557,8 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Бензодиазепиновая отмена: 24 случая делирия из 19 публикаций (1977–2025),
   начало через 12 часов — 13 дней после снижения или отмены, разрешение у 22 из
   24 после возобновления бензодиазепина [`al-soleiti-2026-clinical-characteristics-treatment`](../sources/al-soleiti-2026-clinical-characteristics-treatment.md, `case`).
-  То есть это серия случаев из обзора публикаций, а не сравнение групп.
+  То есть это счёт случаев в литературе, а не распространённость; 12 часов —
+  13 дней — срок до начала делирия.
 - Конверсия индуцированного психоза по веществу, одна методика: каннабис 34%
   (25–46), галлюциногены 26% (14–43), амфетамины 22% (14–34), опиоиды 12%,
   алкоголь 10%, седативные 9% [`murrie-2020-transition-substance-induced-brief-atypical`](../sources/murrie-2020-transition-substance-induced-brief-atypical.md, `meta`).
