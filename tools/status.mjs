@@ -491,15 +491,44 @@ for (const [topic, refs] of topicCites) {
   for (const c of refs) cardTopics.get(c)?.add(topic);
 }
 
+// 9b. Карточка волны без темы. До 27.11.2026 карточка обязана была стоять
+// в topics/ или for-app/. Волна 27 добавляет карточки в sources/ до того, как
+// тема написана, поэтому третьим законным местом стал research/: карточка
+// считается цитируемой, если её PMID стоит в research-файле. Проверка не
+// ослаблена: карточка без PMID и без ссылки по-прежнему падает.
+const cardPmid = new Map();
+for (const c of sourceCards) {
+  const { data } = frontMatter(readFileSync(join(SOURCES, `${c}.md`), 'utf8'));
+  const m = String(data.id ?? '').match(/PMID\s*(\d+)/i);
+  if (m) cardPmid.set(c, m[1]);
+}
+const researchCited = new Set();
+const researchDir = join(ROOT, 'research');
+if (existsSync(researchDir)) {
+  const walk = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith('.md')) {
+        const text = readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
+        for (const m of text.matchAll(/\bPMID\s+(\d{5,9})\b/g)) researchCited.add(m[1]);
+      }
+    }
+  };
+  walk(researchDir);
+}
+const citedInResearch = (c) => Boolean(cardPmid.get(c) && researchCited.has(cardPmid.get(c)));
+
 const inTopics = sourceCards.filter((c) => cardTopics.get(c).size > 0);
 const multiTopic = inTopics.filter((c) => cardTopics.get(c).size > 1);
 const appOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && appUnion.has(c));
-const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c));
+const researchOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c) && citedInResearch(c));
+const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c) && !citedInResearch(c));
 
 // С 25.11.2026 карточки законно живут в трёх темах; формулировка стала точной:
 // «больше чем в одной», проверять нечего — это определение множества.
 for (const c of nowhere) {
-  problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/`);
+  problems.push(`sources/${c}.md — карточка не цитируется ни в topics/, ни в for-app/, ни в research/`);
 }
 
 // 9c. Основа чтения: поле `read` обязательно и только из четырёх значений.
@@ -534,11 +563,11 @@ if (readNamed + readUnknown !== sourceCards.length) {
 const footnote = readmeText
   .replace(/\s+/g, ' ')
   .match(
-    /(\d+) карточ(?:ек|ки) в `sources\/`: (\d+) в темах, (\d+) из них — больше чем в одной теме, (\d+) — только в `for-app`/,
+    /(\d+) карточ(?:ек|ки) в `sources\/`: (\d+) в темах, (\d+) из них — больше чем в одной теме, (\d+) — только в `for-app`(?:, (\d+) — только в `research\/`)?/,
   );
 if (!footnote) {
   problems.push(
-    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — больше чем в одной теме, N — только в `for-app`»',
+    'README.md — нет сноски «N карточек в `sources/`: N в темах, N из них — больше чем в одной теме, N — только в `for-app`, N — только в `research/`»',
   );
 } else {
   const asRead = [
@@ -546,6 +575,7 @@ if (!footnote) {
     ['в темах', Number(footnote[2]), inTopics.length],
     ['больше чем в одной теме', Number(footnote[3]), multiTopic.length],
     ['только в for-app/', Number(footnote[4]), appOnly.length],
+    ['только в research/', Number(footnote[5] ?? 0), researchOnly.length],
   ];
   for (const [label, written, actual] of asRead) {
     if (written !== actual) {
