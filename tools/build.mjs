@@ -16,6 +16,7 @@ const DIST = FIXTURE ? join(tmpdir(), 'psybase-fixture-' + process.pid) : join(R
 const TOPICS = join(ROOT, 'topics');
 const PAGES = join(ROOT, 'pages');
 const SOURCES = join(ROOT, 'sources');
+const APP = join(ROOT, 'for-app');
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 function closingParen(s, open) {
@@ -508,11 +509,28 @@ function cardTopicMap(topics) {
   }
   return byCard;
 }
-function sourceIndexPage({ cards, topics, topicTitles }) {
+// Карточки, на которые ссылается for-app/. Нужно только для подписи
+// «цитируется» в каталоге: страницы for-app/ не публикуются и не строятся.
+function cardAppMap() {
+  const byCard = new Set();
+  if (!existsSync(APP)) return byCard;
+  for (const d of readdirSync(APP)) {
+    const dir = join(APP, d);
+    if (!statSync(dir).isDirectory()) continue;
+    for (const f of readdirSync(dir)) {
+      if (!f.endsWith('.md')) continue;
+      const text = readFileSync(join(dir, f), 'utf8');
+      for (const m of text.matchAll(/\.\.\/sources\/([a-z0-9-]+)\.md/g)) byCard.add(m[1]);
+    }
+  }
+  return byCard;
+}
+function sourceIndexPage({ cards, topics, topicTitles, appCited }) {
   const counts = typeCounts(cards);
   const total = cards.size;
   const parts = TYPE_ORDER.filter((t) => counts[t] > 0).map((t) => `${t} ${counts[t]}`);
   const byCard = cardTopicMap(topics);
+  const inApp = appCited ?? new Set();
   const groups = TYPE_ORDER.map((type) => {
     const list = [...cards.entries()]
       .filter(([, c]) => c.type === type)
@@ -526,7 +544,12 @@ function sourceIndexPage({ cards, topics, topicTitles }) {
         head +
         g.list
           .map(([id, c]) => {
-            const cited = [...(byCard.get(id) ?? [])].sort().map((slug) => `<a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a>`).join(', ') || '<span class="meta">только в for-app</span>';
+            const links = [...(byCard.get(id) ?? [])].sort().map((slug) => `<a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a>`);
+            const cited = links.length
+              ? links.join(', ')
+              : inApp.has(id)
+                ? '<span class="meta">только в for-app</span>'
+                : '<span class="meta">пока не цитируется</span>';
             return `<tr data-type="${esc(c.type)}" data-source="${esc(id)}"><td><a href="${sourceHref(id)}">${esc(c.title ?? id)}</a> <span class="src">${esc(id)}</span></td><td>${esc(c.year ?? '')}</td><td>${esc(c.type ?? '')}</td><td>${cited}</td><td>${citationInner(c) || '—'}</td></tr>`;
           })
           .join('')
@@ -817,6 +840,7 @@ function build() {
   const topicSlugs = new Set(topics.map((t) => t.slug));
   const topicTitles = new Map(topics.map((t) => [t.slug, t.ru.data.title ?? t.slug]));
   const cardTopics = cardTopicMap(topics);
+  const cardApps = cardAppMap();
   for (const id of cardTopics.keys()) {
     if (!cards.has(id)) throw new Error(`тема цитирует sources/${id}.md, а такой карточки нет — ссылка в никуда`);
   }
@@ -826,7 +850,7 @@ function build() {
   mkdirSync(join(DIST, 'ru', 'istochniki'), { recursive: true });
   writeFileSync(
     join(DIST, 'ru', 'istochniki', 'index.html'),
-    sourceIndexPage({ cards, topics, topicTitles }),
+    sourceIndexPage({ cards, topics, topicTitles, appCited: cardApps }),
     'utf8',
   );
   for (const [id, card] of cards) {
