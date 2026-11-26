@@ -6,7 +6,7 @@ type: case
 read: abstract
 year: 2024
 title: One-Year Follow-Up: Schema Therapy for Patients With Borderline Personality Disorder and Comorbid Alcohol Use Disorder.
-taken: Схема-терапия, серия случаев: 20 участников, через год обследованы 17, основные улучшения сохранены; авторы пишут «нужно РКИ»
+taken: Схема-терапия, серия случаев: 20 участников, через год обследованы 17, основные улучшения сохранены; авторы пишут «нужно РКИ»; сравнение: нет — серия случаев
 accessed: 2026-11-25
 ---
 

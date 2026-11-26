@@ -6,7 +6,7 @@ type: case
 read: abstract
 year: 2026
 title: Clinical Characteristics and Treatment of Benzodiazepine Withdrawal Delirium in Adults: An Illustrative Case and Systematic Review of Published Cases.
-taken: Бензодиазепиновая отмена: 24 случая делирия из 19 публикаций (1977–2025), начало через 12 часов – 13 дней после снижения или отмены, разрешение у 22 из 24 после возобновления бензодиазепина
+taken: Бензодиазепиновая отмена: 24 случая делирия из 19 публикаций (1977–2025), начало через 12 часов – 13 дней после снижения или отмены, разрешение у 22 из 24 после возобновления бензодиазепина; сравнение: нет — серия случаев из обзора публикаций
 accessed: 2026-11-26
 ---
 

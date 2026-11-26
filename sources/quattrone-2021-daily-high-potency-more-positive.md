@@ -6,7 +6,7 @@ type: case
 read: abstract
 year: 2021
 title: Daily use of high-potency cannabis is associated with more positive symptoms in first-episode psychosis patients: the EU-GEI case-control study.
-taken: EU-GEI, симптомы: дозозависимая связь позитивного измерения с пожизненной экспозицией, максимум у ежедневных высокопотентных B=0,35 (0,14–0,56); негативные реже у любых потребителей B=−0,22 (−0,37…−0,07)
+taken: EU-GEI, симптомы: дозозависимая связь позитивного измерения с пожизненной экспозицией, максимум у ежедневных высокопотентных B=0,35 (0,14–0,56); негативные реже у любых потребителей B=−0,22 (−0,37…−0,07); сравнение: случай–контроль (title: case-control study)
 accessed: 2026-11-26
 ---
 

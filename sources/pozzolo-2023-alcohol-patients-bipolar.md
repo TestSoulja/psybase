@@ -6,7 +6,7 @@ type: meta
 read: abstract
 year: 2023
 title: Alcohol use disorders in patients with bipolar disorder: a systematic review and meta-analysis.
-taken: 32 886 пациентов с БАР: AUD 29,12%, алкогольная зависимость 15,87%, злоупотребление 18,74%; 20 исследований, 12 стран
+taken: 32 886 пациентов с БАР: AUD 29,12%, алкогольная зависимость 15,87%, злоупотребление 18,74%; 20 исследований, 12 стран; сравнение: нет — распространённость внутри выборки
 accessed: 2026-11-25
 ---
 

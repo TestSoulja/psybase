@@ -6,7 +6,7 @@ type: meta
 read: abstract
 year: 2026
 title: A systematic review of Mendelian randomization evidence on alcohol-related phenotypes and multiple human diseases.
-taken: Umbrella-обзор 88 MR-работ, 630 исследований, до 2 433 011 участников: 30 устойчивых связей (среди них БДР), 98 вероятных, 15 предположительных, 487 (77%) недостаточны
+taken: Umbrella-обзор 88 MR-работ, 630 исследований, до 2 433 011 участников: 30 устойчивых связей (среди них БДР), 98 вероятных, 15 предположительных, 487 (77%) недостаточны; сравнение: нет — обзор MR-работ, счёт связей
 accessed: 2026-11-25
 ---
 

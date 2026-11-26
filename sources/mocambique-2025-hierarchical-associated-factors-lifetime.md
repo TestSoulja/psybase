@@ -6,7 +6,7 @@ type: cohort
 read: abstract
 year: 2025
 title: A hierarchical analysis of associated factors to lifetime suicide attempts in alcohol use disorder.
-taken: 424 мужчины с AUD в лечении: попытка суицида за жизнь у 36,6%; выше при жестоком обращении в детстве, ПРЛ и высокой импульсивности
+taken: 424 мужчины с AUD в лечении: попытка суицида за жизнь у 36,6%; выше при жестоком обращении в детстве, ПРЛ и высокой импульсивности; сравнение: нет — без группы сравнения по ПРЛ (карточка)
 accessed: 2026-11-25
 ---
 

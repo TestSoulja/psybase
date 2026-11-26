@@ -6,7 +6,7 @@ type: cohort
 read: abstract
 year: 2015
 title: Risk Factors for Borderline Personality Disorder in Treatment Seeking Patients with a Substance Use Disorder: An International Multicenter Study.
-taken: 172 из 1 205 (14,3%) пациентов, обращавшихся за лечением расстройства употребления, имели ПРЛ
+taken: 172 из 1 205 (14,3%) пациентов, обращавшихся за лечением расстройства употребления, имели ПРЛ; сравнение: нет — доли внутри выборки
 accessed: 2026-11-25
 ---
 

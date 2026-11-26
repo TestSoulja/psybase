@@ -6,7 +6,7 @@ type: cohort
 read: abstract
 year: 2010
 title: Cannabis withdrawal severity and short-term course among cannabis-dependent adolescent and young adult inpatients.
-taken: 118 стационарных 16–36 лет (73 прошли 10 дней): у большинства пик в 1-й день, меньше половины в группе высокой интенсивности, спад линейный
+taken: 118 стационарных 16–36 лет (73 прошли 10 дней): у большинства пик в 1-й день, меньше половины в группе высокой интенсивности, спад линейный; сравнение: нет — течение внутри одной выборки
 accessed: 2026-11-26
 ---
 

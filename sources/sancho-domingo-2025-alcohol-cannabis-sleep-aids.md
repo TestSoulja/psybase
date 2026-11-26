@@ -6,7 +6,7 @@ type: cohort
 read: abstract
 year: 2025
 title: Alcohol and cannabis as sleep aids among adolescents and associations with sleep quality and problematic use.
-taken: 1 121 подросток 15–18 лет: 8,6% (96) за месяц пили алкоголь или каннабис как снотворное; за 6 месяцев доля выросла с 6,3% до 9,5% (n = 221) — Испания
+taken: 1 121 подросток 15–18 лет: 8,6% (96) за месяц пили алкоголь или каннабис как снотворное; за 6 месяцев доля выросла с 6,3% до 9,5% (n = 221) — Испания; сравнение: нет — доли внутри выборки
 accessed: 2026-11-25
 ---
 
