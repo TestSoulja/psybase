@@ -164,6 +164,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - EU-GEI, симптомы: дозозависимая связь позитивного измерения с пожизненной
   экспозицией, максимум у ежедневных высокопотентных B=0,35 (0,14–0,56);
   негативные реже у любых потребителей B=−0,22 (−0,37…−0,07) [`quattrone-2021-daily-high-potency-more-positive`](../sources/quattrone-2021-daily-high-potency-more-positive.md, `case`).
+  То есть B — это изменение по уровням экспозиции, а не сравнение с
+  контрольной группой; кого брали референсом, в источнике не указано.
 - NAPLS-2, 1 012 человек (734 в группе риска): тяжёлый каннабис и лёгкий табак —
   HR конверсии 2,93 (1,23–6,97) против неупотребляющих [`bello-2026-tobacco-predicts-psychosis-clinical-high`](../sources/bello-2026-tobacco-predicts-psychosis-clinical-high.md, `cohort`).
 
@@ -261,8 +263,10 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   28,45% (психиатрия) и 4,61% (община) [`pini-2026-association-major-depressive-regression`](../sources/pini-2026-association-major-depressive-regression.md, `meta`).
 - NEMESIS-2: каннабис объясняет 1,00% связи тревоги и 1,4% связи депрессии с
   психотическим опытом; обратно тревога объясняет 17%, депрессия 37% связи
-  каннабиса с психотическим опытом [`radhakrishnan-2023-bidirectional-relationships-anxiety`](../sources/radhakrishnan-2023-bidirectional-relationships-anxiety.md, `cohort`). То есть большая часть связи
-  в этих данных идёт не от каннабиса.
+  каннабиса с психотическим опытом [`radhakrishnan-2023-bidirectional-relationships-anxiety`](../sources/radhakrishnan-2023-bidirectional-relationships-anxiety.md, `cohort`).
+  То есть доли сравнивают два направления связи внутри одной когорты, и
+  большая часть связи идёт не от каннабиса; внешней группы сравнения в
+  источнике нет.
 - Квебек, 1 548 подростков в 13, 15 и 17 лет: связи слабые, но двусторонние —
   каннабис в 13 и 15 предсказывает тревогу в 15 и 17, депрессия в 15
   предсказывает каннабис в 17 [`london-nadeau-2021-longitudinal-associations-depression`](../sources/london-nadeau-2021-longitudinal-associations-depression.md, `cohort`).
@@ -300,6 +304,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - Отмена возникает примерно у половины регулярных и зависимых потребителей;
   начало через 24–48 часов, пик на 2–6-й день, часть симптомов держится до
   3 недель и дольше у тяжёлых [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`).
+  То есть это описание течения внутри выборки потребителей; группы сравнения в
+  источнике нет.
 - Пул 47 исследований, 23 518 человек: отмена 47% (41–52), I²=99,2%; в общине
   17% (13–21), амбулаторно 54% (48–59), в стационаре 87% (79–94)
   [`bahji-2020-prevalence-withdrawal-symptoms-people-regular`](../sources/bahji-2020-prevalence-withdrawal-symptoms-people-regular.md, `meta`).
@@ -308,8 +314,11 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - 469 взрослых вне лечения: 42,4% имели синдром отмены за жизнь; 95,5% — хотя
   бы один симптом, в среднем 9,5 (SD 6,1), у 43,1% — 10 и больше; 70,4% курили,
   чтобы снять симптомы [`levin-2010-withdrawal-symptoms-treatment-seeking-adult`](../sources/levin-2010-withdrawal-symptoms-treatment-seeking-adult.md, `cohort`).
+  То есть это доли внутри одной выборки; группы сравнения в источнике нет.
 - 118 стационарных 16–36 лет (73 прошли 10 дней): у большинства пик в 1-й день,
   спад линейный [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`).
+  То есть сроки описывают течение внутри одной выборки; группы сравнения в
+  источнике нет.
 
 Пик отмены в источниках расходится: 1-й день в стационарной проспективной
 выборке [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`) против 2–6-го дня в амбулаторной и в обзоре
@@ -439,6 +448,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Вознаграждение при психиатрической коморбидности: 6 исследований, снижение
   употребления при психотическом спектре и БДР, длительных наблюдений нет
   [`rodas-2022-contingency-management-treatment-occurring`](../sources/rodas-2022-contingency-management-treatment-occurring.md, `review`).
+  То есть с чем сравнивали вознаграждение, в источнике не указано.
 
 ### Фармакотерапия
 
@@ -513,6 +523,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - 2 случая: спутанность на клозапине после прекращения табака и каннабиса (рост
   плазменных уровней), экстрапирамидные симптомы на оланзапине при снижении
   курения [`zullino-2002-tobacco-smoking-cessation-can-lead`](../sources/zullino-2002-tobacco-smoking-cessation-can-lead.md, `case`).
+  То есть группы сравнения в источнике нет: это описание двух случаев.
 - Нонадгерентность, 15 наблюдений, n=3 678: OR 2,46 у потребителей против
   непотребителей (n=3 055); текущие против непотребителей 5,79 (n=175), против
   бывших 5,5 (n=192); бывшие против непотребителей 1,12 (n=187) [`foglia-2017-adherence-antipsychotic-medication`](../sources/foglia-2017-adherence-antipsychotic-medication.md, `meta`).
@@ -547,6 +558,8 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Бензодиазепиновая отмена: 24 случая делирия из 19 публикаций (1977–2025),
   начало через 12 часов — 13 дней после снижения или отмены, разрешение у 22 из
   24 после возобновления бензодиазепина [`al-soleiti-2026-clinical-characteristics-treatment`](../sources/al-soleiti-2026-clinical-characteristics-treatment.md, `case`).
+  То есть группы сравнения в источнике нет: это серия случаев из обзора
+  публикаций.
 - Конверсия индуцированного психоза по веществу, одна методика: каннабис 34%
   (25–46), галлюциногены 26% (14–43), амфетамины 22% (14–34), опиоиды 12%,
   алкоголь 10%, седативные 9% [`murrie-2020-transition-substance-induced-brief-atypical`](../sources/murrie-2020-transition-substance-induced-brief-atypical.md, `meta`).
@@ -556,6 +569,8 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Метамфетамин: градиент от простых бредовых и тактильных галлюцинаций в
   транзиторных случаях (насилие в 75,6%) до сложных полимодальных нарушений при
   стойких [`ricci-2026-clinical-phenomenology-differential-diagnosis`](../sources/ricci-2026-clinical-phenomenology-differential-diagnosis.md, `review`).
+  То есть это доля внутри отобранных случаев из обзора, а не частота насилия
+  среди всех потребителей.
 
 Опиоидная отмена в тему не попала: открытого источника со сравнимыми числами
 смертности или опасности в этом заходе нет, выдача почти целиком оказалась
