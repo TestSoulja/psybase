@@ -41,6 +41,7 @@ import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { frontMatter, topicStats } from './stats.mjs';
+import { classifyCitations, readResearchPmids } from './citations.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const STATUS = join(ROOT, 'STATUS.md');
@@ -502,28 +503,15 @@ for (const c of sourceCards) {
   const m = String(data.id ?? '').match(/PMID\s*(\d+)/i);
   if (m) cardPmid.set(c, m[1]);
 }
-const researchCited = new Set();
-const researchDir = join(ROOT, 'research');
-if (existsSync(researchDir)) {
-  const walk = (dir) => {
-    for (const e of readdirSync(dir, { withFileTypes: true })) {
-      const p = join(dir, e.name);
-      if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith('.md')) {
-        const text = readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
-        for (const m of text.matchAll(/\bPMID\s+(\d{5,9})\b/g)) researchCited.add(m[1]);
-      }
-    }
-  };
-  walk(researchDir);
-}
-const citedInResearch = (c) => Boolean(cardPmid.get(c) && researchCited.has(cardPmid.get(c)));
+const researchPmids = readResearchPmids(join(ROOT, 'research'));
 
-const inTopics = sourceCards.filter((c) => cardTopics.get(c).size > 0);
-const multiTopic = inTopics.filter((c) => cardTopics.get(c).size > 1);
-const appOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && appUnion.has(c));
-const researchOnly = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c) && citedInResearch(c));
-const nowhere = sourceCards.filter((c) => cardTopics.get(c).size === 0 && !appUnion.has(c) && !citedInResearch(c));
+const { inTopics, multiTopic, appOnly, researchOnly, nowhere } = classifyCitations({
+  cards: sourceCards,
+  topicRefs: cardTopics,
+  appRefs: appUnion,
+  researchPmids,
+  cardPmid,
+});
 
 // С 25.11.2026 карточки законно живут в трёх темах; формулировка стала точной:
 // «больше чем в одной», проверять нечего — это определение множества.

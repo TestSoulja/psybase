@@ -8,6 +8,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { frontMatter, splitSections, topicStats, homeStats, LEVELS } from './stats.mjs';
+import { classifyCitations, readResearchPmids } from './citations.mjs';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const BASE = '/psybase/'; // единственная константа адреса
 const SITE = 'https://testsoulja.github.io' + BASE;
@@ -525,12 +526,11 @@ function cardAppMap() {
   }
   return byCard;
 }
-function sourceIndexPage({ cards, topics, topicTitles, appCited }) {
+function sourceIndexPage({ cards, topicTitles, cardTopics, appOnly }) {
   const counts = typeCounts(cards);
   const total = cards.size;
   const parts = TYPE_ORDER.filter((t) => counts[t] > 0).map((t) => `${t} ${counts[t]}`);
-  const byCard = cardTopicMap(topics);
-  const inApp = appCited ?? new Set();
+  const inApp = appOnly ?? new Set();
   const groups = TYPE_ORDER.map((type) => {
     const list = [...cards.entries()]
       .filter(([, c]) => c.type === type)
@@ -544,12 +544,12 @@ function sourceIndexPage({ cards, topics, topicTitles, appCited }) {
         head +
         g.list
           .map(([id, c]) => {
-            const links = [...(byCard.get(id) ?? [])].sort().map((slug) => `<a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a>`);
+            const links = [...(cardTopics.get(id) ?? [])].sort().map((slug) => `<a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a>`);
             const cited = links.length
               ? links.join(', ')
               : inApp.has(id)
                 ? '<span class="meta">только в for-app</span>'
-                : '<span class="meta">пока не цитируется</span>';
+                : '<span class="meta">темы пока нет</span>';
             return `<tr data-type="${esc(c.type)}" data-source="${esc(id)}"><td><a href="${sourceHref(id)}">${esc(c.title ?? id)}</a> <span class="src">${esc(id)}</span></td><td>${esc(c.year ?? '')}</td><td>${esc(c.type ?? '')}</td><td>${cited}</td><td>${citationInner(c) || '—'}</td></tr>`;
           })
           .join('')
@@ -572,13 +572,17 @@ function sourceIndexPage({ cards, topics, topicTitles, appCited }) {
 <footer><p><a href="${BASE}ru/">Все темы</a> · <a href="${BASE}ru/kak-my-rabotaem/" lang="ru">Как мы работаем</a> · <a href="${BASE}">psybase</a></p></footer>
 </body></html>`;
 }
-function sourceCardPage({ id, card, topicTitles, topicsCited, cards }) {
+function sourceCardPage({ id, card, topicTitles, topicsCited, citationState, cards }) {
   const url = sourceHref(id);
   const cited = topicsCited.length
     ? `<ul>${topicsCited
         .map((slug) => `<li><a href="${BASE}ru/${slug}/">${esc(topicTitles.get(slug) ?? slug)}</a></li>`)
         .join('')}</ul>`
-    : `<p class="meta">Ни в одной теме: карточка цитируется только в приложении «Опора» или пока не цитируется.</p>`;
+    : citationState === 'app'
+      ? `<p class="meta">Ни в одной теме: карточка цитируется только в приложении «Опора».</p>`
+      : citationState === 'research'
+        ? `<p class="meta">Ни в одной теме: карточка собрана из сырья исследования (<code>research/</code>), темы пока нет.</p>`
+        : `<p class="meta">Ни в одной теме: карточка пока нигде не цитируется — это ошибка, её должен поймать <code>node tools/status.mjs</code>.</p>`;
   const body = renderBody(card.body.split(/\r?\n/), { lang: 'ru', cards, typesTable: '' });
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -841,6 +845,23 @@ function build() {
   const topicTitles = new Map(topics.map((t) => [t.slug, t.ru.data.title ?? t.slug]));
   const cardTopics = cardTopicMap(topics);
   const cardApps = cardAppMap();
+  const cardPmid = new Map();
+  for (const [slug, card] of cards) {
+    const m = String(card.id ?? '').match(/PMID\s*(\d+)/i);
+    if (m) cardPmid.set(slug, m[1]);
+  }
+  const citation = classifyCitations({
+    cards: [...cards.keys()],
+    topicRefs: cardTopics,
+    appRefs: cardApps,
+    researchPmids: readResearchPmids(join(ROOT, 'research')),
+    cardPmid,
+  });
+  const citationState = new Map();
+  for (const c of citation.inTopics) citationState.set(c, 'topics');
+  for (const c of citation.appOnly) citationState.set(c, 'app');
+  for (const c of citation.researchOnly) citationState.set(c, 'research');
+  for (const c of citation.nowhere) citationState.set(c, 'nowhere');
   for (const id of cardTopics.keys()) {
     if (!cards.has(id)) throw new Error(`тема цитирует sources/${id}.md, а такой карточки нет — ссылка в никуда`);
   }
@@ -850,14 +871,14 @@ function build() {
   mkdirSync(join(DIST, 'ru', 'istochniki'), { recursive: true });
   writeFileSync(
     join(DIST, 'ru', 'istochniki', 'index.html'),
-    sourceIndexPage({ cards, topics, topicTitles, appCited: cardApps }),
+    sourceIndexPage({ cards, topicTitles, cardTopics, appOnly: new Set(citation.appOnly) }),
     'utf8',
   );
   for (const [id, card] of cards) {
     mkdirSync(join(DIST, 'ru', 'istochniki', id), { recursive: true });
     writeFileSync(
       join(DIST, 'ru', 'istochniki', id, 'index.html'),
-      sourceCardPage({ id, card, topicTitles, topicsCited: [...(cardTopics.get(id) ?? [])], cards }),
+      sourceCardPage({ id, card, topicTitles, topicsCited: [...(cardTopics.get(id) ?? [])], citationState: citationState.get(id), cards }),
       'utf8',
     );
   }
