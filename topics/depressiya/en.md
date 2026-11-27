@@ -2,7 +2,7 @@
 slug: depressiya
 title: Depression
 updated: 2026-11-27
-sources: 11
+sources: 12
 ---
 
 ## What it is
@@ -79,9 +79,15 @@ moderate to very low
 steps 1–4 was 36.8%, 30.6%, 13.7% and 13.0%, cumulative 67%; 123 people reached
 step 4 [`rush-2006-star-d`](../sources/rush-2006-star-d.md, `rct`).
 
+A reanalysis of the same data using the original protocol (protocol HRSD, without
+the 99 and 125 patients who had already remitted) gave a cumulative remission of
+35.0% — roughly half as much; the difference is explained by counting rules, not by
+different patients
+[`pigott-2023-star-d-reanalysis`](../sources/pigott-2023-star-d-reanalysis.md, `rct`).
+
 **Interpersonal psychotherapy (IPT).** 38 studies, 4 356 people; versus control
-d 0.63 (0.36–0.90), NNT 2.91; maintenance combination with a drug versus a drug
-alone OR 0.37 (0.19–0.73) for relapse
+(16 studies) d 0.63 (0.36–0.90), NNT 2.91; maintenance combination with a drug
+versus a drug alone OR 0.37 (0.19–0.73) for relapse
 [`cuijpers-2011-ipt`](../sources/cuijpers-2011-ipt.md, `meta`).
 
 **Link with BPD.** Borderline personality disorder is diagnosed in 10–30% of people
@@ -157,6 +163,8 @@ by "pulling yourself together"
   — 21 drugs: a network meta-analysis of 522 RCTs.
 - [`rush-2006-star-d`](../sources/rush-2006-star-d.md) — STAR*D: remission across
   treatment steps.
+- [`pigott-2023-star-d-reanalysis`](../sources/pigott-2023-star-d-reanalysis.md) —
+  STAR*D reanalysis to protocol: 35.0% versus 67%.
 - [`cuijpers-2011-ipt`](../sources/cuijpers-2011-ipt.md) — interpersonal
   psychotherapy: 38 studies.
 - [`kohne-2021-network`](../sources/kohne-2021-network.md) — a symptom network of
