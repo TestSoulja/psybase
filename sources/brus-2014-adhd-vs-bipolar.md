@@ -6,7 +6,7 @@ type: review
 read: abstract
 year: 2014
 title: "Adult ADHD vs. bipolar disorder in the DSM-5 era: a challenging differentiation for clinicians."
-taken: "СДВГ у взрослых 4,4% в США против 1,4% при БАР; СДВГ начинается до 7 лет, БАР — после 12; около 20% с СДВГ имеют БАР и 10–20% с БАР имеют СДВГ"
+taken: "СДВГ у взрослых — 4,4 % в США, БАР — 1,4 %; СДВГ начинается до 7 лет, БАР — после 12; около 20% с СДВГ имеют БАР и 10–20% с БАР имеют СДВГ"
 accessed: 2026-11-27
 ---
 
