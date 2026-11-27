@@ -1,8 +1,8 @@
 ---
 slug: depressiya
 title: Depression
-updated: 2026-11-25
-sources: 7
+updated: 2026-11-27
+sources: 11
 ---
 
 ## What it is
@@ -69,10 +69,29 @@ medicines are not needed [`who-2025-depression`](../sources/who-2025-depression.
 This describes what services recommend, not a prescription: the choice stays with
 the doctor.
 
+**Medicines in an acute episode.** A network meta-analysis of 522 RCTs
+(116 477 people, 21 drugs): every drug beat placebo on response, OR from 1.37
+(1.16–1.63) to 2.13 (1.89–2.41); high risk of bias in 46 (9%) trials, certainty from
+moderate to very low
+[`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
+
+**When the first drug does not help.** STAR*D: of 3 671 patients, remission at
+steps 1–4 was 36.8%, 30.6%, 13.7% and 13.0%, cumulative 67%; 123 people reached
+step 4 [`rush-2006-star-d`](../sources/rush-2006-star-d.md, `rct`).
+
+**Interpersonal psychotherapy (IPT).** 38 studies, 4 356 people; versus control
+d 0.63 (0.36–0.90), NNT 2.91; maintenance combination with a drug versus a drug
+alone OR 0.37 (0.19–0.73) for relapse
+[`cuijpers-2011-ipt`](../sources/cuijpers-2011-ipt.md, `meta`).
+
 **Link with BPD.** Borderline personality disorder is diagnosed in 10–30% of people
 with major depressive disorder, and the frequency of depression among people with
 BPD exceeds 80%; together the course is more severe — more treatment resistance and
-more suicidality [`wiedlocha-2024-bpd-mdd`](../sources/wiedlocha-2024-bpd-mdd.md, `review`).
+more suicidality [`wiedlocha-2024-bpd-mdd`](../sources/wiedlocha-2024-bpd-mdd.md, `review`). A
+network analysis of 376 patients in a clinical sample found direct links between
+depression and BPD symptoms: a model in which symptoms sustain one another rather
+than follow from a shared cause
+[`kohne-2021-network`](../sources/kohne-2021-network.md, `cohort`).
 
 **Devaluing criticism.** In a 17-year cohort of people aged 50 and older, perceived
 criticism from a spouse was associated with more clinically significant depressive
@@ -113,7 +132,8 @@ by "pulling yourself together"
   it appears here.
 - **Validated Russian-language figures for Russia** — not found in this step: all
   numbers above are world, US or England. The topic makes no claims about Russia.
-- **A meta-analysis of "devaluation → suicidality"** — not found.
+- **A meta-analysis of "devaluation → suicidality"** — not found: 39 records, not a
+  single pooled analysis.
 - **False positives in screening and the work-up cascade after them** — not a single
   number (more in the severity-scales topic, when it exists).
 
@@ -133,3 +153,11 @@ by "pulling yourself together"
   HR by grade.
 - [`nhs-depression-overview`](../sources/nhs-depression-overview.md) —
   patient-facing wording, standing in for the unavailable NICE.
+- [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md)
+  — 21 drugs: a network meta-analysis of 522 RCTs.
+- [`rush-2006-star-d`](../sources/rush-2006-star-d.md) — STAR*D: remission across
+  treatment steps.
+- [`cuijpers-2011-ipt`](../sources/cuijpers-2011-ipt.md) — interpersonal
+  psychotherapy: 38 studies.
+- [`kohne-2021-network`](../sources/kohne-2021-network.md) — a symptom network of
+  depression and BPD.

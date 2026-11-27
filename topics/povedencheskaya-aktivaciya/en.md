@@ -1,7 +1,7 @@
 ---
 slug: povedencheskaya-aktivaciya
 title: Behavioural activation
-updated: 2026-11-25
+updated: 2026-11-27
 sources: 10
 ---
 
@@ -81,6 +81,10 @@ was mediated by activation itself (β=−2.62; −3.28…−1.97)
 - **"Small steps".** No RCT was found in which the size of a step was a factor.
   The mechanism "avoidance → less reinforcement → less activity" is theory, not a
   measurement of step size.
+- **Waiting list.** Versus a waiting list — RR 2.14 (0.90–5.09), one RCT, 26
+  people: the direction favours BA, but the interval includes one and the sample is
+  far too small
+  [`uphoff-2020-behavioural-activation`](../sources/uphoff-2020-behavioural-activation.md, `meta`).
 - **Suicidality.** In HAP suicidal behaviour: aPR 0.71 (0.51–1.01), p=0.06 — a
   signal without significance; COBRA excluded acutely suicidal people and those
   who had attempted in the previous 2 months. BA is not proven as a means against
