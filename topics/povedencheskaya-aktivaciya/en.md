@@ -1,7 +1,7 @@
 ---
 slug: povedencheskaya-aktivaciya
 title: Behavioural activation
-updated: 2026-11-27
+updated: 2026-11-28
 sources: 10
 ---
 
@@ -13,35 +13,41 @@ access to what reinforces them
 [`uphoff-2020-behavioural-activation`](../sources/uphoff-2020-behavioural-activation.md, `meta`).
 It is not "positive thinking" and not the advice to "just go for a walk": the work
 targets avoidance and a schedule of actions, not convincing yourself that
-everything is fine.
+everything is fine. Terms are explained on the Russian-language
+[glossary page](/psybase/ru/kak-chitat/).
 
 ## What is known
 
-**Better than usual care — but the effect is fragile.** Cochrane: 53 studies,
-5495 participants; BA versus usual care — RR 1.40 (1.10–1.78), 7 RCTs, 1533
-people, moderate certainty. In worst-case and intention-to-treat analyses the
-difference disappears
+**Better than usual care — but the effect is fragile.** Cochrane review: 53
+studies, 5495 participants; BA versus usual care — relative risk (RR) 1.40
+(1.10–1.78), 7 randomised controlled trials (RCTs), 1533 people, moderate
+certainty. In worst-case and intention-to-treat (all randomised participants,
+including dropouts) analyses the difference disappears
 [`uphoff-2020-behavioural-activation`](../sources/uphoff-2020-behavioural-activation.md, `meta`).
 "It works" is confirmed; "it works for everyone" is not.
 
-**No worse than CBT.** BA versus CBT — RR 0.99 (0.92–1.07), 5 RCTs, 601 people
+**No worse than CBT.** BA versus cognitive behavioural therapy (CBT) — RR 0.99
+(0.92–1.07), 5 RCTs, 601 people
 [`uphoff-2020-behavioural-activation`](../sources/uphoff-2020-behavioural-activation.md, `meta`).
 In COBRA, 440 people over 12 months: PHQ-9 8.4 versus 8.4, a difference of 0.1
-points (−1.3…1.5) against a non-inferiority margin of 1.9
+points (−1.3…1.5) against a non-inferiority margin (the tolerated difference) of
+1.9
 [`richards-2016-cobra`](../sources/richards-2016-cobra.md, `rct`).
 
 **No worse than antidepressants.** One RCT of 141 people: RR 1.77 (1.14–2.76)
 [`uphoff-2020-behavioural-activation`](../sources/uphoff-2020-behavioural-activation.md, `meta`).
-In the Ekers meta-analysis — SMD −0.42 (−0.83…0.00), 4 RCTs, 283 people: the upper
-bound reaches zero, so "BA beats pills" is not a conclusion of that work
+In the Ekers meta-analysis (pooling several studies) — standardised mean
+difference (SMD) −0.42 (−0.83…0.00), 4 RCTs, 283 people: the upper bound reaches
+zero, so "BA beats pills" is not a conclusion of that work
 [`ekers-2014-ba-update`](../sources/ekers-2014-ba-update.md, `meta`).
 
 **A large but heterogeneous effect against control.** SMD −0.74 (−0.91…−0.56),
 25 RCTs, 1088 people; quality was low in most studies and follow-up short
 [`ekers-2014-ba-update`](../sources/ekers-2014-ba-update.md, `meta`). Individual
-BA: g 0.85 (0.57–1.1), 22 RCTs, 819 people; low risk of bias only — g 0.56
-(0.09–1.03), prediction interval −0.85…1.98, that is, in some populations there
-may be no effect
+BA: standardised difference g 0.85 (0.57–1.1), 22 RCTs, 819 people; low risk of
+bias (systematic error) only — g 0.56 (0.09–1.03), prediction interval (where
+the effect would fall in another population) −0.85…1.98 — in some populations
+there may be no effect
 [`cuijpers-2023-individual-ba`](../sources/cuijpers-2023-individual-ba.md, `meta`).
 
 **In severe depression, no weaker than pills.** An RCT of 241 people: among the
@@ -61,15 +67,18 @@ psychotherapies in general: SMD −0.51 (−0.69…−0.33), 12 trials, 2859 peo
 [`serrano-ripoll-2022-apps`](../sources/serrano-ripoll-2022-apps.md, `meta`).
 
 **Inside digital programmes BA is a working component.** A component network
-meta-analysis of iCBT: 76 RCTs, 17 521 people; adding BA gave −1.83 points on the
-depression scale (CrI −2.90…−0.80), while relaxation may be harmful (1.20; CrI
-0.17–2.27)
+meta-analysis (comparing components through one shared network) of internet CBT
+(iCBT): 76 RCTs, 17 521 people; adding BA gave −1.83 points on the depression
+scale (credible interval CrI −2.90…−0.80), while relaxation may be harmful
+(1.20; CrI 0.17–2.27)
 [`furukawa-2021-icbt-components`](../sources/furukawa-2021-icbt-components.md, `meta`).
 
-**It transfers to lay counsellors and holds for a year.** HAP, India, primary
-care: 495 people, counsellors without specialist training; at 12 months BDI-II was
-4.45 points lower (−7.26…−1.63), remission aPR 1.36 (1.15–1.61), and the effect
-was mediated by activation itself (β=−2.62; −3.28…−1.97)
+**It transfers to lay counsellors and holds for a year.** The HAP (Healthy
+Activity Program), India, primary care: 495 people, counsellors without
+specialist training; at 12 months the Beck Depression Inventory (BDI-II) was
+4.45 points lower (−7.26…−1.63), remission — adjusted prevalence ratio (aPR)
+1.36 (1.15–1.61), and the effect was mediated by activation itself (coefficient
+β=−2.62; −3.28…−1.97)
 [`weobong-2017-hap-12m`](../sources/weobong-2017-hap-12m.md, `rct`).
 
 ## What is not proven
