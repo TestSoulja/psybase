@@ -2,6 +2,7 @@
 .DS_Store
 Thumbs.db
 dist/
+.build.json
 
 # агентский файл — только для локальной работы, публике не нужен
 AGENTS.md

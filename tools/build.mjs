@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { frontMatter, splitSections, topicStats, homeStats, LEVELS } from './stats.mjs';
 import { classifyCitations, readResearchPmids } from './citations.mjs';
+import { buildFingerprint } from './build-fingerprint.mjs';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const BASE = '/psybase/'; // единственная константа адреса
 const SITE = 'https://testsoulja.github.io' + BASE;
@@ -725,6 +726,7 @@ function routePage({ slug, title, updated }) {
 </body></html>`;
 }
 function build() {
+  const inputs = buildFingerprint(ROOT);
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
   const cards = loadCards();
@@ -964,6 +966,12 @@ ${pages
     ...cards.keys().map((id) => `${SITE}ru/istochniki/${id}/`),
   ];
   writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`, 'utf8');
+  // Отпечаток входов для status.mjs: сравнение по содержимому, а не по mtime.
+  // Лежит в корне и в git не попадает: dist/ остаётся ровно тем, что
+  // публикуется, без служебного файла на сайте.
+  if (!FIXTURE) {
+    writeFileSync(join(ROOT, '.build.json'), JSON.stringify({ inputs }) + '\n', 'utf8');
+  }
   const bytes = dirBytes(DIST);
   for (const f of filesUnder(DIST)) {
     const text = readFileSync(f, 'utf8');

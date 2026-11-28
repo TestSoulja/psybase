@@ -21,8 +21,8 @@
  *     ловит опечатку, а не смысл.
  *   - pages/<slug>/ без ru.md; слаг страницы совпал с темой; страница попала
  *     в таблицу тем; «Тем: N» на собранной главной не равна числу папок тем.
- *   - dist/ нет или он старше последней правки входов — это ошибка, а не
- *     «сверка пропущена»: собери `node tools/build.mjs`.
+ *   - dist/ нет или отпечаток входов сборки не совпадает с деревом — это
+ *     ошибка, а не «сверка пропущена»: собери `node tools/build.mjs`.
  *   - страница источника: нет индекса, страницы карточки или строки; число
  *     в индексе не равно числу файлов или числу на главной; тип показан не
  *     тем числом; в sitemap нет адресов источников или страниц каталога;
@@ -42,6 +42,7 @@ import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { frontMatter, topicStats } from './stats.mjs';
 import { classifyCitations, readResearchPmids } from './citations.mjs';
+import { buildFingerprint } from './build-fingerprint.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const STATUS = join(ROOT, 'STATUS.md');
@@ -619,32 +620,31 @@ const buildHome = {
 // пропущенная сверка выглядит как успешная.
 const DIST = join(ROOT, 'dist');
 const DIST_HOME = join(DIST, 'ru', 'index.html');
+const DIST_STAMP = join(ROOT, '.build.json');
 const distReady = existsSync(DIST_HOME);
 if (!distReady) {
   problems.push('dist/ — сборки нет: собери: node tools/build.mjs');
 } else {
-  const builtAt = statSync(DIST_HOME).mtimeMs;
-  let newest = 0;
-  let newestWhere = '';
-  const touch = (p) => {
-    const m = statSync(p).mtimeMs;
-    if (m > newest) {
-      newest = m;
-      newestWhere = p;
+  // Свежесть сборки — по содержимому входов, а не по mtime. `git checkout`
+  // меняет время файлов, не меняя текст; раньше это давало ложное «dist/
+  // старше последней правки». Сборка пишет отпечаток в .build.json в корне.
+  if (!existsSync(DIST_STAMP)) {
+    problems.push('dist/ — нет отпечатка сборки (.build.json): пересобери: node tools/build.mjs');
+  } else {
+    let stamp = null;
+    try {
+      stamp = JSON.parse(readFileSync(DIST_STAMP, 'utf8').replace(/^\uFEFF/, ''));
+    } catch {
+      stamp = null;
     }
-  };
-  for (const d of topics) {
-    for (const f of ['ru.md', 'en.md']) if (existsSync(join(TOPICS, d, f))) touch(join(TOPICS, d, f));
-  }
-  for (const d of pageDirs) {
-    if (existsSync(join(PAGES, d, 'ru.md'))) touch(join(PAGES, d, 'ru.md'));
-  }
-  for (const f of sourceCards) touch(join(SOURCES, `${f}.md`));
-  touch(join(ROOT, 'tools', 'build.mjs'));
-  if (newest > builtAt + 2000) {
-    problems.push(
-      `dist/ — старше последней правки (${newestWhere.replace(ROOT + '\\', '')}): пересобери: node tools/build.mjs`,
-    );
+    const actual = buildFingerprint(ROOT);
+    if (!stamp || typeof stamp.inputs !== 'string') {
+      problems.push('.build.json — нет поля inputs: пересобери: node tools/build.mjs');
+    } else if (stamp.inputs !== actual) {
+      problems.push(
+        `dist/ — входы изменились после сборки (отпечаток ${stamp.inputs.slice(0, 12)}…, сейчас ${actual.slice(0, 12)}…): пересобери: node tools/build.mjs`,
+      );
+    }
   }
 
   const html = readFileSync(DIST_HOME, 'utf8').replace(/^\uFEFF/, '');
