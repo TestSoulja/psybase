@@ -1,7 +1,7 @@
 ---
 slug: antidepressanty
 title: Antidepressants
-updated: 2026-11-25
+updated: 2026-11-28
 sources: 19
 ---
 
@@ -13,13 +13,16 @@ accumulates over weeks, and the decision to start, to change the dose or to stop
 is made by a doctor
 [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
 
-What follows is what meta-analyses and reviews show — and what they do not.
+What follows is what meta-analyses (pooling the results of several studies) and
+reviews show — and what they do not.
 
 ## What is known
 
 **All 21 drugs beat placebo, but the differences between them are small.** 522
-RCTs, 116 477 people: response OR from 2.13 (amitriptyline, 1.89–2.41) to 1.37
-(reboxetine, 1.16–1.63); differences between drugs in efficacy — 1.15–1.55. High
+randomised controlled trials (RCTs), 116 477 people: response (a score reduction
+of at least half by the source's criterion) OR from 2.13 (amitriptyline,
+1.89–2.41) to 1.37 (reboxetine, 1.16–1.63); differences between drugs in
+efficacy — 1.15–1.55. High
 risk of bias in 46 (9%) trials, moderate in 380 (73%), low in 96 (18%); the
 authors' certainty was moderate to very low
 [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
@@ -34,56 +37,67 @@ note: 522 RCTs, 116 477 people; risk of bias in the trials
 ```
 
 **The mean difference from placebo is 1.75 HAMD points.** 232 RCTs, 73 388
-people, FDA data 1979–2016: 1.75 (1.63–1.86). A large response in 24.5% versus
-9.6%, a minimal one in 12.2% versus 21.5%; "about 15% have a substantial effect
-beyond placebo". There is no trend over the years: the placebo response did not
-grow [`stone-2022-fda-ipd`](../sources/stone-2022-fda-ipd.md, `meta`).
+people, FDA data 1979–2016: 1.75 (1.63–1.86). HAMD and HDRS are the same
+Hamilton scale. A large response in 24.5% versus 9.6%, a minimal one in 12.2%
+versus 21.5%; "about 15% have a substantial effect beyond placebo" — this is a
+model estimate, not the share cured. A large and a minimal response here are
+classes from a statistical model, not a common threshold. There is no trend over
+the years: the placebo response did not grow
+[`stone-2022-fda-ipd`](../sources/stone-2022-fda-ipd.md, `meta`).
 
-**The difference grows with severity.** At HDRS below 23 the difference is less
-than d 0.20 — a "small effect"; the NICE threshold of clinical significance is
-crossed at HDRS 25
+**The difference grows with severity.** At HDRS below 23 the standardised
+difference d is less than 0.20 — a "small effect"; the threshold at which NICE
+considers the difference clinically significant is crossed at HDRS 25
 [`fournier-2010-severity`](../sources/fournier-2010-severity.md, `meta`). The FDA
 data show the same: the difference grows but remains small even in very severe
 depression, and the reason is a fall in the placebo response, not a rise in the
 drug response [`kirsch-2008-severity`](../sources/kirsch-2008-severity.md, `meta`).
 
 **Improvement is visible by the end of the first week.** 28 RCTs, n = 5872: a
-50% fall in HAMD within a week — RR 1.64 (1.2–2.25); after that improvement
-continues at a decreasing rate for at least 6 weeks
+50% fall in HAMD within a week — relative risk (RR) 1.64 (1.2–2.25); after that
+improvement continues at a decreasing rate for at least 6 weeks
 [`taylor-2006-early-response`](../sources/taylor-2006-early-response.md, `meta`).
 Caveat: these are SSRIs, not the whole class.
 
-**Fewer dropouts than placebo — only for two drugs.** Fewer discontinuations than
-on placebo with agomelatine (OR 0.84; 0.72–0.97) and fluoxetine (0.88;
-0.80–0.96); more with clomipramine (1.30; 1.01–1.68). In head-to-head
+**Fewer dropouts (stopping participation or treatment) than placebo — only for
+two drugs.** Fewer discontinuations than on placebo with agomelatine (OR 0.84;
+0.72–0.97) and fluoxetine (0.88; 0.80–0.96); more with clomipramine (1.30;
+1.01–1.68). In head-to-head
 comparisons the highest dropout was with seven drugs — OR 1.30–2.32
 [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
 
-**Stopping is not "a couple of weeks".** 24 studies: incidence 27–86%, weighted
-average 56%; 46% of those who experienced it rated the severity as extreme. The
-mean duration in four studies was 5 days, 10 days, 43 days and 79 weeks; 7 of 10
-studies of duration contradict the guidelines' claim that withdrawal is
-self-limiting within 1–2 weeks
+**Withdrawal symptoms are not "a couple of weeks".** 24 studies: incidence of
+withdrawal symptoms 27–86%, weighted average 56%; 46% of those who experienced it
+rated the severity as extreme. The mean duration in four studies was 5 days,
+10 days, 43 days and 79 weeks; 7 of 10 studies of duration contradict the
+guidelines' claim that withdrawal is self-limiting within 1–2 weeks
 [`davies-read-2019-withdrawal`](../sources/davies-read-2019-withdrawal.md, `review`).
 
 **Short tapering schedules do not solve the problem.** Guidelines suggest
-tapering over 2–4 weeks down to the therapeutic minimum; such schedules are
-minimally better than abrupt withdrawal and are often poorly tolerated. More
-successful are tapers over months and down to doses below the therapeutic
-minimum, hyperbolically: PET data show that serotonin transporter occupancy falls
-linearly with such tapering
+tapering over 2–4 weeks down to the therapeutic minimum (the lowest dose still
+considered therapeutic); such schedules are minimally better than abrupt
+withdrawal and are often poorly tolerated. More successful are tapers over months
+and down to doses below the therapeutic minimum, hyperbolically (each next step
+down is smaller than the previous one): PET (positron emission tomography) data
+show that serotonin transporter occupancy falls linearly with such tapering
 [`horowitz-taylor-2019-tapering`](../sources/horowitz-taylor-2019-tapering.md, `review`).
 
 **Switching medication.** The share of people who feel worse specifically after
 a switch is not reported in the studies found. What is measured is
-discontinuation symptoms — after stopping, not after switching. 50 studies,
-17 828 people; in the DESS meta-analysis (11 studies, 3915 people) symptoms in
-the first week after stopping were greater than on placebo — SMD 0.31 (0.23–0.39),
-equivalent to "one more symptom"; the most frequent were dizziness (OR 5.52;
-3.81–8.01), nausea (3.16), vertigo (6.40), nervousness (3.15); dizziness was the
-most prevalent symptom (risk difference 6.24%). In that study discontinuation was
-not associated with depression symptoms: the authors attribute later worsening
-to relapse, not to discontinuation
+discontinuation symptoms — after stopping, not after switching.
+
+50 studies, 17 828 people; in the DESS (Discontinuation-Emergent Signs and
+Symptoms — symptoms arising after stopping) meta-analysis (11 studies, 3915
+people) symptoms in the first week after stopping were greater than on placebo —
+standardised mean difference (SMD) 0.31 (0.23–0.39), equivalent to "one more
+symptom"
+[`kalfas-2025-discontinuation`](../sources/kalfas-2025-discontinuation.md, `meta`).
+
+The most frequent were dizziness (OR 5.52; 3.81–8.01), nausea (3.16), vertigo
+(6.40), nervousness (3.15); dizziness was the most prevalent symptom (risk
+difference, that is how many percentage points more often, 6.24%). In that study
+discontinuation was not associated with depression symptoms: the authors
+attribute later worsening to relapse, not to discontinuation
 [`kalfas-2025-discontinuation`](../sources/kalfas-2025-discontinuation.md, `meta`).
 Another estimate — 79 studies, 21 002 people: at least one discontinuation
 symptom in 31% versus 17% on placebo (difference 8%), severe in 2.8% versus
@@ -112,7 +126,8 @@ illustration, not a rate.
 
 **A dose is not the same as a drug.** The share of people who feel worse
 specifically after a dose increase is not reported in the studies found. The
-closest measure is activation (jitteriness) at treatment start: 27.7% over
+closest measure is activation, or jitteriness (inner trembling, anxiety and
+agitation in the first weeks of treatment), at treatment start: 27.7% over
 6 weeks in 209 people, of whom 6.7% in the first 2 weeks; a high dose was
 associated with activation (OR 2.68; 1.37–5.25)
 [`sinha-2017-jitteriness`](../sources/sinha-2017-jitteriness.md, `cohort`). A
@@ -139,9 +154,10 @@ the only consistent signal. Heterogeneity was low, confidence was low
 **In BPD there is no indication, yet most patients are prescribed one.** "No
 approved pharmacological treatment for BPD exists"; antidepressants are the most
 frequent class at baseline, 80.4%; polypharmacy (by the authors' methods, more
-than one medication at the same time; the abstract says "≥ 1") in 83.1%. This
-is a retrospective cohort: 12-month data were available for 1461 people (16.1%
-of those who started)
+than one medication at the same time; the short description says "≥ 1") in
+83.1%. This is a retrospective cohort (data were collected from records after
+the fact, not by following people forward): 12-month data were available for
+1461 people (16.1% of those who started)
 [`white-2026-bpd-antidepressants`](../sources/white-2026-bpd-antidepressants.md, `cohort`).
 
 ## What is not proven

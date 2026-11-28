@@ -1,7 +1,7 @@
 ---
 slug: depressiya
 title: Depression
-updated: 2026-11-27
+updated: 2026-11-28
 sources: 12
 ---
 
@@ -48,7 +48,9 @@ unit: %
 ```
 
 **Treatment.** Among 12-month cases 51.6% received some treatment, treatment was
-adequate in 41.9% of them — that is, 21.7% of all cases were adequately treated
+adequate by the study's criteria (what exactly was considered adequate is not in
+the available description) in 41.9% of them — that is, 21.7% of all cases were
+adequately treated
 [`kessler-2003-ncsr`](../sources/kessler-2003-ncsr.md, `cohort`). In high-income
 countries about one third of people with depression receive treatment
 [`who-2025-depression`](../sources/who-2025-depression.md, `review`).
@@ -80,10 +82,10 @@ certainty from moderate to very low
 steps 1–4 was 36.8%, 30.6%, 13.7% and 13.0%, cumulative 67%; 123 people reached
 step 4 [`rush-2006-star-d`](../sources/rush-2006-star-d.md, `rct`).
 
-A reanalysis of the same data using the original protocol (protocol HRSD, without
-the 99 and 125 patients who had already remitted) gave a cumulative remission of
-35.0% — roughly half as much; the difference is explained by counting rules, not by
-different patients
+A reanalysis of the same data using the rules written before data collection
+(Hamilton scale, HRSD, without the 99 and 125 patients who had already remitted)
+gave a cumulative remission of 35.0% — roughly half as much; the difference is
+explained by counting rules, not by different patients
 [`pigott-2023-star-d-reanalysis`](../sources/pigott-2023-star-d-reanalysis.md, `rct`).
 
 **Interpersonal psychotherapy (IPT).** 38 studies, 4 356 people; versus control
@@ -100,12 +102,15 @@ depression and BPD symptoms: a model in which symptoms sustain one another rathe
 than follow from a shared cause
 [`kohne-2021-network`](../sources/kohne-2021-network.md, `cohort`).
 
-**Devaluing criticism.** In a 17-year cohort of people aged 50 and older, perceived
-criticism from a spouse was associated with more clinically significant depressive
-symptoms: HR 1.36 (1.18–1.55) for "some", 2.24 (1.85–2.72) for "a lot" and 1.05
-(0.92–1.20) for "a little" — that is, no association for "a little". Criticism from
-children: 1.24 (1.12–1.36), 1.50 (1.33–1.68), 2.02 (1.62–2.52). Women were more
-susceptible to all four sources [`li-2025-criticism`](../sources/li-2025-criticism.md, `cohort`).
+**Devaluing criticism.** In the 17-year ELSA cohort (England, aged 50 and older),
+perceived (that is, felt by the person) criticism from a spouse was associated
+with more clinically significant depressive symptoms compared with those who
+perceived no criticism at all: HR (how many times faster symptoms occurred) 1.36
+(1.18–1.55) for "some", 2.24 (1.85–2.72) for "a lot" and 1.05 (0.92–1.20) for
+"a little" — that is, no association for "a little". Criticism from children
+against the same baseline: 1.24 (1.12–1.36) for "a little", 1.50 (1.33–1.68) for
+"some", 2.02 (1.62–2.52) for "a lot". Women were more susceptible to all four
+sources [`li-2025-criticism`](../sources/li-2025-criticism.md, `cohort`).
 
 **How patients are told about it.** A service that works to NICE guidance states it
 directly: depression is not a sign of weakness and not something you "snap out of"
@@ -127,9 +132,9 @@ by "pulling yourself together"
   older source. The percentages are taken; the absolute is not quoted as "now".
 - **Comorbidity of depression and BPD comes from a review, not a meta-analysis.**
   The primary work [`zanarini-1998-axis-i`](../sources/zanarini-1998-axis-i.md, `cohort`)
-  gives no percentage for depression in its abstract, so ">80%" is marked as a
-  secondary figure. The introduction of an RCT protocol names ">85%", but the
-  protocol was not opened in full — that figure is not used.
+  gives no percentage for depression in its short description, so ">80%" is marked as a
+  secondary figure. The introduction to the RCT article names ">85%", but the
+  full text was not opened — that figure is not used.
 
 ## Not found
 
@@ -155,7 +160,8 @@ by "pulling yourself together"
 - [`wiedlocha-2024-bpd-mdd`](../sources/wiedlocha-2024-bpd-mdd.md) — link between
   depression and BPD, caveat that the figures are secondary.
 - [`zanarini-1998-axis-i`](../sources/zanarini-1998-axis-i.md) — comorbidity
-  profile in BPD, and what its abstract does not contain (a depression percentage).
+  profile in BPD, and what its short description does not contain (a depression
+  percentage).
 - [`li-2025-criticism`](../sources/li-2025-criticism.md) — criticism and symptoms,
   HR by grade.
 - [`nhs-depression-overview`](../sources/nhs-depression-overview.md) —
