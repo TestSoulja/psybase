@@ -70,9 +70,10 @@ This describes what services recommend, not a prescription: the choice stays wit
 the doctor.
 
 **Medicines in an acute episode.** A network meta-analysis of 522 RCTs
-(116 477 people, 21 drugs): every drug beat placebo on response, OR from 1.37
-(1.16–1.63) to 2.13 (1.89–2.41); high risk of bias in 46 (9%) trials, certainty from
-moderate to very low
+(116 477 people, 21 drugs): on the share of responders (response — a score
+reduction of at least 50% by the source's criterion), every drug beat placebo, OR
+from 1.37 (1.16–1.63) to 2.13 (1.89–2.41); high risk of bias in 46 (9%) trials,
+certainty from moderate to very low
 [`cipriani-2018-21-antidepressants`](../sources/cipriani-2018-21-antidepressants.md, `meta`).
 
 **When the first drug does not help.** STAR*D: of 3 671 patients, remission at

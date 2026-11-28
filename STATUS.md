@@ -446,12 +446,12 @@ SMD на разных шкалах, общей доли и знаменател�
 | 2026-11-27 | `sources/jorgensen-2024-5-year.md` | знаменатель для 24 % | в `taken` стояло «24 % (97 из 111)»; в аннотации 97 из 111 — пришедшие на осмотр (87 %) | ошибка исправлена, `read` — `abstract`; в тему число поставлено от 97 пришедших |
 | 2026-11-27 | `research/2026-11-25/nakat-i-navyki.md` | журнал, приписанный `povedencheskaya-aktivaciya` в аудите | журнал принадлежит лейну 18 (навыки при ПРЛ), а не BA; настоящий журнал BA — `depressiya-lechenie.md`, его числа уже в теме | в BA из этого журнала не перенесено ничего; карта «тема → журнал» в аудите неполная |
 
-Список 22 карточек с `read: unknown` (по одной строке, чтобы долг не растворился):
+Список 21 карточки с `read: unknown` (по одной строке, чтобы долг не растворился):
 `bach-2022-icd11-pd`, `brodsky-2025-dbt-vs-ssri`, `eaton-2008-baltimore`,
 `gonzalez-2021-stepps`, `grant-2008-nesarc`, `guillen-2024-family-connections`,
 `hegel-1994-cbt-alprazolam`, `huo-2026-prevalence-men`,
 `klein-2021-internet-self-management`,
-`lak-2025-suicidality`, `leichsenring-2024-bpd-review`, `li-2025-criticism`,
+`lak-2025-suicidality`, `leichsenring-2024-bpd-review`,
 `paz-otero-2026-adhd`, `pesic-2026-borderline-name`, `potter-2006-manipulative`,
 `ramos-suarez-2026-prevalence`, `shen-2018-misdiagnosis`, `stoffers-2022-pharmacotherapy`,
 `storebo-2020-psychotherapy`, `vikstrom-2026-relatives`, `zanarini-2018-web-psychoeducation`,
@@ -537,6 +537,21 @@ SMD на разных шкалах, общей доли и знаменател�
     `/ru/kak-chitat/`. Числа, PMID/DOI, заголовки и карточки не менялись:
     `node tools/parity.mjs depressiya` — паритет, EN-перевод не расширялся.
     `npm run check` — exit 0, `linkish` 0. Выкладки нет.
+11. **Читаемость III, часть 1 — словарь и правка `depressiya` (28.11.2026):**
+    словарь дополнен DSM-5/DSM-IV, МКБ-11/МКБ-10, Cochrane, «ответ»,
+    «ремиссия», клиническая значимость, отсев, гетерогенность, двойное слепое,
+    полипрагмазия, PPV → ППЦ, HAMD → HDRS/HRSD; формулировка про обратную
+    ссылку переписана. В `depressiya` названа база сравнения HR (ELSA, «совсем
+    не ощущал критики»), три HR критики детей подписаны градациями, один раз
+    объяснён «ответ», у «адекватного лечения» отмечено отсутствие определения
+    в карточке (полный текст Kessler 2003 недоступен: `isOpenAccess: N`,
+    `inPMC: N`; строка в реестре §9). В «Не нашёл» вернулись «39 записей» и
+    «Русскоязычные валидированные цифры по РФ». В карточке `li-2025-criticism`
+    `read: full`, `accessed` 2026-11-28, база сравнения записана. Проценты с
+    пробелом исправлены только в правившихся абзацах `depressiya`; долг по
+    корпусу — **370 мест** по заданию (фактический замер `topics/` + `for-app/`
+    — 356). Проверки: `npm run check` — exit 0, `parity.mjs depressiya` —
+    паритет, `linkish` 0. Выкладки нет.
 
 ## Не делать (решения владельца, 25.11.2026)
 
