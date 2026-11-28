@@ -1,7 +1,7 @@
 ---
 slug: kannabis
 title: Каннабис и другие вещества
-updated: 2026-11-26
+updated: 2026-11-28
 sources: 118
 age: 18+
 ---
@@ -12,7 +12,8 @@ age: 18+
 disorder, дальше — CUD): не о «часто курю», а о состоянии, у которого есть
 критерии, течение, отмена и лечение. Рядом — то, что с каннабисом связано:
 психоз, депрессия и тревога, сон, лекарственные взаимодействия; в конце —
-другие вещества, о которых в этом заходе нашлись открытые числа.
+другие вещества, о которых здесь нашлись открытые числа. Термины — на странице
+[«Как читать»](/psybase/ru/kak-chitat/).
 
 Границы темы обозначены сразу: «безопасных доз» здесь нет, порогов «сколько
 можно» — тоже. Потенция (доля ТГК) появляется только там, где источник её
@@ -20,7 +21,8 @@ disorder, дальше — CUD): не о «часто курю», а о сост
 
 ### МКБ-11: четыре диагноза вместо одного
 
-МКБ-11 (MMS, релиз 2025-01, PDF) держит каннабис отдельной рубрикой 6C41, и
+МКБ-11 (MMS — статистика смертности и заболеваемости, релиз 2025-01, PDF)
+держит каннабис отдельной рубрикой 6C41, и
 рубрики внутри неё разведены по вреду и времени [`icd-11-mms-2025`](../sources/icd-11-mms-2025.md, `review`):
 
 - **Эпизод вредного употребления (6C41.0)** — вред физическому или
@@ -32,7 +34,8 @@ disorder, дальше — CUD): не о «часто курю», а о сост
   (ежедневно или почти ежедневно). Подрубрики: 6C41.10 эпизодический,
   6C41.11 непрерывный.
 - **Зависимость (6C41.2)** — нарушенный контроль, рост приоритета употребления,
-  продолжение вопреки вреду, craving, физиологические признаки (толерантность,
+  продолжение вопреки вреду, craving (труднопреодолимое влечение к веществу),
+  физиологические признаки (толерантность,
   отмена, употребление для её снятия). Признаки обычно выражены не менее
   12 месяцев; при непрерывном употреблении диагноз возможен от 3 месяцев.
 - **Ремиссии (6C41.20–23)** — текущее употребление (в пределах месяца), ранняя
@@ -106,8 +109,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   отмены образуют один фактор; набор работает одинаково по полу, возрасту и
   законам штата [`shmulewitz-2023-dimensionality-differential-functioning`](../sources/shmulewitz-2023-dimensionality-differential-functioning.md, `cohort`).
 - В выборке 392 человек валидаторы (психиатрия, социальное нарушение) увереннее
-  подтверждали тяжёлую степень, чем лёгкую и среднюю [`fink-2022-construct-validity-dsm-diagnosis-severity`](../sources/fink-2022-construct-validity-dsm-diagnosis-severity.md, `cohort`). То есть
-  верх шкалы различим лучше нижнего.
+  подтверждали тяжёлую степень, чем лёгкую и среднюю [`fink-2022-construct-validity-dsm-diagnosis-severity`](../sources/fink-2022-construct-validity-dsm-diagnosis-severity.md, `cohort`). Верх
+  шкалы различим лучше нижнего.
 - 339 подростков 14–18 лет в лечении: зависимость по МКБ-11 ставилась чаще, чем
   по МКБ-10, DSM-IV и «среднее–тяжёлое» DSM-5; критерий набирали толерантностью
   и «много времени», а не нарушенным контролем [`chung-2017-greater-prevalence-proposed-icd-alcohol`](../sources/chung-2017-greater-prevalence-proposed-icd-alcohol.md, `cohort`).
@@ -132,8 +135,9 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   начинается в среднем на **2,50 года** раньше; в группах 20–<25, 25–<30 и
   ≥30 лет — на 1,60, 4,43 и 6,30 года; в группе младше 20 лет разницы нет
   [`stevens-2026-age-related-acceleration-psychosis-onset`](../sources/stevens-2026-age-related-acceleration-psychosis-onset.md, `meta`).
-- 410 пациентов с первым психозом и 370 контролей (южный Лондон): «сканк» против
-  «никогда» — OR 2,92, ежедневный «сканк» — OR 5,4 (2,81–11,31); доля первых
+- 410 пациентов с первым психозом и 370 контролей (южный Лондон): «сканк»
+  (высокопотентный каннабис) против «никогда» — OR 2,92, ежедневный «сканк» —
+  OR 5,4 (2,81–11,31); доля первых
   психозов, связанная со «сканком», 24% (17–31) [`di-forti-2015-proportion-patients-south-london-first`](../sources/di-forti-2015-proportion-patients-south-london-first.md, `case`).
 - EU-GEI, 901 пациент и 1 237 контролей: ежедневное употребление OR 3,2
   (2,2–4,1), ежедневное высокопотентное OR 4,8 (2,5–6,3); доля предотвратимых
@@ -145,11 +149,12 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   (1,73–2,13); биполярное 2,01, депрессия 1,34, тревога 1,24 [`young-wolff-2026-adolescent-risk-psychotic-bipolar`](../sources/young-wolff-2026-adolescent-risk-psychotic-bipolar.md, `cohort`).
 - Umbrella review 69 мета-анализов, 970 исследований, 221 фактор: шесть факторов
   класса I, и каннабиса среди них нет; употребление 5–7 дней в неделю — класс II,
-  PAF 12,75%; детские невзгоды 40,69%, Toxoplasma 20,47% [`aymerich-2026-evidence-based-atlas-risk-protective`](../sources/aymerich-2026-evidence-based-atlas-risk-protective.md, `meta`).
+  PAF (доля предотвратимых случаев) 12,75%; детские невзгоды 40,69%, Toxoplasma 20,47% [`aymerich-2026-evidence-based-atlas-risk-protective`](../sources/aymerich-2026-evidence-based-atlas-risk-protective.md, `meta`).
 - 13 исследований, 13 559 человек: связь с паранойей — экспериментальные работы
   SMD 0,47, поперечные OR 1,75 (1,43–2,07); в психиатрических выборках пул
-  незначим. В абстракте интервал напечатан как 0,13–0,48 при точке 0,47 —
-  точка вне своего интервала; это оставлено как в тексте, не исправлено
+  незначим. В кратком описании статьи интервал напечатан как 0,13–0,48 при
+  точке 0,47 — точка вне своего интервала; это оставлено как в источнике,
+  не исправлено
   [`belvederi-2025-association-paranoia-experimental`](../sources/belvederi-2025-association-paranoia-experimental.md, `meta`).
 
 ### Возраст начала и потентность
@@ -158,13 +163,14 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   психотический опыт в 19–24 лет OR 2,15 (1,13–4,06); любое употребление —
   OR 1,45 (0,94–2,12), не значимо [`hines-2024-incident-psychotic-experiences-following-self`](../sources/hines-2024-incident-psychotic-experiences-following-self.md, `cohort`).
 - ALSPAC, 1 087 человек в 24 года: высокопотентный каннабис — у 141 (13,0%);
-  AOR проблем 4,08 (1,41–11,81), частоты 4,38 (2,89–6,63), тревоги 1,92
+  AOR (скорректированное отношение шансов) проблем 4,08 (1,41–11,81),
+  частоты 4,38 (2,89–6,63), тревоги 1,92
   (1,11–3,32); с психотическим опытом после поправки на частоту — 1,29
   (0,67–2,50), не значимо [`hines-2020-association-high-potency-mental-health`](../sources/hines-2020-association-high-potency-mental-health.md, `cohort`).
 - EU-GEI, симптомы: дозозависимая связь позитивного измерения с пожизненной
   экспозицией, максимум у ежедневных высокопотентных B=0,35 (0,14–0,56);
   негативные реже у любых потребителей B=−0,22 (−0,37…−0,07) [`quattrone-2021-daily-high-potency-more-positive`](../sources/quattrone-2021-daily-high-potency-more-positive.md, `case`).
-  То есть B — коэффициент линейной регрессии в исследовании случай–контроль.
+  Здесь B — коэффициент линейной регрессии в исследовании случай–контроль.
 - NAPLS-2, 1 012 человек (734 в группе риска): тяжёлый каннабис и лёгкий табак —
   HR конверсии 2,93 (1,23–6,97) против неупотребляющих [`bello-2026-tobacco-predicts-psychosis-clinical-high`](../sources/bello-2026-tobacco-predicts-psychosis-clinical-high.md, `cohort`).
 
@@ -172,8 +178,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 
 | Что | Число | Источник |
 |---|---|---|
-| Изъятая смола, Дания 2000–2022 | ТГК **8,3% → 31,2%**; в нескорректированных моделях положительных связей с психозом и двойным диагнозом нет | [`romer-2026-changes-potency-related-psychiatric-harms`](../sources/romer-2026-changes-potency-related-psychiatric-harms.md, `cohort`) |
-| Категории экспозиции в обзоре 42 исследований | 1–9 / 10–19 / 20–30% ТГК, киф и смола 30–50%, концентраты ≥60%; доказанность GRADE **very low** | [`lake-2025-high-potency-health-observational-experimental`](../sources/lake-2025-high-potency-health-observational-experimental.md, `review`) |
+| Изъятая смола, Дания 2000–2022 | ТГК **8,3% → 31,2%**; в нескорректированных моделях положительных связей с психозом и двойным диагнозом (психическое расстройство вместе с зависимостью) нет | [`romer-2026-changes-potency-related-psychiatric-harms`](../sources/romer-2026-changes-potency-related-psychiatric-harms.md, `cohort`) |
+| Категории экспозиции в обзоре 42 исследований | 1–9 / 10–19 / 20–30% ТГК, киф (смола из соцветий) и смола 30–50%, концентраты ≥60%; доказанность по системе GRADE — очень низкая | [`lake-2025-high-potency-health-observational-experimental`](../sources/lake-2025-high-potency-health-observational-experimental.md, `review`) |
 | Высокая против низкой потентности, 20 исследований | рост риска психоза и CUD; по депрессии и тревоге разнородно | [`petrilli-2022-association-potency-mental-ill-health`](../sources/petrilli-2022-association-potency-mental-ill-health.md, `review`) |
 | 71 исследование, 14–25 лет | высокопотентный каннабис (>15% ТГК) связан с зависимостью, психозом и когнитивными дефицитами | [`hambly-2026-influence-potency-mental-health-outcomes`](../sources/hambly-2026-influence-potency-mental-health-outcomes.md, `review`) |
 
@@ -183,7 +189,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 
 ### Причинность
 
-- Менделевская рандомизация (10 вариантов; 34 241 случай, 45 604 контроля):
+- Менделевская рандомизация (метод, где гены служат случайным распределением;
+  10 вариантов, 34 241 случай, 45 604 контроля):
   OR шизофрении 1,37 (1,09–1,67) при обсервационной оценке 1,43 (1,19–1,67);
   с поправкой на табак 1,41 (1,09–1,83) [`vaucher-2018-risk-schizophrenia-mendelian-randomization`](../sources/vaucher-2018-risk-schizophrenia-mendelian-randomization.md, `meta`).
 - Двухвыборочная МР: инициация каннабиса OR 1,04 (1,01–1,07) на удвоение
@@ -205,7 +212,7 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 
 Разброс от 7% до 44,5% — не ошибка одной работы: разные сроки наблюдения,
 разные исходы (спектр против шизофрении) и разные диагностические практики.
-Усреднять эти доли нельзя; в тексте они стоят рядом с подписями.
+Усреднять эти доли нельзя; здесь они стоят рядом с подписями.
 
 Ещё две детали: в датской выборке у 47,1% диагноз ставился позже чем через год,
 а возраст начала шизофрении был 24,6 против 30,7 года у мужчин и 28,9 против
@@ -228,7 +235,7 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - 24 исследования, 16 565 человек: продолжение употребления связано с худшим
   исходом d=0,36 (0,22–0,50) против не употребляющих и 0,28 (0,12–0,44) против
   прекративших; прекращение с рецидивом не связано (d=0,02; −0,12–0,15)
-  [`schoeler-2016-continued-discontinued-patients-psychosis`](../sources/schoeler-2016-continued-discontinued-patients-psychosis.md, `meta`). То есть «перестал» само по себе рецидив не предотвращает.
+  [`schoeler-2016-continued-discontinued-patients-psychosis`](../sources/schoeler-2016-continued-discontinued-patients-psychosis.md, `meta`). Само по себе прекращение рецидив не предотвращает.
 - 220 пациентов с первым эпизодом, 2 года: в периоды употребления шанс рецидива
   OR 1,13 (1,03–1,24); смена паттерна — OR 1,07 (1,02–1,13) [`schoeler-2016-association-continued-risk-relapse-first`](../sources/schoeler-2016-association-continued-risk-relapse-first.md, `cohort`).
 
@@ -249,7 +256,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
   1,18 (0,84–1,67) не значима; суицидальные мысли 1,50 (1,11–2,03), попытки
   3,46 (1,53–7,84) [`gobbi-2019-association-adolescence-risk-depression-anxiety`](../sources/gobbi-2019-association-adolescence-risk-depression-anxiety.md, `meta`).
 - 24 исследования (10 в пуле): любое тревожное расстройство OR 1,25
-  (1,01–1,54); ГТР, паника и социальная тревога по отдельности не значимы
+  (1,01–1,54); генерализованное тревожное расстройство (ГТР), паника и
+  социальная тревога по отдельности не значимы
   [`xue-2021-prospective-long-term-association-anxiety`](../sources/xue-2021-prospective-long-term-association-anxiety.md, `meta`).
 - 6 лонгитюдных исследований подростков: каннабис → тревожное расстройство
   OR 2,14 (1,37–3,36); в 12 качественных исследованиях связь с усилением
@@ -263,19 +271,21 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - NEMESIS-2: каннабис объясняет 1,00% связи тревоги и 1,4% связи депрессии с
   психотическим опытом; обратно тревога объясняет 17%, депрессия 37% связи
   каннабиса с психотическим опытом [`radhakrishnan-2023-bidirectional-relationships-anxiety`](../sources/radhakrishnan-2023-bidirectional-relationships-anxiety.md, `cohort`).
-  То есть это доли объяснённой связи: сколько процентов ассоциации проходит
-  через каннабис в одну сторону и сколько — в обратную.
+  Это доли объяснённой связи: сколько процентов связи проходит через
+  каннабис в одну сторону и сколько — в обратную.
 - Квебек, 1 548 подростков в 13, 15 и 17 лет: связи слабые, но двусторонние —
   каннабис в 13 и 15 предсказывает тревогу в 15 и 17, депрессия в 15
   предсказывает каннабис в 17 [`london-nadeau-2021-longitudinal-associations-depression`](../sources/london-nadeau-2021-longitudinal-associations-depression.md, `cohort`).
 - 961 человек, 7 волн за 2 года: связи двусторонние, преобладает направление
-  «последствия каннабиса → интернализация»; это верно для депрессии, но не для
+  «последствия каннабиса → внутренние симптомы (тревога, депрессия)»; это
+  верно для депрессии, но не для
   тревоги; у женщин сильнее [`halladay-2025-examining-bidirectional-associations`](../sources/halladay-2025-examining-bidirectional-associations.md, `cohort`).
 
 ### Что говорит генетика и что — нет
 
 - UK Biobank, 126 291 человек: депрессия OR 1,64 (1,59–1,70), самоповреждение
-  OR 2,85 (2,69–3,01); генетическая корреляция rg 0,289 (SE 0,036);
+  OR 2,85 (2,69–3,01); генетическая корреляция rg (коэффициент связи) 0,289
+  (стандартная ошибка SE 0,036);
   двухвыборочная менделевская рандомизация **не значима** — о направлении
   причинности по ней судить нельзя [`hodgson-2020-depression-self-harm-phenotypic-genetic`](../sources/hodgson-2020-depression-self-harm-phenotypic-genetic.md, `cohort`).
 - NESARC: зависимость от каннабиса → большое депрессивное расстройство OR 6,61
@@ -292,7 +302,7 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 судорогах, спутанности сознания или лихорадке — 112.**
 
 Для каннабиса это правило мягче, чем для алкоголя, и ниже сказано, почему
-именно: отмена каннабиса в двух обзорах Cochrane названа не опасной для жизни.
+именно: отмена каннабиса в двух Кокрейновских обзорах названа не опасной для жизни.
 «Не опасна для жизни» при этом не значит «безопасна» — и не отменяет правило,
 потому что рядом с каннабисом часто стоят алкоголь и седативные, а тяжёлый
 дистресс при отмене поддерживает возврат к употреблению.
@@ -302,8 +312,9 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - Отмена возникает примерно у половины регулярных и зависимых потребителей;
   начало через 24–48 часов, пик на 2–6-й день, часть симптомов держится до
   3 недель и дольше у тяжёлых [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`).
-  То есть это сроки отмены по обзору ведения, а не сравнение групп.
-- Пул 47 исследований, 23 518 человек: отмена 47% (41–52), I²=99,2%; в общине
+  Это сроки отмены по обзору ведения, а не сравнение групп.
+- Пул 47 исследований, 23 518 человек: отмена 47% (41–52), неоднородность
+  I²=99,2%; в общине
   17% (13–21), амбулаторно 54% (48–59), в стационаре 87% (79–94)
   [`bahji-2020-prevalence-withdrawal-symptoms-people-regular`](../sources/bahji-2020-prevalence-withdrawal-symptoms-people-regular.md, `meta`).
 - Проспективно 45 дней, 18 потребителей и 12 бывших: начало дни 1–3, пик дни
@@ -311,11 +322,11 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - 469 взрослых вне лечения: 42,4% имели синдром отмены за жизнь; 95,5% — хотя
   бы один симптом, в среднем 9,5 (SD 6,1), у 43,1% — 10 и больше; 70,4% курили,
   чтобы снять симптомы [`levin-2010-withdrawal-symptoms-treatment-seeking-adult`](../sources/levin-2010-withdrawal-symptoms-treatment-seeking-adult.md, `cohort`).
-  То есть это доли и средние в выборке вне лечения: распространённость,
+  Это доли и средние в выборке вне лечения: распространённость,
   средняя тяжесть и доля куривших ради облегчения.
 - 118 стационарных 16–36 лет (73 прошли 10 дней): у большинства пик в 1-й день,
   спад линейный [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`).
-  То есть это описание течения: срок до пика и форма спада внутри одной
+  Это описание течения: срок до пика и форма спада внутри одной
   выборки, без группы сравнения.
 
 Пик отмены в источниках расходится: 1-й день в стационарной проспективной
@@ -328,17 +339,17 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 - Частые симптомы: тревога, раздражительность, злость и агрессия, нарушенный
   сон и сновидения, подавленное настроение, потеря аппетита; реже — озноб,
   головная боль, потливость, боль в животе [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`).
-- 90 полисубстантных пациентов: все критерии DSM-5, кроме потери аппетита,
+- 90 пациентов, употреблявших несколько веществ: все критерии DSM-5, кроме потери аппетита,
   связаны со временем с последнего употребления; яркие неприятные сны — тоже
   [`hesse-2013-time-course-dsm-withdrawal-symptoms`](../sources/hesse-2013-time-course-dsm-withdrawal-symptoms.md, `cohort`).
 - 127 подростков (90 — каннабис): отмена у 40%, и у всех с отменой была
-  зависимость; независимой связи с абстиненцией нет [`greene-2014-prevalence-withdrawal-influence-adolescents`](../sources/greene-2014-prevalence-withdrawal-influence-adolescents.md, `cohort`).
+  зависимость; независимой связи с воздержанием (абстиненцией) нет [`greene-2014-prevalence-withdrawal-influence-adolescents`](../sources/greene-2014-prevalence-withdrawal-influence-adolescents.md, `cohort`).
 - 45 женщин и 91 мужчина: у женщин выше общий балл отмены и шесть симптомов,
   прежде всего настроение и ЖКТ [`herrmann-2015-sex-differences-withdrawal-symptoms`](../sources/herrmann-2015-sex-differences-withdrawal-symptoms.md, `cohort`).
 - 527 человек с хронической болью: лёгкая отмена 41%, средняя 34%, тяжёлая 25%;
   устойчивость 0,58–0,87 за 2 года; молодой возраст — тяжелее [`coughlin-2021-progression-withdrawal-symptoms-people-using`](../sources/coughlin-2021-progression-withdrawal-symptoms-people-using.md, `cohort`).
 
-### «Не опасна для жизни»: два Cochrane
+### «Не опасна для жизни»: два Кокрейновских обзора
 
 | Что сказано | Версия | Источник |
 |---|---|---|
@@ -351,7 +362,8 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 
 Оговорка к обеим: фраза фоновая и не результат метаанализа. В версии 2019 она
 опирается на Budney 2003 (18 и 12 человек), а «complicated withdrawal» описан
-при психиатрической коморбидности и полисубстантном употреблении
+при сопутствующем психиатрическом расстройстве и употреблении нескольких
+веществ
 [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`).
 
 Единичный случай в другую сторону: 53-летняя женщина, тонико-клонический статус
@@ -362,7 +374,7 @@ DSM-IV [`lago-2016-concordance-icd-dsm-definitions-alcohol`](../sources/lago-201
 
 | Что | Каннабис | Алкоголь |
 |---|---|---|
-| Опасность для жизни | «not life-threatening» в двух обзорах Cochrane; единичный случай статуса | «может быть опасной», требует мониторинга и бензодиазепинов по шкалам |
+| Опасность для жизни | «not life-threatening» в двух Кокрейновских обзорах; единичный случай статуса | «может быть опасной», требует мониторинга и бензодиазепинов по шкалам |
 | Смертность | не измерена; случаев мало | годовая 8,0% при делирии, 5,0% при отмене, 3,6% при зависимости; SMR при делирии 9,8 |
 | Источник | [`nielsen-2019-pharmacotherapies-dependence`](../sources/nielsen-2019-pharmacotherapies-dependence.md, `meta`) [`bahji-2026-era-legalization-implications-addiction`](../sources/bahji-2026-era-legalization-implications-addiction.md, `review`) | [`ratner-2024-management-alcohol-withdrawal-syndrome`](../sources/ratner-2024-management-alcohol-withdrawal-syndrome.md, `review`) [`bramness-2023-mortality-alcohol-related-morbidity-patients`](../sources/bramness-2023-mortality-alcohol-related-morbidity-patients.md, `cohort`) |
 
@@ -386,7 +398,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 
 ## Сон и отскок
 
-- Cochrane 2026, 9 РКИ, 537 человек: медицинский каннабис против плацебо —
+- Кокрейновский обзор 2026, 9 РКИ, 537 человек: медицинский каннабис против плацебо —
   качество сна SMD −0,49 (−1,06–0,08), общее время сна +7,68 мин
   (−23,04–38,39); нежелательные явления OR 11,25 (4,46–28,35), 37 против 0
   [`varela-2026-medical-treatment-insomnia`](../sources/varela-2026-medical-treatment-insomnia.md, `meta`). Интервал качества сна накрывает ноль: эффект не доказан.
@@ -395,18 +407,21 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   [`costa-2025-sleep-quality-adult-recreational-users`](../sources/costa-2025-sleep-quality-adult-recreational-users.md, `review`).
 - 18 исследований, 9 в метаанализе: введение каннабиса не меняет устойчиво
   длительность, латентность, бодрствование, эффективность и стадии; подавление
-  REM — только в ранних малых исследованиях с высокой дозой ТГК; отмена
+  фаза быстрого сна (REM) — только в ранних малых исследованиях с высокой дозой ТГК; отмена
   устойчиво связана с сокращением общего времени сна, удлинением засыпания и
   **REM-отскоком** [`velzeboer-2025-sleep-architecture`](../sources/velzeboer-2025-sleep-architecture.md, `meta`).
-- 1 449 полисомнографий (151 ежедневный потребитель ≥1 года против 1 298
-  никогда не употреблявших): WASO +21% (6,7–37,2), эффективность −3,8%
-  (−6,6…1,0), N1 +2,8 п.п. (0,3–5,6), общее время сна −3,3% (−6,3…0,3)
+- 1 449 полисомнографий (записей сна в лаборатории; 151 ежедневный потребитель
+  ≥1 года против 1 298 никогда не употреблявших): WASO (время бодрствования
+  после засыпания) +21% (6,7–37,2), эффективность −3,8%
+  (−6,6…1,0), N1 (первая стадия сна) +2,8 п.п. (0,3–5,6), общее время сна
+  −3,3% (−6,3…0,3)
   [`velzeboer-2026-chronic-sleep-architecture-cross-sectional`](../sources/velzeboer-2026-chronic-sleep-architecture-cross-sectional.md, `cohort`).
 - 177 взрослых: употребление меньше чем за 3 часа до сна — WASO 60,5 против
   45,8 мин, RR 1,59 (1,22–2,05); стадия 1 15,2% против 12,3%; у частых
   (>20 дней в месяц) выше латентность REM и ниже эффективность [`althoff-2024-impact-proximal-sleep-cannabinoid-metabolites`](../sources/althoff-2024-impact-proximal-sleep-cannabinoid-metabolites.md, `cohort`).
-- 1 926 молодых: ≥20 дней в месяц без тревоги и депрессии — сон хуже, MD +1,66
-  (0,59–2,74); с тревогой или депрессией и исходно плохим сном — наоборот лучше,
+- 1 926 молодых: ≥20 дней в месяц без тревоги и депрессии — сон хуже,
+  разница средних (MD) +1,66 (0,59–2,74); с тревогой или депрессией и исходно
+  плохим сном — наоборот лучше,
   MD −1,42 (−2,81…−0,02) [`walsh-2025-sleep-problems-young-adults-mental`](../sources/walsh-2025-sleep-problems-young-adults-mental.md, `cohort`).
 - 36 публикаций: сон часто нарушается при отмене, механизмы неясны, окончательных
   выводов сделать нельзя [`gates-2016-withdrawal-sleep-human-studies`](../sources/gates-2016-withdrawal-sleep-human-studies.md, `review`).
@@ -423,15 +438,17 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 
 ### Психосоциальное лечение
 
-- Сетевой мета-анализ 57 исследований: DBT/ACT MD −0,18 (−0,26…−0,09),
-  MET-CBT с вознаграждением −0,15 (−0,23…−0,07) против неспецифического
-  контроля; КБД OR 2,91 (0,45–27,98), NAC 1,30 (0,55–3,74), варениклин 4,85
+- Сетевой мета-анализ 57 исследований: диалектико-поведенческая терапия и
+  терапия принятия (DBT/ACT) — MD −0,18 (−0,26…−0,09), мотивационное интервью
+  с КПТ (MET-CBT) и вознаграждением — −0,15 (−0,23…−0,07) против
+  неспецифического контроля; КБД OR 2,91 (0,45–27,98),
+  N-ацетилцистеин (NAC) 1,30 (0,55–3,74), варениклин 4,85
   (0,65–48,26); вся достоверность низкая и очень низкая [`halicka-2026-comparative-effectiveness-safety`](../sources/halicka-2026-comparative-effectiveness-safety.md, `meta`).
 - 22 РКИ, 3 304 участника: MET-CBT — точечная абстиненция OR 18,27
   (9,00–37,07), непрерывная 2,72 (1,20–6,19), завершение 0,53 (0,35–0,85);
   DBT/ACT — 4,34 (1,74–10,80); ни одно исследование не мерило тяжесть отмены
   [`halicka-2025-effectiveness-safety-psychosocial`](../sources/halicka-2025-effectiveness-safety-psychosocial.md, `meta`).
-- Cochrane, 23 РКИ, 4 045 человек: дней употребления MD 5,67 (3,08–8,26),
+- Кокрейновский обзор, 23 РКИ, 4 045 человек: дней употребления MD 5,67 (3,08–8,26),
   абстиненция RR 2,55 (1,34–4,83), завершение 0,71 (0,63–0,78), тяжесть
   зависимости SMD 4,15 (1,67–6,63); к финалу абстинентны около четверти;
   сильнее всего MET с КПТ и вознаграждением за чистые пробы [`gates-2016-psychosocial-interventions`](../sources/gates-2016-psychosocial-interventions.md, `meta`).
@@ -441,18 +458,19 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Взрослые, 127 человек: 75,5% против 57,1% проб без каннабиса (F=2,25;
   p=0,02); авторы пишут, что добавление КПТ к вознаграждению ухудшило результат
   [`carroll-2012-combining-cognitive-behavioral-therapy`](../sources/carroll-2012-combining-cognitive-behavioral-therapy.md, `rct`).
-- Подростки, 109 человек: MDFT не превосходит КПТ ни по одному исходу, удержание
+- Подростки, 109 человек: многомерная семейная терапия (MDFT) не превосходит
+  КПТ ни по одному исходу, удержание
   выше в MDFT [`hendriks-2011-treatment-adolescents-main-findings`](../sources/hendriks-2011-treatment-adolescents-main-findings.md, `rct`).
-- Вознаграждение при психиатрической коморбидности: 6 исследований, снижение
-  употребления при психотическом спектре и БДР, длительных наблюдений нет
+- Вознаграждение при сопутствующих психиатрических расстройствах: 6
+  исследований, снижение употребления при психотическом спектре и БДР,
+  длительных наблюдений нет
   [`rodas-2022-contingency-management-treatment-occurring`](../sources/rodas-2022-contingency-management-treatment-occurring.md, `review`).
-  То есть это сводка исследований вознаграждения при психиатрической
-  коморбидности, а не сравнение групп.
+  Это сводка исследований, а не сравнение групп.
 
 ### Фармакотерапия
 
 - Сетевой мета-анализ 24 РКИ, n=1 912: нзбилион d=−4,47 (−8,15…−0,79),
-  топирамат −3,80 (−7,06…−0,54), ингибитор FAAH −2,30 (−4,75…0,15);
+  топирамат −3,80 (−7,06…−0,54), ингибитор фермента FAAH −2,30 (−4,75…0,15);
   дронабинол по удержанию RR 1,27 (1,02–1,57), топирамат по удержанию 0,62
   (0,42–0,91); габапентин по тяге −2,42 (−3,53…−1,32); нежелательные явления
   чаще у буспирона 1,14 (1,00–1,29), венлафаксина 1,78 (1,40–2,26), топирамата
@@ -461,10 +479,11 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   каннабиноиды не повышают абстиненцию (умеренная сила доказательств), не
   снижают употребление и не улучшают удержание (низкая); устойчивого вреда нет
   [`kondo-2020-pharmacotherapy-treatment`](../sources/kondo-2020-pharmacotherapy-treatment.md, `meta`).
-- КБД, 82 участника: THC-COOH/креатинин −94,21 нг/мл (−161,83…−35,56), +0,48
+- КБД, 82 участника: метаболит ТГК (THC-COOH) к креатинину −94,21 нг/мл
+  (−161,83…−35,56), +0,48
   дня абстиненции в неделю (0,15–0,82); вероятность быть самой эффективной дозой
   0,9995; 94% завершили, тяжёлых нежелательных явлений нет [`freeman-2020-cannabidiol-treatment-phase-double-blind`](../sources/freeman-2020-cannabidiol-treatment-phase-double-blind.md, `rct`).
-- AEF0117, сигнал-специфичный ингибитор CB1: позитивные субъективные эффекты
+- AEF0117, сигнал-специфичный ингибитор каннабиноидного рецептора 1 типа (CB1): позитивные субъективные эффекты
   каннабиса −19% и −38% против плацебо (P<0,04), самоадминистрирование снижено
   (P<0,05), отмену не провоцировал; фазы 1 и 2a [`haney-2023-signaling-specific-inhibition-sub-sub`](../sources/haney-2023-signaling-specific-inhibition-sub-sub.md, `rct`).
 - Дронабинол с лофексидином, 122 рандомизировано: 3 недели абстиненции 27,9%
@@ -472,7 +491,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 
 Одно РКИ даёт вероятность 0,9995 для КБД, а пул 57 исследований — OR 2,91 с
 интервалом 0,45–27,98 [`freeman-2020-cannabidiol-treatment-phase-double-blind`](../sources/freeman-2020-cannabidiol-treatment-phase-double-blind.md, `rct`) [`halicka-2026-comparative-effectiveness-safety`](../sources/halicka-2026-comparative-effectiveness-safety.md, `meta`). Это не противоречие
-арифметики, а разница между одним испытанием и пулом; в тексте оба числа стоят
+арифметики, а разница между одним испытанием и пулом; здесь оба числа стоят
 рядом.
 
 ### При психозе и депрессии
@@ -487,14 +506,15 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   косяков 27,3 против 48,2 (p=0,06) [`hjorthoj-2013-specialized-psychosocial-treatment-plus`](../sources/hjorthoj-2013-specialized-psychosocial-treatment-plus.md, `rct`).
 - CIRCLE, 551 человек: время до неотложной психиатрической помощи HR 1,03
   (0,76–1,40); госпитализированы 90 (33%) против 85 (30%) [`sheridan-2019-clinical-cost-effectiveness-contingency`](../sources/sheridan-2019-clinical-cost-effectiveness-contingency.md, `rct`).
-- Мета испытаний при коморбидном психозе: на частоту употребления эффекта нет,
+- Мета испытаний при психозе и CUD одновременно: на частоту употребления эффекта нет,
   на количество и на позитивные симптомы есть, на негативные нет [`hjorthoj-2014-intervention-efficacy-trials-targeting`](../sources/hjorthoj-2014-intervention-efficacy-trials-targeting.md, `meta`).
 - Клозапин против прежнего антипсихотика, 31 пациент: примерно на 4,5 косяка в
   неделю меньше, t=−1,77; p=0,086; величина эффекта ≈0,6; симптомы и
   функционирование без различий [`brunette-2011-clozapine-other-antipsychotics-patients`](../sources/brunette-2011-clozapine-other-antipsychotics-patients.md, `rct`).
 - 124 пациента с первым психозом: продолжение употребления не связано с
   симптоматической и функциональной ремиссией и с восстановлением; с социальными
-  ролями — 5,6% и 8,4% объяснённой дисперсии; с PANSS связи нет [`faber-2012-continued-outcome-first-episode-psychosis`](../sources/faber-2012-continued-outcome-first-episode-psychosis.md, `cohort`).
+  ролями — 5,6% и 8,4% объяснённой дисперсии; с PANSS (шкалой симптомов
+  психоза) связи нет [`faber-2012-continued-outcome-first-episode-psychosis`](../sources/faber-2012-continued-outcome-first-episode-psychosis.md, `cohort`).
 
 ## Взаимодействия
 
@@ -503,15 +523,16 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 
 ### Ферменты
 
-- Обзор: CYP2C9, 1A1/2 и 1B1 ингибируются всеми тремя каннабиноидами; 2D6,
+- Обзор: печёночные ферменты CYP2C9, 1A1/2 и 1B1 ингибируются всеми тремя каннабиноидами; 2D6,
   2C19, 2B6 и 2J2 — ТГК и КБД; 3A4/5/7 — КБД; ТГК активирует 2C9 и индуцирует
   1A1. Клинически показаны ингибирование 2C19 КБД, 2C9 каннабисом и индукция
   1A2 курением; по транспортёрам клинических данных нет [`qian-2019-potential-pharmacokinetic-interactions-products`](../sources/qian-2019-potential-pharmacokinetic-interactions-products.md, `meta`).
-- In vitro: IC50,u КБД — 1A2 0,45; 2C9 0,17; 2C19 0,30; 2D6 0,95; 3A 0,38 мкМ;
+- В пробирке (in vitro): IC50,u (концентрация, подавляющая фермент вдвое) у
+  КБД — 1A2 0,45; 2C9 0,17; 2C19 0,30; 2D6 0,95; 3A 0,38 мкМ;
   ТГК — 0,06; 0,012; 0,57; 1,28; 1,30. Необратимое ингибирование только у КБД
   (1A2, 2C19, 3A); прогноз — умеренный или сильный риск взаимодействия
   [`bansal-2020-predicting-potential-cannabinoids-precipitate`](../sources/bansal-2020-predicting-potential-cannabinoids-precipitate.md, `unsure`). Это лабораторные концентрации, а не клинические исходы.
-- Курение каннабиса и табака индуцирует CYP1A2 аддитивно, отказ быстро снижает
+- Курение каннабиса и табака индуцирует CYP1A2 суммарно (аддитивно), отказ быстро снижает
   индукцию; CYP3A4 — основной для ТГК и КБД; КБД может значимо ингибировать
   CYP2C19 [`anderson-2016-pharmacokinetic-drug-interactions-tobacco`](../sources/anderson-2016-pharmacokinetic-drug-interactions-tobacco.md, `review`).
 - Отдельный обзор прямо пишет: существующих фармакокинетических данных
@@ -522,7 +543,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - 2 случая: спутанность на клозапине после прекращения табака и каннабиса (рост
   плазменных уровней), экстрапирамидные симптомы на оланзапине при снижении
   курения [`zullino-2002-tobacco-smoking-cessation-can-lead`](../sources/zullino-2002-tobacco-smoking-cessation-can-lead.md, `case`).
-  То есть это описание двух наблюдений, а не оценка частоты.
+  Это описание двух наблюдений, а не оценка частоты.
 - Нонадгерентность, 15 наблюдений, n=3 678: OR 2,46 у потребителей против
   непотребителей (n=3 055); текущие против непотребителей 5,79 (n=175), против
   бывших 5,5 (n=192); бывшие против непотребителей 1,12 (n=187) [`foglia-2017-adherence-antipsychotic-medication`](../sources/foglia-2017-adherence-antipsychotic-medication.md, `meta`).
@@ -546,9 +567,9 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 | Препарат | Что сказано про каннабис | Источник |
 |---|---|---|
 | Эпидиолекс (КБД) | слабый ингибитор CYP1A2, умеренный CYP2C19, индуктор и ингибитор CYP2B6, ингибитор UGT1A9; рифампин снижает КБД на ≈32% и 7-ОН-КБД на ≈63%; эверолимус внутрь ≈ в 2,5 раза; клобазам — рост N-десметилклобазама | [`dailymed-epidiolex-interactions`](../sources/dailymed-epidiolex-interactions.md, `review`) |
-| Клозапин | слов «cannabis» и «marijuana» в лейбле **0**; названы курение табака, кофеин и класс CYP1A2 | [`dailymed-clozapine-interactions`](../sources/dailymed-clozapine-interactions.md, `review`) |
+| Клозапин | слов «cannabis» и «marijuana» в инструкции **0**; названы курение табака, кофеин и класс CYP1A2 | [`dailymed-clozapine-interactions`](../sources/dailymed-clozapine-interactions.md, `review`) |
 
-Второй лейбл важен именно тем, чего в нём нет: взаимодействие с каннабисом
+Вторая инструкция важна именно тем, чего в ней нет: взаимодействие с каннабисом
 описано в литературе (случаи и когорты выше), а в инструкции клозапина его нет —
 и это не доказательство безопасности, а граница документа.
 
@@ -557,7 +578,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Бензодиазепиновая отмена: 24 случая делирия из 19 публикаций (1977–2025),
   начало через 12 часов — 13 дней после снижения или отмены, разрешение у 22 из
   24 после возобновления бензодиазепина [`al-soleiti-2026-clinical-characteristics-treatment`](../sources/al-soleiti-2026-clinical-characteristics-treatment.md, `case`).
-  То есть это счёт случаев в литературе, а не распространённость; 12 часов —
+  Это счёт случаев в литературе, а не распространённость; 12 часов —
   13 дней — срок до начала делирия.
 - Конверсия индуцированного психоза по веществу, одна методика: каннабис 34%
   (25–46), галлюциногены 26% (14–43), амфетамины 22% (14–34), опиоиды 12%,
@@ -568,11 +589,11 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - Метамфетамин: градиент от простых бредовых и тактильных галлюцинаций в
   транзиторных случаях (насилие в 75,6%) до сложных полимодальных нарушений при
   стойких [`ricci-2026-clinical-phenomenology-differential-diagnosis`](../sources/ricci-2026-clinical-phenomenology-differential-diagnosis.md, `review`).
-  То есть это доля внутри отобранных случаев из обзора, а не частота насилия
+  Это доля внутри отобранных случаев из обзора, а не частота насилия
   среди всех потребителей.
 
 Опиоидная отмена в тему не попала: открытого источника со сравнимыми числами
-смертности или опасности в этом заходе нет, выдача почти целиком оказалась
+смертности или опасности здесь нет, выдача почти целиком оказалась
 неонатальным абстинентным синдромом.
 
 ## Что не доказано
@@ -588,19 +609,19 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 | Связь с тревогой | OR 2,14 у подростков (2024) против OR 1,25 с интервалом у порога (2021) и RR 1,10 не значимо (2024) | [`lowe-2024-adolescents-anxiety-symptoms`](../sources/lowe-2024-adolescents-anxiety-symptoms.md, `meta`) [`xue-2021-prospective-long-term-association-anxiety`](../sources/xue-2021-prospective-long-term-association-anxiety.md, `meta`) [`burke-2024-associations-tobacco-incident-anxiety-mood`](../sources/burke-2024-associations-tobacco-incident-anxiety-mood.md, `meta`) |
 | Причинность | МР шизофрении 1,37 и обратный поток «шизофрения → инициация» 1,10; МР депрессии нулевая; направление не установлено | [`vaucher-2018-risk-schizophrenia-mendelian-randomization`](../sources/vaucher-2018-risk-schizophrenia-mendelian-randomization.md, `meta`) [`gage-2017-assessing-causality-associations-schizophrenia`](../sources/gage-2017-assessing-causality-associations-schizophrenia.md, `cohort`) [`hodgson-2020-depression-self-harm-phenotypic-genetic`](../sources/hodgson-2020-depression-self-harm-phenotypic-genetic.md, `cohort`) |
 | Пик отмены | 1-й день (стационар, проспективно) против 2–6-го дня (амбулатория и обзор) | [`preuss-2010-withdrawal-severity-short-term-course`](../sources/preuss-2010-withdrawal-severity-short-term-course.md, `cohort`) [`budney-2003-time-course-significance-withdrawal`](../sources/budney-2003-time-course-significance-withdrawal.md, `cohort`) [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`) |
-| Опасность отмены | «not life-threatening» в двух Cochrane против единичного случая статуса и оговорки, что фраза фоновая | [`nielsen-2019-pharmacotherapies-dependence`](../sources/nielsen-2019-pharmacotherapies-dependence.md, `meta`) [`spiga-2025-pharmacotherapies`](../sources/spiga-2025-pharmacotherapies.md, `meta`) [`azhar-2026-status-epilepticus-lateralized-periodic`](../sources/azhar-2026-status-epilepticus-lateralized-periodic.md, `case`) [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`) |
+| Опасность отмены | «not life-threatening» в двух Кокрейновских обзорах против единичного случая статуса и оговорки, что фраза фоновая | [`nielsen-2019-pharmacotherapies-dependence`](../sources/nielsen-2019-pharmacotherapies-dependence.md, `meta`) [`spiga-2025-pharmacotherapies`](../sources/spiga-2025-pharmacotherapies.md, `meta`) [`azhar-2026-status-epilepticus-lateralized-periodic`](../sources/azhar-2026-status-epilepticus-lateralized-periodic.md, `case`) [`connor-2022-clinical-management-withdrawal`](../sources/connor-2022-clinical-management-withdrawal.md, `review`) |
 | Конверсия индуцированного психоза | 44,5% (535, ≥3 года, спектр) / 47,4% (6 788, до 20 лет) / 34% (мета) / 20% (мета) / 7% (317, 1,3 года) | [`arendt-2005-induced-psychosis-subsequent-schizophrenia`](../sources/arendt-2005-induced-psychosis-subsequent-schizophrenia.md, `cohort`) [`starzer-2018-rates-predictors-conversion-schizophrenia`](../sources/starzer-2018-rates-predictors-conversion-schizophrenia.md, `cohort`) [`murrie-2020-transition-substance-induced-brief-atypical`](../sources/murrie-2020-transition-substance-induced-brief-atypical.md, `meta`) [`javed-2026-prevalence-schizophrenia-spectrum-bipolar`](../sources/javed-2026-prevalence-schizophrenia-spectrum-bipolar.md, `meta`) [`chuenchom-2024-real-world-clinical-outcomes-treatment`](../sources/chuenchom-2024-real-world-clinical-outcomes-treatment.md, `case`) |
 | Потентность и психоз | ALSPAC: высокопотентный OR 2,15, любое употребление 1,45 не значимо; EU-GEI: ежедневное 3,2, высокопотентное 4,8; датская смола: рост ТГК без положительных связей в нескорректированных моделях | [`hines-2024-incident-psychotic-experiences-following-self`](../sources/hines-2024-incident-psychotic-experiences-following-self.md, `cohort`) [`di-forti-2019-contribution-variation-incidence-psychotic`](../sources/di-forti-2019-contribution-variation-incidence-psychotic.md, `case`) [`romer-2026-changes-potency-related-psychiatric-harms`](../sources/romer-2026-changes-potency-related-psychiatric-harms.md, `cohort`) |
-| Сон | субъективно лучше против объективного ухудшения по полисомнографии; Cochrane: SMD −0,49 с интервалом через ноль | [`velzeboer-2025-sleep-architecture`](../sources/velzeboer-2025-sleep-architecture.md, `meta`) [`velzeboer-2026-chronic-sleep-architecture-cross-sectional`](../sources/velzeboer-2026-chronic-sleep-architecture-cross-sectional.md, `cohort`) [`varela-2026-medical-treatment-insomnia`](../sources/varela-2026-medical-treatment-insomnia.md, `meta`) |
-| Фармакотерапия | КБД: вероятность 0,9995 в одном РКИ против OR 2,91 (0,45–27,98) в пуле; NMA находит нзбилион и топирамат, SR — «каннабиноиды не повышают абстиненцию» | [`freeman-2020-cannabidiol-treatment-phase-double-blind`](../sources/freeman-2020-cannabidiol-treatment-phase-double-blind.md, `rct`) [`bahji-2021-pharmacotherapies-network`](../sources/bahji-2021-pharmacotherapies-network.md, `meta`) [`kondo-2020-pharmacotherapy-treatment`](../sources/kondo-2020-pharmacotherapy-treatment.md, `meta`) |
-| Психотерапия и коморбидность | DBT/ACT и MET-CBT+CM дают малые эффекты при низкой достоверности; КПТ поверх вознаграждения ухудшила результат в одном РКИ | [`halicka-2026-comparative-effectiveness-safety`](../sources/halicka-2026-comparative-effectiveness-safety.md, `meta`) [`carroll-2012-combining-cognitive-behavioral-therapy`](../sources/carroll-2012-combining-cognitive-behavioral-therapy.md, `rct`) |
+| Сон | субъективно лучше против объективного ухудшения по полисомнографии; Кокрейновский обзор: SMD −0,49 с интервалом через ноль | [`velzeboer-2025-sleep-architecture`](../sources/velzeboer-2025-sleep-architecture.md, `meta`) [`velzeboer-2026-chronic-sleep-architecture-cross-sectional`](../sources/velzeboer-2026-chronic-sleep-architecture-cross-sectional.md, `cohort`) [`varela-2026-medical-treatment-insomnia`](../sources/varela-2026-medical-treatment-insomnia.md, `meta`) |
+| Фармакотерапия | КБД: вероятность 0,9995 в одном РКИ против OR 2,91 (0,45–27,98) в пуле; сетевой мета-анализ (NMA) находит нзбилион и топирамат, систематический обзор (SR) — «каннабиноиды не повышают абстиненцию» | [`freeman-2020-cannabidiol-treatment-phase-double-blind`](../sources/freeman-2020-cannabidiol-treatment-phase-double-blind.md, `rct`) [`bahji-2021-pharmacotherapies-network`](../sources/bahji-2021-pharmacotherapies-network.md, `meta`) [`kondo-2020-pharmacotherapy-treatment`](../sources/kondo-2020-pharmacotherapy-treatment.md, `meta`) |
+| Психотерапия и сопутствующие расстройства | DBT/ACT и MET-CBT+CM дают малые эффекты при низкой достоверности; КПТ поверх вознаграждения ухудшила результат в одном РКИ | [`halicka-2026-comparative-effectiveness-safety`](../sources/halicka-2026-comparative-effectiveness-safety.md, `meta`) [`carroll-2012-combining-cognitive-behavioral-therapy`](../sources/carroll-2012-combining-cognitive-behavioral-therapy.md, `rct`) |
 
 Отдельно: критерии МКБ-11 в первичном тексте не содержат счёта «два из трёх»
 [`icd-11-mms-2025`](../sources/icd-11-mms-2025.md, `review`); пересказ обзора [`matone-2022-alcohol-substance-diagnostic-criteria-changes`](../sources/matone-2022-alcohol-substance-diagnostic-criteria-changes.md, `review`) в критерии не поставлен.
 
 ## Не нашёл
 
-Сведено из всех четырёх заходов журнала. Недоступные источники — тоже
+Сведено из четырёх этапов поиска. Недоступные источники — тоже
 результат, а не сбой.
 
 - **CDDR** (клинические описания МКБ-11): `iris.who.int` обрывается примерно на
@@ -610,13 +631,13 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   именно TR изменила в критериях CUD, не проверено; критерии — по DSM-5 (2013)
   и вторичным воспроизведениям.
 - **Абсолютный риск психоза у потребителей в населении** (случаев на 1 000
-  человеко-лет): в открытых абстрактах только OR, AHR и PAF. Фразу «у N из
+  человеко-лет): в открытых кратких описаниях только OR, AHR и PAF. Фразу «у N из
   1 000 разовьётся психоз» собрать не из чего.
 - **Доза ТГК, измеренная биомаркёром и связанная с инцидентным психозом**:
   есть самоотчёт о типе продукта, категории процентов и концентрация в изъятой
   смоле — не биомаркёр.
 - **Содержание полемики о причинности**: 31122483 и 31122474 — письма Lancet
-  Psychiatry без абстрактов, полный текст закрыт; аргументы сторон не прочитаны.
+  Psychiatry без кратких описаний, полный текст закрыт; аргументы сторон не прочитаны.
 - **Русскоязычные доли CUD и каннабис-индуцированного психоза**: `elibrary.ru`
   требует входа (302 → страница ошибки), CyberLeninka список результатов не
   отдаёт (JS), Europe PMC `LANG:"rus"` — 62 записи, по теме 0. Числа 24% и 10,3%
@@ -624,8 +645,8 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
 - **Русскоязычные числа по отмене, сну, лечению и взаимодействиям**: те же
   источники, тот же результат; `bekhterev.ru` — 200 без формы поиска,
   `voprosynarkologii.ru` и `sibpsychiatry.ru` не ответили.
-- **Менделевская рандомизация каннабис → тревога**: не найдена; единственная МР
-  по депрессии нулевая [`hodgson-2020-depression-self-harm-phenotypic-genetic`](../sources/hodgson-2020-depression-self-harm-phenotypic-genetic.md, `cohort`).
+- **Менделевская рандомизация каннабис → тревога**: не найдена; единственная
+  менделевская рандомизация по депрессии нулевая [`hodgson-2020-depression-self-harm-phenotypic-genetic`](../sources/hodgson-2020-depression-self-harm-phenotypic-genetic.md, `cohort`).
 - **Человеческие данные об отскоке сна после прекращения (полисомнография)**:
   нет. Есть отскок на уровне обзора [`velzeboer-2025-sleep-architecture`](../sources/velzeboer-2025-sleep-architecture.md, `meta`) и «нарушенный сон» как
   симптом отмены; отдельного замера величины отскока нет.
@@ -652,7 +673,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   запрос вернул 44 записи, по теме 0; есть случай после прекращения
   [`zullino-2002-tobacco-smoking-cessation-can-lead`](../sources/zullino-2002-tobacco-smoking-cessation-can-lead.md, `case`).
 - **РКИ ведения отмены у людей с психозом**: нет — три РКИ и исследование
-  никотинового пластыря набраны без психотической коморбидности
+  никотинового пластыря набраны без сопутствующего психоза
   [`allsop-2014-nabiximols-agonist-replacement-therapy`](../sources/allsop-2014-nabiximols-agonist-replacement-therapy.md, `rct`).
 - **Доля CUD, обусловленная высокой потентностью, за пределами Лондона**: нет.
 - **Открытые лейблы**: `api.fda.gov/drug/label.json` — 403 даже с User-Agent,
@@ -664,7 +685,7 @@ dangerous than alcohol or benzodiazepine withdrawal», но дистресс п�
   8 279 465 байт), и рубрики 6C41–6C42 взяты из него. Это запись о смене пути, а
   не о найденном источнике сверх журнала.
 - **Полные тексты**: не запрашивались, кроме перечисленных в журнале; числа — из
-  абстрактов, если не сказано иное.
+  кратких описаний статей, если не сказано иное.
 
 ## Источники
 
